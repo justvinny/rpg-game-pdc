@@ -1,6 +1,7 @@
 package com.mycompany.pdc_assignment_rpg.utilities;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.List;
  */
 public class MapLoaderUtility {
 
+    private static final String RESOURCE_PATH = "./resources";
+
     /**
      * Method to load a map from a text file depending on map name argument
      * given. Once successfully loaded, the map will be stored in a list.
@@ -21,14 +24,17 @@ public class MapLoaderUtility {
      * @return a List collection containing a map for our game.
      */
     public static List<String> loadMap(String mapName) {
+        String fileName = RESOURCE_PATH + "/" + mapName + ".txt";
+        File file = new File(fileName);
+
         List<String> map = new ArrayList<>();
 
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(mapName));
+            reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
-
+                map.add(line);
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());

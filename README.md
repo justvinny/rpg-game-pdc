@@ -29,3 +29,6 @@ Basic RPG game for Program Design and Construction paper.
 
 ### Macauley 
 - [ ] Edit and add tasks here.
+
+## UML
+<img src="https://github.com/justvinny/rpg-game-pdc/blob/main/UML.jpg" width="1500" height="400">

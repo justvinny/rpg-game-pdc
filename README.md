@@ -20,6 +20,7 @@ Basic RPG game for Program Design and Construction paper.
 ## Team Member Tasks
 ### Vinson 
 - [x] Loading maps 
+- [x] InvalidMapException - thrown when loading invalid maps. 
 - [ ] Lanterna CLI
 - [ ] Game Loop
 - [ ] Loading user data

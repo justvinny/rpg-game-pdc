@@ -1,7 +1,9 @@
 package com.group.pdc_assignment_rpg;
 
 import com.group.pdc_assignment_rpg.cli.GameTerminal;
+import com.group.pdc_assignment_rpg.cli.InventoryView;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
+import com.group.pdc_assignment_rpg.model.Inventory;
 import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
 import java.util.List;
 
@@ -16,13 +18,19 @@ public class MainDriver {
         try {
             init();
         } catch (InvalidMapException ex) {
-            System.err.println(ex.getMessage());    
+            System.err.println(ex.getMessage());
         }
     }
 
     private static void init() throws InvalidMapException {
+        // Dummy map.
         List<String> map = MapLoaderUtility.loadMap("sample");
 
-        GameTerminal.start(map);
+        // Dummy inventory data.
+        Inventory inventory = new Inventory();
+        inventory.addMultiple("Sword,,Axe,,Armor,,Red Potion,,Mythical Andromeda's Spear");
+        InventoryView inventoryView = new InventoryView(inventory);
+        
+        GameTerminal.start(map, inventoryView);
     }
 }

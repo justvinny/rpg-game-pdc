@@ -21,15 +21,20 @@ Basic RPG game for Program Design and Construction paper.
 ### Vinson 
 - [x] Loading maps 
 - [x] InvalidMapException - thrown when loading invalid maps. 
-- [ ] Lanterna CLI
-- [ ] Game Loop
-- [ ] Loading user data
+- [x] Inventory CLI - First prototype done.
+- [ ] Lanterna CLI - WIP
+- [ ] Game Loop WIP
 
 ### Jess 
+- [ ] Loading user data
 - [ ] Edit and add tasks here.
 
+
 ### Macauley 
+- [x] UML
+- [ ] Game Logic
 - [ ] Edit and add tasks here.
+ 
 
 ## UML
 <img src="https://github.com/justvinny/rpg-game-pdc/blob/main/UML.jpg" width="1500" height="400">

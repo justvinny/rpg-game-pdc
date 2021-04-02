@@ -52,9 +52,6 @@ public class GameTerminal {
 
             String[] lines = inventoryView.makeView().split("\n");
 
-            int cursorPositionCol = InventoryView.ITEM_COL_START;
-            int cursorPositionRow = InventoryView.ITEM_ROW_START;
-
             // Game loop
             while (true) {
                 screen.clear();
@@ -65,7 +62,7 @@ public class GameTerminal {
                     for (String each : lines) {
                         textGraphics.putString(0, row, each);
                         textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                        textGraphics.putString(cursorPositionCol, cursorPositionRow, CURSOR, SGR.BOLD);
+                        textGraphics.putString(inventoryView.getX(), inventoryView.getY(), CURSOR, SGR.BOLD);
                         textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
                         row++;
                     }

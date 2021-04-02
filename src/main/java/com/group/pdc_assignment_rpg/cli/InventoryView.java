@@ -38,6 +38,14 @@ public class InventoryView {
         return inventory;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public String makeView() {
         StringBuilder builder = new StringBuilder();
 

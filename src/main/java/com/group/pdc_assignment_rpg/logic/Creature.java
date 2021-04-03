@@ -1,7 +1,7 @@
 package com.group.pdc_assignment_rpg.logic;
 
 import com.googlecode.lanterna.TextColor;
-import com.group.pdc_assignment_rpg.model.Inventory;
+import com.group.pdc_assignment_rpg.logic.Inventory;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing

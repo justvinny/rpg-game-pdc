@@ -36,6 +36,10 @@ public class MainDriver {
         		new Item("Mythical Andromeda's Spear", ItemList.SPEAR));
         InventoryView inventoryView = new InventoryView(inventory);
         
-        GameTerminal.start(map, inventoryView);
+        // Dummy player.
+        Player player = new Player();
+        
+        // Start our game.
+        GameTerminal.start(map, inventoryView, player);
     }
 }

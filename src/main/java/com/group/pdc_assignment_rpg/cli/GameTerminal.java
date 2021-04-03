@@ -2,6 +2,7 @@ package com.group.pdc_assignment_rpg.cli;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
@@ -10,7 +11,9 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.group.pdc_assignment_rpg.logic.Player;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,11 +34,11 @@ public class GameTerminal {
 
     /**
      * Method that starts our game and its game loop.
-     * 
+     *
      * @param map is the first map shown when we start the game.
      * @param inventoryView contains the CLI for our inventory.
      */
-    public static void start(List<String> map, InventoryView inventoryView) {
+    public static void start(List<String> map, InventoryView inventoryView, Player player) {
         // Create our Lanterna Terminal which we will use for the game.
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT));
@@ -68,8 +71,24 @@ public class GameTerminal {
                     }
                     // Print the game map instead if the inventory is invisbile.
                 } else {
-                    for (String each : map) {
-                        textGraphics.putCSIStyledString(0, row, each);
+//                    for (String each : map) {
+//                        textGraphics.putCSIStyledString(0, row, each);
+//                        row++;
+//                    }
+
+                    for (int i = 0; i < map.size(); i++) {
+                        String line = map.get(i);
+
+                        textGraphics.putString(0, row, line);
+
+                        if (i == player.getY()) {
+                            if (line.charAt(player.getX()) != '#') {
+                                textGraphics.setForegroundColor(TextColor.ANSI.RED);
+                                textGraphics.setCharacter(player.getX(), i, player.getCharSymbol());
+                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+                            }
+                        }
+
                         row++;
                     }
                 }
@@ -109,6 +128,9 @@ public class GameTerminal {
                     } else if (inventoryView.getInventory().isVisible()) {
                         // Navigating the inventory.
                         inventoryNavigation(keyStroke, inventoryView);
+                    } else if (!inventoryView.getInventory().isVisible()) {
+                        // Navigate the map.
+                        mapNavigation(keyStroke, player, map);
                     }
                 }
             }
@@ -129,9 +151,10 @@ public class GameTerminal {
 
     /**
      * Prints the available keys that the user can press during the game.
-     * 
+     *
      * @param textGraphics used for drawing to our Lanterna console.
-     * @param row is y position on where we want to start drawing on the console.
+     * @param row is y position on where we want to start drawing on the
+     * console.
      */
     private static void printAvailableKeys(TextGraphics textGraphics, int row) {
         String keysMenu = "Keys: [I] - Inventory   [Esc] - Exit Game\n";
@@ -140,10 +163,11 @@ public class GameTerminal {
 
     /**
      * Prints the exit message when user presses the Esc key.
-     * 
+     *
      * @param textGraphics used for drawing to our Lanterna console.
      * @param terminal is the Lanterna terminal.
-     * @throws IOException exception thrown when using TextGraphics putString method.
+     * @throws IOException exception thrown when using TextGraphics putString
+     * method.
      */
     private static void printExitMessage(TextGraphics textGraphics, Terminal terminal) throws IOException {
         String message = "Thanks for playing our game!";
@@ -153,8 +177,8 @@ public class GameTerminal {
     }
 
     /**
-     * Handles inventory navigation. 
-     * 
+     * Handles inventory navigation.
+     *
      * @param keyStroke is the key pressed.
      * @param inventoryView contains the CLI for our inventory.
      */
@@ -171,6 +195,43 @@ public class GameTerminal {
                 break;
             case ArrowLeft:
                 inventoryView.moveLeft();
+        }
+    }
+
+    /**
+     * Handles player navigation in the map.
+     *
+     * @param keyStroke
+     * @param player
+     */
+    private static void mapNavigation(KeyStroke keyStroke, Player player, List<String> map) {
+        switch (keyStroke.getKeyType()) {
+            case ArrowDown:
+                if (player.getY() < map.size()
+                        && map.get(player.getY() + 1).charAt(player.getX()) != '#') {
+                    player.down();
+                }
+
+                break;
+            case ArrowUp:
+                if (player.getY() > 0
+                        && map.get(player.getY() - 1).charAt(player.getX()) != '#') {
+                    player.up();
+                }
+
+                break;
+            case ArrowRight:
+                if (player.getX() < map.get(player.getY()).length()
+                        && map.get(player.getY()).charAt(player.getX() + 1) != '#') {
+                    player.right();
+                }
+
+                break;
+            case ArrowLeft:
+                if (player.getX() > 0
+                        && map.get(player.getY()).charAt(player.getX() - 1) != '#') {
+                    player.left();
+                }
         }
     }
 }

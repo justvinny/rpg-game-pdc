@@ -22,16 +22,20 @@ Basic RPG game for Program Design and Construction paper.
 - [x] Loading maps 
 - [x] InvalidMapException - thrown when loading invalid maps. 
 - [x] Inventory CLI - First prototype done.
+- [X] Player Navigation in Map - First prototype done.
 - [ ] Lanterna CLI - WIP
 - [ ] Game Loop WIP
 
+
 ### Jess 
 - [ ] Loading user data
+- [ ] Map Design
 - [ ] Edit and add tasks here.
 
 
 ### Macauley 
 - [x] UML
+- [x] Inventory Backend 
 - [ ] Game Logic
 - [ ] Edit and add tasks here.
  

@@ -5,6 +5,7 @@ package com.group.pdc_assignment_rpg.exceptions;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
+@SuppressWarnings("serial")
 public class InvalidMapException extends Exception {
     public InvalidMapException() {
         super("File is not a valid game map.");

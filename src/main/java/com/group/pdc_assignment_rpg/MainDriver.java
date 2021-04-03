@@ -3,7 +3,7 @@ package com.group.pdc_assignment_rpg;
 import com.group.pdc_assignment_rpg.cli.GameTerminal;
 import com.group.pdc_assignment_rpg.cli.InventoryView;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
-import com.group.pdc_assignment_rpg.model.Inventory;
+import com.group.pdc_assignment_rpg.logic.*;
 import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
 import java.util.List;
 
@@ -28,7 +28,12 @@ public class MainDriver {
 
         // Dummy inventory data.
         Inventory inventory = new Inventory();
-        inventory.addMultiple("Sword,,Axe,,Armor,,Red Potion,,Mythical Andromeda's Spear");
+        inventory.addMultiple(
+        		new Item("Sword of Stabbing", ItemList.SWORD), 
+        		new Item("Woodaxe", ItemList.HANDAXE), 
+        		new Item("Breastplate", ItemList.ARMOUR), 
+        		new Item("Potion of Healing", ItemList.RED_POTION), 
+        		new Item("Mythical Andromeda's Spear", ItemList.SPEAR));
         InventoryView inventoryView = new InventoryView(inventory);
         
         GameTerminal.start(map, inventoryView);

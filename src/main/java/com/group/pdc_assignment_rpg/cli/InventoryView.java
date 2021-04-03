@@ -5,7 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.cli;
 
-import com.group.pdc_assignment_rpg.model.Inventory;
+import com.group.pdc_assignment_rpg.logic.Inventory;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
 
 /**
@@ -55,7 +55,7 @@ public class InventoryView {
         for (int i = 0; i < inventory.getCapacity(); i++) {
             String item;
             if ((inventory.getInventory().size() - 1) >= i) {
-                item = inventory.get(i);
+                item = inventory.get(i).toString();
             } else {
                 item = "Empty";
             }

@@ -53,8 +53,8 @@ public class BattleView {
                  player.getHP(), player.getMaxHP());
         
         String mobBar = String.format("# %c %-20s      HP %3d/%3d #",
-                 mob.getCharSymbol(), mob.getName(),
-                 mob.getCurrentHP(), mob.getMaxHP()); 
+                 mob.getSymbol(), mob.getName(),
+                 mob.getHP(), mob.getMaxHP()); 
         
         String hashLine = TextUtility.repeatCharacter((playerBar.length()), '#');
 

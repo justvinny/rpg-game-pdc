@@ -40,7 +40,7 @@ public class MainDriver {
         Player player = new Player("Bob");
         
         // Dummy mob.
-        Mob mob = new Mob();
+        Mob mob = new Mob("Red Slime");
         
         // Start our game.
         GameTerminal.start(map, inventoryView, player, mob);

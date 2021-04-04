@@ -18,7 +18,7 @@ public class Player extends Creature implements Killable {
      * name and sets everything else to default values.
      */
     public Player(String name) {
-        super(5, 23, 'P', TextColor.ANSI.RED, new StatBlock(), new Inventory());
+        super(5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory());
         setName(name);
         setLevel(1);
     }
@@ -27,7 +27,7 @@ public class Player extends Creature implements Killable {
      * Constructor for creating a player with existing data. All character data must be given to the constructor.
      */
     public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock, int hp) {
-        super(x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp);
+        super(x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory, hp);
         this.name = name;
         this.level = level;
     }

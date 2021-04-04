@@ -147,7 +147,7 @@ public class GameTerminal {
                                     && !(mob.getX() == player.getX()
                                     && mob.getY() == player.getY())) {
                                 textGraphics.setForegroundColor(TextColor.ANSI.RED);
-                                textGraphics.setCharacter(mob.getX(), i, mob.getCharSymbol());
+                                textGraphics.setCharacter(mob.getX(), i, mob.getSymbol());
                                 textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
                             }
                         }

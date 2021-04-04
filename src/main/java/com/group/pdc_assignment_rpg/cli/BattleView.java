@@ -49,8 +49,8 @@ public class BattleView {
 
     public String statusBars() {
         String playerBar = String.format("# %c %-20s      HP %3d/%3d #",
-                 player.getCharSymbol(), player.getName(),
-                 player.getCurrentHP(), player.getMaxHP());
+                 player.getSymbol(), player.getName(),
+                 player.getHP(), player.getMaxHP());
         
         String mobBar = String.format("# %c %-20s      HP %3d/%3d #",
                  mob.getCharSymbol(), mob.getName(),

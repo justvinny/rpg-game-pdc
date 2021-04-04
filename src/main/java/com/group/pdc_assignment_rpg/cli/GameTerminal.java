@@ -137,7 +137,7 @@ public class GameTerminal {
                         if (i == player.getY()) {
                             if (line.charAt(player.getX()) != '#') {
                                 textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                                textGraphics.setCharacter(player.getX(), i, player.getCharSymbol());
+                                textGraphics.setCharacter(player.getX(), i, player.getSymbol());
                                 textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
                             }
                         }

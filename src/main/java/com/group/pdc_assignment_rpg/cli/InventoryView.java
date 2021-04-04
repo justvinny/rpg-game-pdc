@@ -46,7 +46,7 @@ public class InventoryView {
         return y;
     }
 
-    public String makeView() {
+    public String[] createInventoryScene() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(makeHeader());
@@ -78,7 +78,7 @@ public class InventoryView {
 
         }
 
-        return builder.toString();
+        return builder.toString().split("\n");
     }
 
     /**

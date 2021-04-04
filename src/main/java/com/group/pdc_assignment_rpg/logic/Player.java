@@ -7,13 +7,30 @@ package com.group.pdc_assignment_rpg.logic;
  */
 public class Player {
 
+    private String name;
+    private int maxHP, currentHP;
     private int x, y;
     private char charSymbol;
 
     public Player() {
+        name = "Son Goku";
+        maxHP = 100;
+        currentHP = 100;
         x = 5;
         y = 23;
         charSymbol = 'P';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
     }
     
     public int getX() {

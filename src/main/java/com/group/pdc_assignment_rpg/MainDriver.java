@@ -39,7 +39,10 @@ public class MainDriver {
         // Dummy player.
         Player player = new Player();
         
+        // Dummy mob.
+        Mob mob = new Mob();
+        
         // Start our game.
-        GameTerminal.start(map, inventoryView, player);
+        GameTerminal.start(map, inventoryView, player, mob);
     }
 }

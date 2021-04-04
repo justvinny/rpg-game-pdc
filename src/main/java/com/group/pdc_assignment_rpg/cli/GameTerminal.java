@@ -2,7 +2,6 @@ package com.group.pdc_assignment_rpg.cli;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
@@ -11,9 +10,9 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.group.pdc_assignment_rpg.logic.Mob;
 import com.group.pdc_assignment_rpg.logic.Player;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,12 +37,20 @@ public class GameTerminal {
      * @param map is the first map shown when we start the game.
      * @param inventoryView contains the CLI for our inventory.
      */
-    public static void start(List<String> map, InventoryView inventoryView, Player player) {
+    public static void start(List<String> map, InventoryView inventoryView, Player player, Mob mob) {
         // Create our Lanterna Terminal which we will use for the game.
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT));
 
         Screen screen = null;
+
+        // Placeholder for map visibility. Needs to be refactored later on 
+        // in its own Map Scene class.
+        boolean mapIsVisible = true;
+
+        // Placeholder for dummy Battle Scene.
+        BattleView battleView = new BattleView(player, mob);
+
         try {
             Terminal terminal = defaultTerminalFactory.createTerminal();
             screen = new TerminalScreen(terminal);
@@ -53,54 +60,9 @@ public class GameTerminal {
             // Will be used for drawing things on the console.
             TextGraphics textGraphics = screen.newTextGraphics();
 
-            String[] lines = inventoryView.makeView().split("\n");
-
             // Game loop
             while (true) {
                 screen.clear();
-
-                int row = 0;
-                // Print the inventory to the console if it is toggled by the user.
-                if (inventoryView.getInventory().isVisible()) {
-                    for (String each : lines) {
-                        textGraphics.putString(0, row, each);
-                        textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                        textGraphics.putString(inventoryView.getX(), inventoryView.getY(), CURSOR, SGR.BOLD);
-                        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                        row++;
-                    }
-                    // Print the game map instead if the inventory is invisbile.
-                } else {
-//                    for (String each : map) {
-//                        textGraphics.putCSIStyledString(0, row, each);
-//                        row++;
-//                    }
-
-                    for (int i = 0; i < map.size(); i++) {
-                        String line = map.get(i);
-
-                        textGraphics.putString(0, row, line);
-
-                        if (i == player.getY()) {
-                            if (line.charAt(player.getX()) != '#') {
-                                textGraphics.setForegroundColor(TextColor.ANSI.RED);
-                                textGraphics.setCharacter(player.getX(), i, player.getCharSymbol());
-                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                            }
-                        }
-
-                        row++;
-                    }
-                }
-
-                // Print out the keys the user can press for the game.
-                printAvailableKeys(textGraphics, row);
-
-                // Refresh the screen to show changes if any.
-                screen.refresh();
-
-                // Game speed.
-                Thread.sleep(FPS);
 
                 // Non-blocking read input from keyboard which means
                 // the program won't come to a stop to wait for input.
@@ -117,22 +79,91 @@ public class GameTerminal {
                         screen.refresh();
                         Thread.sleep(1000);
                         break;
-                        // Check if key stroke is a character.
-                    } else if (keyStroke.getKeyType() == KeyType.Character) {
-                        // If the character pressed is the letter i,
+                    } else if (keyStroke.getKeyType() == KeyType.Character
+                            && keyStroke.getCharacter() == 'i'
+                            && !battleView.isVisible()) {
+                        // Check if the key pressed is a character.
+                        // if the character pressed is the letter i and
+                        // the battle scene is not visible,
                         // toggle the inventory's visibility.
-                        if (keyStroke.getCharacter() == 'i') {
-                            inventoryView.getInventory().toggle();
-                        }
-                        // Only allow inventory navigation if it is visible.
+                        inventoryView.getInventory().toggle();
                     } else if (inventoryView.getInventory().isVisible()) {
                         // Navigating the inventory.
                         inventoryNavigation(keyStroke, inventoryView);
-                    } else if (!inventoryView.getInventory().isVisible()) {
+                    } else if (battleView.isVisible()) {
+                        // If the battle scene is visible,
+                        // enable battle scene navigation.
+                        battleNavigation(keyStroke, battleView);
+                    } else if (mapIsVisible) {
                         // Navigate the map.
                         mapNavigation(keyStroke, player, map);
                     }
                 }
+
+                // Detect monster and player collision
+                if (player.getX() == mob.getX() && player.getY() == mob.getY() && !battleView.isVisible()) {
+                    System.out.println("COLLISION DETECTED!");
+                    battleView.toggle();
+                    mapIsVisible = false;
+                }
+
+                int row = 0;
+                // Print the inventory to the console if it is toggled by the user.
+                if (inventoryView.getInventory().isVisible()) {
+                    for (String each : inventoryView.createInventoryScene()) {
+                        textGraphics.putString(0, row, each);
+                        textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
+                        textGraphics.putString(inventoryView.getX(), inventoryView.getY(), CURSOR, SGR.BOLD);
+                        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+                        row++;
+                    }
+                    // Print the game map instead if the inventory is invisbile.
+                } else if (battleView.isVisible()) {
+                    for (String each : battleView.createBattleScene()) {
+                        textGraphics.putString(0, row, each);
+                        textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
+                        textGraphics.putString(battleView.getX(), battleView.getY(), CURSOR, SGR.BOLD);
+                        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+                        row++;
+                    }
+                } else if (mapIsVisible) {
+                    for (int i = 0; i < map.size(); i++) {
+                        String line = map.get(i);
+
+                        textGraphics.putString(0, row, line);
+
+                        // Code smell. Refactor into method later on with 
+                        // Player and Mob sharing the same superclass.
+                        if (i == player.getY()) {
+                            if (line.charAt(player.getX()) != '#') {
+                                textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
+                                textGraphics.setCharacter(player.getX(), i, player.getCharSymbol());
+                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+                            }
+                        }
+
+                        if (i == mob.getY()) {
+                            if (line.charAt(mob.getX()) != '#'
+                                    && !(mob.getX() == player.getX()
+                                    && mob.getY() == player.getY())) {
+                                textGraphics.setForegroundColor(TextColor.ANSI.RED);
+                                textGraphics.setCharacter(mob.getX(), i, mob.getCharSymbol());
+                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+                            }
+                        }
+
+                        row++;
+                    }
+                }
+
+                // Print out the keys the user can press for the game.
+                printAvailableKeys(textGraphics, row);
+
+                // Refresh the screen to show changes if any.
+                screen.refresh();
+
+                // Game speed.
+                Thread.sleep(FPS);
             }
         } catch (IOException | InterruptedException ex) {
             System.err.println(ex.getMessage());
@@ -231,6 +262,35 @@ public class GameTerminal {
                 if (player.getX() > 0
                         && map.get(player.getY()).charAt(player.getX() - 1) != '#') {
                     player.left();
+                }
+        }
+    }
+
+    /**
+     * Handles navigation for battle scenes. Allowing players to navigate
+     * between Attack, Defend, and Escape.
+     *
+     * @param keyStroke
+     * @param battleView
+     */
+    private static void battleNavigation(KeyStroke keyStroke, BattleView battleView) {
+        switch (keyStroke.getKeyType()) {
+            case ArrowDown:
+                battleView.down();
+                break;
+            case ArrowUp:
+                battleView.up();
+                break;
+            case Enter:
+                switch(BattleViewConstants.toEnum(battleView.getY())) {
+                    case ATTACK:
+                        System.out.println("You have attacked!");
+                        break;
+                    case DEFEND:
+                        System.out.println("You have defended!");
+                        break;
+                    case ESCAPE:
+                        System.out.println("You have escaped!");
                 }
         }
     }

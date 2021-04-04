@@ -10,10 +10,10 @@ import com.googlecode.lanterna.TextColor;
  */
 public abstract class Entity {
 
-	private int posx;
-	private int posy;
-	private char symbol;
-	private TextColor color;
+	protected int x;
+	protected int y;
+	protected char symbol;
+	protected TextColor color;
 	
 	public Entity(int x, int y, char s, TextColor c){
 		this.setX(x);
@@ -34,11 +34,11 @@ public abstract class Entity {
 	 * 
 	 **/
 	public int getX() {
-		return this.posx;
+		return this.x;
 	}
 	
 	public int getY() {
-		return this.posy;
+		return this.y;
 	}
 
 	public char getSymbol() {
@@ -53,12 +53,12 @@ public abstract class Entity {
 	 * Setter methods
 	 *
 	 */
-	public void setX(int posx) {
-		this.posx = posx;
+	public void setX(int x) {
+		this.x = x;
 	}
 	
-	public void setY(int posy) {
-		this.posy = posy;
+	public void setY(int y) {
+		this.y = y;
 	}
 
 	public void setSymbol(char symbol) {
@@ -68,6 +68,27 @@ public abstract class Entity {
 	public void setColor(TextColor colour) {
 		this.color = colour;
 	}
+        
+        /**
+	 * Movement methods
+	 *
+	 */
+        
+        public void up() {
+            y--;
+        }
+
+        public void down() {
+            y++;
+        }
+
+        public void left() {
+            x--;
+        }
+
+        public void right() {
+            x++;
+        }
 
 	public String toString() {
 		return "" + this.symbol;

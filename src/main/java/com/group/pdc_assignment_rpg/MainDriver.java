@@ -37,7 +37,7 @@ public class MainDriver {
         InventoryView inventoryView = new InventoryView(inventory);
         
         // Dummy player.
-        Player player = new Player();
+        Player player = new Player("Bob");
         
         // Start our game.
         GameTerminal.start(map, inventoryView, player);

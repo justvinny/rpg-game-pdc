@@ -10,6 +10,9 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.group.pdc_assignment_rpg.logic.Boundaries;
+import com.group.pdc_assignment_rpg.logic.Coordinates;
+import com.group.pdc_assignment_rpg.logic.Creature;
 import com.group.pdc_assignment_rpg.logic.Mob;
 import com.group.pdc_assignment_rpg.logic.Player;
 import java.io.IOException;
@@ -35,12 +38,17 @@ public class GameTerminal {
      * Method that starts our game and its game loop.
      *
      * @param map is the first map shown when we start the game.
-     * @param inventoryView contains the CLI for our inventory.
+     * @param inventoryScene contains the CLI for our inventory.
      */
-    public static void start(List<String> map, InventoryView inventoryView, Player player, Mob mob) {
+    public static void start(
+            List<String> map,
+            InventoryScene inventoryScene,
+            Player player,
+            Mob mob) {
         // Create our Lanterna Terminal which we will use for the game.
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
-        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT));
+        TerminalSize terminalSize = new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT);
+        defaultTerminalFactory.setInitialTerminalSize(terminalSize);
 
         Screen screen = null;
 
@@ -49,7 +57,19 @@ public class GameTerminal {
         boolean mapIsVisible = true;
 
         // Placeholder for dummy Battle Scene.
-        BattleView battleView = new BattleView(player, mob);
+        Coordinates battleSceneCoords = new Coordinates(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START);
+        Boundaries battleSceneBounds = new Boundaries(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START,
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_END); 
+        BattleScene battleScene = new BattleScene(
+                battleSceneCoords,
+                battleSceneBounds,
+                player,
+                mob);
 
         try {
             Terminal terminal = defaultTerminalFactory.createTerminal();
@@ -81,19 +101,19 @@ public class GameTerminal {
                         break;
                     } else if (keyStroke.getKeyType() == KeyType.Character
                             && keyStroke.getCharacter() == 'i'
-                            && !battleView.isVisible()) {
+                            && !battleScene.isVisible()) {
                         // Check if the key pressed is a character.
                         // if the character pressed is the letter i and
                         // the battle scene is not visible,
                         // toggle the inventory's visibility.
-                        inventoryView.getInventory().toggle();
-                    } else if (inventoryView.getInventory().isVisible()) {
+                        inventoryScene.toggle();
+                    } else if (inventoryScene.isVisible()) {
                         // Navigating the inventory.
-                        inventoryNavigation(keyStroke, inventoryView);
-                    } else if (battleView.isVisible()) {
+                        inventoryNavigation(keyStroke, inventoryScene);
+                    } else if (battleScene.isVisible()) {
                         // If the battle scene is visible,
                         // enable battle scene navigation.
-                        battleNavigation(keyStroke, battleView);
+                        battleNavigation(keyStroke, battleScene);
                     } else if (mapIsVisible) {
                         // Navigate the map.
                         mapNavigation(keyStroke, player, map);
@@ -101,58 +121,42 @@ public class GameTerminal {
                 }
 
                 // Detect monster and player collision
-                if (player.getX() == mob.getX() && player.getY() == mob.getY() && !battleView.isVisible()) {
+                if (player.getX() == mob.getX() 
+                        && player.getY() == mob.getY() 
+                        && !battleScene.isVisible()) {
                     System.out.println("COLLISION DETECTED!");
-                    battleView.toggle();
+                    battleScene.toggle();
                     mapIsVisible = false;
                 }
 
                 int row = 0;
                 // Print the inventory to the console if it is toggled by the user.
-                if (inventoryView.getInventory().isVisible()) {
-                    for (String each : inventoryView.createInventoryScene()) {
-                        textGraphics.putString(0, row, each);
-                        textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                        textGraphics.putString(inventoryView.getX(), inventoryView.getY(), CURSOR, SGR.BOLD);
-                        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                        row++;
-                    }
+                if (inventoryScene.isVisible()) {
+                    drawScene(inventoryScene, textGraphics);
+
                     // Print the game map instead if the inventory is invisbile.
-                } else if (battleView.isVisible()) {
-                    for (String each : battleView.createBattleScene()) {
+                } else if (battleScene.isVisible()) {
+                    for (String each : battleScene.createScene()) {
                         textGraphics.putString(0, row, each);
                         textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                        textGraphics.putString(battleView.getX(), battleView.getY(), CURSOR, SGR.BOLD);
+                        textGraphics.putString(
+                                battleScene.getCoordinates().getX(),
+                                battleScene.getCoordinates().getY(),
+                                CURSOR, SGR.BOLD);
                         textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
                         row++;
                     }
                 } else if (mapIsVisible) {
                     for (int i = 0; i < map.size(); i++) {
-                        String line = map.get(i);
+                        String mapFullRow = map.get(i);
 
-                        textGraphics.putString(0, row, line);
+                        textGraphics.putString(0, i, mapFullRow);
 
-                        // Code smell. Refactor into method later on with 
-                        // Player and Mob sharing the same superclass.
-                        if (i == player.getY()) {
-                            if (line.charAt(player.getX()) != '#') {
-                                textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
-                                textGraphics.setCharacter(player.getX(), i, player.getSymbol());
-                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                            }
-                        }
+                        // Draw player
+                        drawCreature(player, i, mapFullRow, textGraphics);
 
-                        if (i == mob.getY()) {
-                            if (line.charAt(mob.getX()) != '#'
-                                    && !(mob.getX() == player.getX()
-                                    && mob.getY() == player.getY())) {
-                                textGraphics.setForegroundColor(TextColor.ANSI.RED);
-                                textGraphics.setCharacter(mob.getX(), i, mob.getSymbol());
-                                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                            }
-                        }
-
-                        row++;
+                        // Draw mob
+                        drawCreature(mob, i, mapFullRow, textGraphics);
                     }
                 }
 
@@ -211,21 +215,21 @@ public class GameTerminal {
      * Handles inventory navigation.
      *
      * @param keyStroke is the key pressed.
-     * @param inventoryView contains the CLI for our inventory.
+     * @param inventoryScene contains the CLI for our inventory.
      */
-    private static void inventoryNavigation(KeyStroke keyStroke, InventoryView inventoryView) {
+    private static void inventoryNavigation(KeyStroke keyStroke, InventoryScene inventoryScene) {
         switch (keyStroke.getKeyType()) {
             case ArrowDown:
-                inventoryView.moveDown();
+                inventoryScene.down();
                 break;
             case ArrowUp:
-                inventoryView.moveUp();
+                inventoryScene.up();
                 break;
             case ArrowRight:
-                inventoryView.moveRight();
+                inventoryScene.right();
                 break;
             case ArrowLeft:
-                inventoryView.moveLeft();
+                inventoryScene.left();
         }
     }
 
@@ -271,18 +275,18 @@ public class GameTerminal {
      * between Attack, Defend, and Escape.
      *
      * @param keyStroke
-     * @param battleView
+     * @param battleScene
      */
-    private static void battleNavigation(KeyStroke keyStroke, BattleView battleView) {
+    private static void battleNavigation(KeyStroke keyStroke, BattleScene battleScene) {
         switch (keyStroke.getKeyType()) {
             case ArrowDown:
-                battleView.down();
+                battleScene.down();
                 break;
             case ArrowUp:
-                battleView.up();
+                battleScene.up();
                 break;
             case Enter:
-                switch(BattleViewConstants.toEnum(battleView.getY())) {
+                switch (BattleSceneConstants.toEnum(battleScene.getCoordinates().getY())) {
                     case ATTACK:
                         System.out.println("You have attacked!");
                         break;
@@ -292,6 +296,49 @@ public class GameTerminal {
                     case ESCAPE:
                         System.out.println("You have escaped!");
                 }
+        }
+    }
+
+    /**
+     * Helper method to draw creatures on the map. Creatures can be players or
+     * mobs.
+     *
+     * @param creature creature to draw.
+     * @param rowNum which row of the map.
+     * @param mapFullRow a full for from the map.
+     * @param textGraphics used to draw to our Lanterna console.
+     */
+    private static void drawCreature(
+            Creature creature,
+            int rowNum,
+            String mapFullRow,
+            TextGraphics textGraphics) {
+
+        if (rowNum == creature.getY()) {
+            if (mapFullRow.charAt(creature.getX()) != '#') {
+                textGraphics.setForegroundColor(creature.getColor());
+                textGraphics.setCharacter(creature.getX(), rowNum,
+                        creature.getSymbol());
+                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+            }
+        }
+    }
+
+    /**
+     * Helper method to draw Scenes such as Maps, Inventory, Battles.
+     * 
+     * @param scene is a scene to draw.
+     * @param textGraphics is used to draw to our Lanterna console.
+     */
+    private static void drawScene(Scene scene, TextGraphics textGraphics) {
+        String[] sceneStrArr = scene.createScene();
+        
+        for (int i = 0; i < sceneStrArr.length; i++ ) {
+            textGraphics.putString(0, i, sceneStrArr[i]);
+            textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
+            textGraphics.putString(scene.getCoordinates().getX(),
+                    scene.getCoordinates().getY(), CURSOR, SGR.BOLD);
+            textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
         }
     }
 }

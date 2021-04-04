@@ -15,12 +15,10 @@ public class Inventory {
 
     private Map<Item, Integer> inventory;
     private int capacity;
-    private boolean visible;
 
     public Inventory() {
         this.setInventory(new HashMap<Item, Integer>());
         this.setCapacity(MAX_INVENTORY_CAPACITY);
-        this.setVisible(false);
     }
 
     /**
@@ -32,7 +30,6 @@ public class Inventory {
     public Inventory(int c) {
         this.setInventory(new HashMap<Item, Integer>());
         this.setCapacity(c);
-        this.setVisible(false);
     }
 
     /**
@@ -47,10 +44,6 @@ public class Inventory {
         return capacity;
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
     /**
      * Setters
      *
@@ -61,10 +54,6 @@ public class Inventory {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     /**
@@ -118,20 +107,5 @@ public class Inventory {
         Item[] items = inventory.keySet().toArray(new Item[inventory.size()]);
 
         return items[index];
-    }
-
-    /**
-     * Utility methods
-     *
-     */
-    /**
-     * Toggles the visibility of the inventory on or off.
-     */
-    public void toggle() {
-        if (!visible) {
-            visible = true;
-        } else {
-            visible = false;
-        }
     }
 }

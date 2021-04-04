@@ -9,16 +9,20 @@ package com.group.pdc_assignment_rpg.cli;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public enum BattleViewConstants {
+public enum BattleSceneConstants {
     INVALID(-1), ATTACK(5), DEFEND(6), ESCAPE(7);
 
+    public static final int CURSOR_X = 2;
+    public static final int CURSOR_Y_START = 5;
+    public static final int CURSOR_Y_END = 7;
+    
     private int rowNum;
 
-    private BattleViewConstants(int rowNum) {
+    private BattleSceneConstants(int rowNum) {
         this.rowNum = rowNum;
     }
 
-    public static BattleViewConstants toEnum(int value) {
+    public static BattleSceneConstants toEnum(int value) {
         switch (value) {
             case 5:
                 return ATTACK;

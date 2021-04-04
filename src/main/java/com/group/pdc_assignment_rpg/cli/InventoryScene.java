@@ -5,48 +5,35 @@
  */
 package com.group.pdc_assignment_rpg.cli;
 
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUMNS;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
+import com.group.pdc_assignment_rpg.logic.Boundaries;
+import com.group.pdc_assignment_rpg.logic.Coordinates;
 import com.group.pdc_assignment_rpg.logic.Inventory;
+import com.group.pdc_assignment_rpg.logic.Navigation;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
 
 /**
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class InventoryView {
-
-    public static final int ITEM_ROW_START = 9;
-    public static final int ITEM_ROW_END = 21;
-    public static final int ITEM_ROW_INCREMENT = 2;
-    public static final int ITEM_COL_START = 2;
-    public static final int ITEM_COL_INCREMENT = 31;
-    public static final int ITEM_COL_END = ITEM_COL_START + 31 * 2;
-
-    private static final int MAX_WORD_LENGTH = 30;
-    private static final int MAX_COLUMNS = 3;
-    private static final int N_ROW_DASHES = ((MAX_WORD_LENGTH + 1) * MAX_COLUMNS) + 1;
+public class InventoryScene extends Scene {
 
     private Inventory inventory;
-    private int x, y;
-
-    public InventoryView(Inventory inventory) {
+    private Navigation navigation;
+    
+    public InventoryScene(Coordinates coordinates, Boundaries boundaries, Inventory inventory) {
+        super(coordinates, boundaries);
         this.inventory = inventory;
-        this.x = ITEM_COL_START;
-        this.y = ITEM_ROW_START;
+        this.navigation = new Navigation(coordinates, boundaries);
     }
 
     public Inventory getInventory() {
         return inventory;
     }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String[] createInventoryScene() {
+    
+    public String[] createScene() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(makeHeader());
@@ -121,28 +108,27 @@ public class InventoryView {
 
         return makeRowDashes() + title + makeRowDashes();
     }
-
-    public void moveRight() {
-        if (x < ITEM_COL_END) {
-            x += ITEM_COL_INCREMENT;
-        }
+    
+    /**
+     * Inventory navigation
+     * 
+     * Note: Uses composition as not all scenes may implement all navigation
+     *       methods.
+     */
+    
+    public void up() {
+        navigation.up();
     }
-
-    public void moveLeft() {
-        if (x > ITEM_COL_START) {
-            x -= ITEM_COL_INCREMENT;
-        }
+    
+    public void down() {
+        navigation.down();
     }
-
-    public void moveUp() {
-        if (y > ITEM_ROW_START) {
-            y -= ITEM_ROW_INCREMENT;
-        }
+    
+    public void left() {
+        navigation.left();
     }
-
-    public void moveDown() {
-        if (y < ITEM_ROW_END) {
-            y += ITEM_ROW_INCREMENT;
-        }
+    
+    public void right() {
+        navigation.right();
     }
 }

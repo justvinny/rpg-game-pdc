@@ -21,13 +21,15 @@ Basic RPG game for Program Design and Construction paper.
 ### Vinson 
 - [x] Loading maps 
 - [x] InvalidMapException - thrown when loading invalid maps. 
-- [x] Inventory CLI - First prototype done.
-- [X] Player Navigation in Map - First prototype done.
+- [x] Inventory CLI Prototype.
+- [X] Player Navigation in Map Prototype.
+- [X] Battle Scene CLI Prototype with navigation.
 - [ ] Lanterna CLI - WIP
 - [ ] Game Loop WIP
 
 
 ### Jess 
+- [x] Entity, Creature, Player
 - [ ] Loading user data
 - [ ] Map Design
 - [ ] Edit and add tasks here.

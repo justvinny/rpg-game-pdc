@@ -7,16 +7,23 @@ package com.group.pdc_assignment_rpg.logic;
 
 /**
  * Class that contains 2d coordinates.
- * 
+ *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class Coordinates {
-    
-    private int x, y;
-    
-    public Coordinates(int x, int y) {
+
+    private static final int DEFAULT_STEP = 1;
+    private int x, y, xStep, yStep;
+
+    public Coordinates(int x, int y, int xStep, int yStep) {
         this.x = x;
         this.y = y;
+        this.xStep = xStep;
+        this.yStep = yStep;
+    }
+
+    public Coordinates(int x, int y) {
+        this(x, y, DEFAULT_STEP, DEFAULT_STEP);
     }
 
     public int getX() {
@@ -26,22 +33,20 @@ public class Coordinates {
     public int getY() {
         return y;
     }
-    
+
     public void incrementX() {
-        x++;
+        x += xStep;
     }
-    
+
     public void decrementX() {
-        x--;
+        x -= xStep;
     }
-    
+
     public void incrementY() {
-        y++;
+        y += yStep;
     }
-    
+
     public void decrementY() {
-        y--;
+        y -= yStep;
     }
-    
-    
 }

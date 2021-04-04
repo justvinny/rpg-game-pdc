@@ -57,7 +57,9 @@ public class MainDriver {
         // Make inventory scene.
         Coordinates inventoryCoords = new Coordinates(
                 InventorySceneConstants.CURSOR_X_START,
-                InventorySceneConstants.CURSOR_Y_START);
+                InventorySceneConstants.CURSOR_Y_START,
+                InventorySceneConstants.CURSOR_X_STEP,
+                InventorySceneConstants.CURSOR_Y_STEP);
 
         Boundaries inventoryBounds = new Boundaries(
                 InventorySceneConstants.CURSOR_X_START,

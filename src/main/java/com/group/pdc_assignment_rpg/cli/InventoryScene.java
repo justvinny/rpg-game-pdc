@@ -8,32 +8,37 @@ package com.group.pdc_assignment_rpg.cli;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUMNS;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
-import com.group.pdc_assignment_rpg.logic.Boundaries;
-import com.group.pdc_assignment_rpg.logic.Coordinates;
 import com.group.pdc_assignment_rpg.logic.Inventory;
 import com.group.pdc_assignment_rpg.logic.Navigation;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- *
+ * Represents the UI for our inventory on the terminal.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class InventoryScene extends Scene {
 
     private Inventory inventory;
     private Navigation navigation;
-    
-    public InventoryScene(Coordinates coordinates, Boundaries boundaries, Inventory inventory) {
-        super(coordinates, boundaries);
+
+    public InventoryScene(Navigation navigation, Inventory inventory) {
+        super();
+        this.navigation = navigation;
         this.inventory = inventory;
-        this.navigation = new Navigation(coordinates, boundaries);
+    }
+
+    public Navigation getNavigation() {
+        return navigation;
     }
 
     public Inventory getInventory() {
         return inventory;
     }
-    
-    public String[] createScene() {
+
+    public List<String> createScene() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(makeHeader());
@@ -65,7 +70,7 @@ public class InventoryScene extends Scene {
 
         }
 
-        return builder.toString().split("\n");
+        return Arrays.asList(builder.toString().split("\n"));
     }
 
     /**
@@ -108,26 +113,25 @@ public class InventoryScene extends Scene {
 
         return makeRowDashes() + title + makeRowDashes();
     }
-    
+
     /**
      * Inventory navigation
-     * 
+     *
      * Note: Uses composition as not all scenes may implement all navigation
-     *       methods.
+     * methods.
      */
-    
     public void up() {
         navigation.up();
     }
-    
+
     public void down() {
         navigation.down();
     }
-    
+
     public void left() {
         navigation.left();
     }
-    
+
     public void right() {
         navigation.right();
     }

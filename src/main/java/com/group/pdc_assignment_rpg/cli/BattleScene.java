@@ -1,29 +1,32 @@
 package com.group.pdc_assignment_rpg.cli;
 
-import com.group.pdc_assignment_rpg.logic.Boundaries;
-import com.group.pdc_assignment_rpg.logic.Coordinates;
 import com.group.pdc_assignment_rpg.logic.Mob;
 import com.group.pdc_assignment_rpg.logic.Navigation;
 import com.group.pdc_assignment_rpg.logic.Player;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- *
+ * Represents our UI for the battle scenes on our Lanterna terminal.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class BattleScene extends Scene {
 
-    private Coordinates coordinates;
-    private Boundaries boundaries;
     private Navigation navigation;
     private Player player;
     private Mob mob;
 
-    public BattleScene(Coordinates coordinates, Boundaries boundaries, Player player, Mob mob) {
-        super(coordinates, boundaries);
-        this.navigation = new Navigation(coordinates, boundaries);
+    public BattleScene(Navigation navigation, Player player, Mob mob) {
+        super();
+        this.navigation = navigation;
         this.player = player;
         this.mob = mob;
+    }
+
+    public Navigation getNavigation() {
+        return navigation;
     }
 
     public String statusBars() {
@@ -58,9 +61,10 @@ public class BattleScene extends Scene {
         return hashLineLog + String.join("", TextUtility.repeatStringIntoArray(18, hashMiddleLog)) + hashLineLog;
     }
 
-    public String[] createScene() {
-
-        return (statusBars() + mergeCommandMenuAndBattleLog()).split("\n");
+    public List<String> createScene() {
+        String[] strArr = (statusBars() + mergeCommandMenuAndBattleLog()).split("\n");
+        
+        return Arrays.asList(strArr);
     }
 
     private String mergeCommandMenuAndBattleLog() {

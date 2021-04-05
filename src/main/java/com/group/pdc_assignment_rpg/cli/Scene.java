@@ -5,40 +5,44 @@
  */
 package com.group.pdc_assignment_rpg.cli;
 
-import com.group.pdc_assignment_rpg.logic.Boundaries;
-import com.group.pdc_assignment_rpg.logic.Coordinates;
+import java.util.List;
 
 /**
+ * Base class for all scenes.
+ * Scenes are what we see on the screen when we're playing.
+ * These include: maps, inventory, and battles.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public abstract class Scene {
     
-    private Coordinates coordinates;
-    private Boundaries boundaries;
     private boolean visible;
     
-    public Scene(Coordinates coordinates, Boundaries boundaries) {
-        this.coordinates = coordinates;
-        this.boundaries = boundaries;
+    public Scene() {
+        visible = false; 
     }
 
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public Boundaries getBoundaries() {
-        return boundaries;
-    }
-
+    /**
+     * Getter method
+     */
     public boolean isVisible() {
         return visible;
     }
-    
+
+    /**
+     * Toggles the visibility on or off for the scene.
+     * On means to draw it on our terminal/ui.
+     * Off means not to draw it.
+     */
     public void toggle() {
         visible = !visible;
     }
     
-    public abstract String[] createScene();
+    /**
+     * Used for transforming a scene into a list of strings so
+     * we can draw it to our Lanterna console line by line.
+     * @return a list of strings representing our scene.
+     */
+    public abstract List<String> createScene();
     
 }

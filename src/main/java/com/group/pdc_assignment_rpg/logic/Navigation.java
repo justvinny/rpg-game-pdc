@@ -21,6 +21,14 @@ public class Navigation {
         this.boundaries = boundaries;
     }
 
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public Boundaries getBoundaries() {
+        return boundaries;
+    }
+    
     public void up() {
         if (coordinates.getY() > boundaries.getYBoundStart()) {
             coordinates.decrementY();

@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg;
 import com.group.pdc_assignment_rpg.cli.GameTerminal;
 import com.group.pdc_assignment_rpg.cli.InventoryScene;
 import com.group.pdc_assignment_rpg.cli.InventorySceneConstants;
+import com.group.pdc_assignment_rpg.cli.MapScene;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.*;
 import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
@@ -26,6 +27,11 @@ public class MainDriver {
     private static void init() throws InvalidMapException {
         // Dummy map.
         List<String> map = MapLoaderUtility.loadMap("sample");
+        MapScene mapScene = new MapScene(map);
+        mapScene.toggle(); // Make map visible.
+
+        // Make inventory scene.
+        InventoryScene inventoryScene = generateInventoryScene();
 
         // Dummy player.
         Player player = new Player("Bob");
@@ -33,16 +39,14 @@ public class MainDriver {
         // Dummy mob.
         Mob mob = new Mob("Red Slime");
 
-        // Make inventory scene.
-        InventoryScene inventoryScene = generateInventoryScene();
-        
         // Start our game.
-        GameTerminal.start(map, inventoryScene, player, mob);
+        GameTerminal.start(mapScene, inventoryScene, player, mob);
     }
 
     /**
      * Helper method to generate inventory and inventory scene.
-     * @return 
+     *
+     * @return
      */
     private static InventoryScene generateInventoryScene() {
         // Dummy inventory data.
@@ -54,7 +58,7 @@ public class MainDriver {
                 new Item("Potion of Healing", ItemList.RED_POTION),
                 new Item("Mythical Andromeda's Spear", ItemList.SPEAR));
 
-        // Make inventory scene.
+        // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(
                 InventorySceneConstants.CURSOR_X_START,
                 InventorySceneConstants.CURSOR_Y_START,
@@ -67,11 +71,15 @@ public class MainDriver {
                 InventorySceneConstants.CURSOR_X_END,
                 InventorySceneConstants.CURSOR_Y_END);
 
-        InventoryScene inventoryScene = new InventoryScene(
+        Navigation inventoryNavigation = new Navigation(
                 inventoryCoords,
-                inventoryBounds,
+                inventoryBounds);
+
+        // Make inventory scene.
+        InventoryScene inventoryScene = new InventoryScene(
+                inventoryNavigation,
                 inventory);
-        
+
         return inventoryScene;
     }
 }

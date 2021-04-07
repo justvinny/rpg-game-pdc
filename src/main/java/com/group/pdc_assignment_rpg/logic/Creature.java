@@ -1,42 +1,58 @@
 package com.group.pdc_assignment_rpg.logic;
 
+import java.util.*;
 import com.googlecode.lanterna.TextColor;
-import com.group.pdc_assignment_rpg.logic.Inventory;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to
- * participate in combat and other actions.
+ * participate in combat and other actions. The bartracking variable is used to
+ * keep track of consumable Stats' current values. The maximum of these stats is
+ * stored in the StatBlock stats variable.
  *
- * @author Macauley Cunningham - 19072621
+ * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  */
 public abstract class Creature extends Entity {
 
     private StatBlock stats;
+    private Map<CStats, Integer> consumables;
     private Inventory inventory;
-    private int maxHP;
-    private int hp;
 
     /**
      * Constructor for creating a creature with all values known.
      */
-    public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp) {
+    public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp) {
         super(x, y, s, c);
         this.setStats(stats);
-        this.inventory = inventory;
-        this.maxHP = 20;
+        this.setInventory(inventory);
         this.setHP(hp);
+        this.setSP(sp);
+        this.setWP(wp);
     }
 
-    /**
+
+	/**
      * Constructor for creating a creature with default (full) hit-points.
      */
     public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory) {
         super(x, y, s, c);
         this.setStats(stats);
-        this.inventory = inventory;
-        this.maxHP = 20;
+        this.setInventory(inventory);
         this.setHP(getMaxHP());
+        this.setSP(getMaxSP());
+        this.setWP(getMaxWP());
+    }
+    
+    /**
+     * Constructor for creating a creature with a default state (default stats, empty inventory).
+     */
+    public Creature(int x, int y, char s, TextColor c) {
+    	super(x, y, s, c);
+    	this.setStats(new StatBlock());
+    	this.setInventory(new Inventory());
+    	this.setHP(getMaxHP());
+    	this.setSP(getMaxSP());
+    	this.setWP(getMaxWP());
     }
 
     /**
@@ -46,18 +62,32 @@ public abstract class Creature extends Entity {
     public StatBlock getStats() {
         return stats;
     }
-
     public Inventory getInventory() {
         return inventory;
     }
-
-    public int getMaxHP() {
-        return maxHP;
-    }
-
     public int getHP() {
-        return hp;
+    	return this.getConsumables().get(CStats.HEALTH);
     }
+    public int getSP() {
+    	return this.getConsumables().get(CStats.STAMINA);
+    }
+    public int getWP() {
+    	return this.getConsumables().get(CStats.WILL);
+    }
+    public int getMaxHP() {
+        return this.getStats().getValue(CStats.HEALTH);
+    }    
+    public int getMaxSP() {
+		return this.getStats().getValue(CStats.STAMINA);
+	}
+	public int getMaxWP() {
+		return this.getStats().getValue(CStats.WILL);
+	}
+	public Map<CStats, Integer> getConsumables() {
+		return consumables;
+	}
+
+	
 
     /**
      * Setter methods
@@ -66,15 +96,32 @@ public abstract class Creature extends Entity {
     public void setStats(StatBlock stats) {
         this.stats = stats;
     }
-
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
-
     public void setHP(int hp) {
-        if (hp <= getMaxHP() && hp >= 0) {
-            this.hp = hp;
+        if (hp <= this.getMaxHP() && hp >= 0) {
+            this.consumables.put(CStats.HEALTH, hp);
+        } else if (hp > this.getMaxHP()) {
+            this.consumables.put(CStats.HEALTH, this.getMaxHP());
         }
+    }
+    private void setSP(int sp) {
+    	if (sp <= this.getMaxSP() && sp >= 0) {
+    		this.consumables.put(CStats.STAMINA, sp);
+    	} else if (sp > this.getMaxSP()) {
+            this.consumables.put(CStats.STAMINA, this.getMaxSP());
+        }
+    }
+    private void setWP(int wp) {
+    	if (wp <= this.getMaxWP() && wp >= 0) {
+            this.consumables.put(CStats.WILL, wp);
+        } else if (wp > this.getMaxWP()) {
+            this.consumables.put(CStats.WILL, this.getMaxWP());
+        }
+	}
+    public void setConsumables(Map<CStats, Integer> consumables) {
+    	this.consumables = consumables;
     }
 
     /**
@@ -125,7 +172,10 @@ public abstract class Creature extends Entity {
     @Override
     public String toString() {
         String str = "HP: (" + getHP() + "/" + getMaxHP() + ")\n";
-        str += "Coords: (" + getX() + ", " + getY() + ")";
-        return super.toString();
+        str += "Coords: (" + getX() + ", " + getY() + ")\n";
+        return str += super.toString();
     }
+
+	
+
 }

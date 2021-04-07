@@ -4,7 +4,7 @@ import com.googlecode.lanterna.TextColor;
 
 /**
  * Holds data and information of a mob in the game. Based on player design from
- * Macauley / Jess.
+ * Macauley / Jess. Stat Block is stored in the Creature object.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
@@ -14,35 +14,48 @@ public class Mob extends Creature {
     private int level;
 
     /**
-     * Constructor for creating a player with existing data. All character data
+     * Constructor for creating a mob with existing data. All character data
      * must be given to the constructor.
      */
-    public Mob(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock, int hp) {
-        super(x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp);
+    public Mob(String name, int level, int x, int y, Inventory inventory, StatBlock statBlock, int hp, int sp, int wp) {
+        super(x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp);
         setName(name);
         setLevel(level);
     }
 
     /**
-     * Constructor for creating a new player for the first time. Takes only a
+     * Constructor for creating a new mob for the first time. Takes only a
      * name and sets everything else to default values.
      */
     public Mob(String name) {
-        super(13, 21, 'M', TextColor.ANSI.RED, new StatBlock(), new Inventory());
+        super(13, 21, 'M', TextColor.ANSI.RED);
         setName(name);
         setLevel(1);
     }
-
-    public String getName() {
-        return name;
+    
+    /**
+     * Constructor for creating a default mob. Takes only
+     * name and level, everything else is default.
+     */
+    public Mob(String name, int level) {
+    	super(13, 21, 'M', TextColor.ANSI.RED);
+    	setName(name);
+    	setLevel(level);
     }
 
+    public String getName() {
+        return this.name;
+    }
+	public int getLevel() {
+		return level;
+	}
+
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     /**
@@ -64,4 +77,5 @@ public class Mob extends Creature {
             throw new IllegalArgumentException("Level must be greater than or equal to 1.");
         }
     }
+
 }

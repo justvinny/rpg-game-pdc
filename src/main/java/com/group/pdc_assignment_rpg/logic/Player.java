@@ -26,10 +26,10 @@ public class Player extends Creature implements Killable {
     /**
      * Constructor for creating a player with existing data. All character data must be given to the constructor.
      */
-    public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock, int hp) {
-        super(x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory, hp);
-        this.name = name;
-        this.level = level;
+    public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock) {
+        super(x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory);
+        this.setName(name);
+        this.setLevel(level);
     }
     
     /**
@@ -75,8 +75,6 @@ public class Player extends Creature implements Killable {
     @Override
     public String toString() {
         String str = "Name: " + getName() + " (Lvl: " + getLevel() + ")\n";
-        str += "HP: (" + getHP() + "/" + getMaxHP() +")\n";
-        str += "Coords: (" + getX() + ", " + getY() + ")";
-        return super.toString();
+        return str += super.toString();
     }
 }

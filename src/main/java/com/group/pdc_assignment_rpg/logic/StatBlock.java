@@ -13,6 +13,7 @@ public class StatBlock {
 	 */
 	public StatBlock() {
 		this.setStats(new EnumMap<Stats, Integer>(Stats.class));
+		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
 		this.populate(5, 5, 5);
 		this.populateConsumables(
 				this.calculateHealth(),
@@ -28,6 +29,7 @@ public class StatBlock {
 	 */
 	public StatBlock(int s, int d, int i) {
 		this.stats = new EnumMap<Stats, Integer>(Stats.class);
+		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
 		this.populate(s, d, i);
 		this.populateConsumables(
 				this.calculateHealth(),

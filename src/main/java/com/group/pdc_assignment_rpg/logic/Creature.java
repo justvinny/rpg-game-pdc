@@ -23,6 +23,7 @@ public abstract class Creature extends Entity {
      */
     public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp) {
         super(x, y, s, c);
+		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setStats(stats);
         this.setInventory(inventory);
         this.setHP(hp);
@@ -36,6 +37,7 @@ public abstract class Creature extends Entity {
      */
     public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory) {
         super(x, y, s, c);
+		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setStats(stats);
         this.setInventory(inventory);
         this.setHP(getMaxHP());
@@ -48,6 +50,7 @@ public abstract class Creature extends Entity {
      */
     public Creature(int x, int y, char s, TextColor c) {
     	super(x, y, s, c);
+		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
     	this.setStats(new StatBlock());
     	this.setInventory(new Inventory());
     	this.setHP(getMaxHP());

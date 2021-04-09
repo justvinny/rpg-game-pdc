@@ -2,6 +2,8 @@ package com.group.pdc_assignment_rpg.logic;
 
 import static com.group.pdc_assignment_rpg.logic.ItemType.*;
 
+import com.group.pdc_assignment_rpg.utilities.TextUtility;
+
 public enum ItemList {
 
 	COIN(0, 1, NORMAL), 
@@ -61,6 +63,8 @@ public enum ItemList {
 		this.weight = weight;
 	}
 	
-	
+	public String toString() {
+		return TextUtility.toTitleCase(this.name());
+	}
 	
 }

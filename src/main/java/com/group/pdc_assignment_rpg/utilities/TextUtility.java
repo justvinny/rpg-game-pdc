@@ -9,6 +9,7 @@ package com.group.pdc_assignment_rpg.utilities;
  * Contains utility methods that manipulates text.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
+ * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
 public class TextUtility {
 
@@ -80,5 +81,40 @@ public class TextUtility {
             mergedArr[i] = strArr1[i] + strArr2[i];
         }
         return mergedArr;
+    }
+    
+    /**
+     * Method to convert a string into title case and replace any underscores with spaces.
+     * Primarily to be used for easily converting enumeration's .name() value into text.
+     * 
+     * @param string String to be converted
+     * @return a string in titlecase with spaces instead of underscores
+     */
+    public static String toTitleCase(String string) {
+    	
+    	if (string == null || string.isEmpty()) {
+    		return "";
+    	} 
+
+    	if (string.length() == 1) {
+    		return string.toUpperCase();
+    	}
+    	
+    	string = string.toLowerCase();
+    	
+    	String parts[] = string.split("_");
+    	
+    	StringBuilder titlecase = new StringBuilder(string.length());
+    	
+    	for (String part : parts) {
+    		if (part.length() > 1) {
+    			titlecase.append(part.substring(0, 1).toUpperCase()).append(part.substring(1));
+    		} else {
+    			titlecase.append(part.toLowerCase());
+    		}
+    		titlecase.append(" ");
+    	}
+    	
+    	return titlecase.toString().trim();
     }
 }

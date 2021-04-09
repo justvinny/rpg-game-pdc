@@ -56,7 +56,7 @@ public class MainDriver {
                 new Item("Woodaxe", ItemList.HANDAXE),
                 new Item("Breastplate", ItemList.ARMOUR),
                 new Item("Potion of Healing", ItemList.RED_POTION),
-                new Item("Mythical Andromeda's Spear", ItemList.SPEAR));
+                new Item("Mythical Somnos' Spear", ItemList.SPEAR));
 
         // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(

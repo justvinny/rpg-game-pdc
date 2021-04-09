@@ -1,5 +1,7 @@
 package com.group.pdc_assignment_rpg.logic;
 
+import java.io.IOException;
+
 /**
  * These items get directly added into a creature's inventory.
  * They are an extension of the StaticObject object which holds
@@ -11,8 +13,14 @@ public class Item {
 	private String name;
 	private ItemList item;
 	
+	private static int MAX_NAME_LENGTH = 23;
+	
 	public Item(String n, ItemList i){
-		this.setName(n);
+		try {
+			this.setName(n);
+		} catch (IOException e) {
+			this.name = i.toString();
+		}
 		this.setItem(i);
 	}
 
@@ -23,8 +31,12 @@ public class Item {
 		return item;
 	}
 	
-	private void setName(String name) {
-		this.name = name;
+	private void setName(String name) throws IOException {
+		if(name.length() < MAX_NAME_LENGTH ) {
+			this.name = name;
+		} else {
+			throw(new IOException("Name too long, exceeds character limit"));
+		}
 	}
 	private void setItem(ItemList item) {
 		this.item = item;

@@ -44,6 +44,10 @@ public class Inventory {
         return capacity;
     }
 
+    public int size() { 
+        return inventory.size();
+    }
+    
     /**
      * Setters
      *
@@ -107,5 +111,14 @@ public class Inventory {
         Item[] items = inventory.keySet().toArray(new Item[inventory.size()]);
 
         return items[index];
+    }
+    
+    /**
+     * Removes an item from the inventory
+     * @param item to remove
+     * @return previous mapping of the code or null
+     */
+    public int remove(Item item) {
+        return inventory.remove(item);
     }
 }

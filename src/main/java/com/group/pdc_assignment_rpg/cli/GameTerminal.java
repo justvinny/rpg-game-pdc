@@ -150,7 +150,7 @@ public class GameTerminal {
                 }
 
                 // Print out the keys the user can press for the game.
-                printAvailableKeys(textGraphics, cursorPos);
+//                printAvailableKeys(textGraphics, cursorPos);
 
                 // Refresh the screen to show changes if any.
                 screen.refresh();
@@ -173,17 +173,21 @@ public class GameTerminal {
 
     }
 
-    /**
-     * Prints the available keys that the user can press during the game.
-     *
-     * @param textGraphics used for drawing to our Lanterna console.
-     * @param row is y position on where we want to start drawing on the
-     * console.
-     */
-    private static void printAvailableKeys(TextGraphics textGraphics, int row) {
-        String keysMenu = "Keys: [I] - Inventory   [Esc] - Exit Game\n";
-        textGraphics.putString(0, row + 1, keysMenu);
-    }
+//    /**
+//     * Prints the available keys that the user can press during the game.
+//     *
+//     * @param textGraphics used for drawing to our Lanterna console.
+//     * @param row is y position on where we want to start drawing on the
+//     * console.
+//     */
+//    private static void printAvailableKeys(TextGraphics textGraphics, int row) {
+//        String keysMenu = "Keys: [I] - Inventory   [Esc] - Exit Game\n";
+//        textGraphics.putString(0, ++row, keysMenu);
+//        
+//        
+//        String keysMovement = "Movement/Navigation: Arrow Keys - Up, Down, Left, Right";
+//        textGraphics.putString(0, ++row, keysMovement);
+//    }
 
     /**
      * Prints the exit message when user presses the Esc key.
@@ -207,7 +211,15 @@ public class GameTerminal {
      * @param inventoryScene contains the CLI for our inventory.
      */
     private static void inventoryNavigation(KeyStroke keyStroke, InventoryScene inventoryScene) {
-        switch (keyStroke.getKeyType()) {
+        // Resets the action message in the inventory scene if we pressed 
+        // a key that is not a character. For example, Arrow Keys are considered
+        // as keys that are not characters. Hence, pressing these will trigger
+        // this condition.
+        if (keyStroke.getKeyType() != KeyType.Character) {
+            inventoryScene.resetActionMessage();
+        }
+        
+        switch (keyStroke.getKeyType()) {                
             case ArrowDown:
                 inventoryScene.down();
                 break;
@@ -219,6 +231,15 @@ public class GameTerminal {
                 break;
             case ArrowLeft:
                 inventoryScene.left();
+                break;
+            case Character:
+                switch (keyStroke.getCharacter()) {
+                    case 'u':
+                        inventoryScene.use();
+                        break;
+                    case 'd':
+                        inventoryScene.drop();
+                }     
         }
     }
 
@@ -331,6 +352,11 @@ public class GameTerminal {
         return cursorPos + 1;
     }
 
+    /**
+     * Draws the cursor we use for Inventory/Battle Scene navigation.
+     * @param navigation
+     * @param textGraphics 
+     */
     private static void drawNavigationCursor(Navigation navigation, TextGraphics textGraphics) {
         textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
         textGraphics.putString(navigation.getCoordinates().getX(),

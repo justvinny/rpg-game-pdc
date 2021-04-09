@@ -3,6 +3,12 @@ package com.group.pdc_assignment_rpg;
 import com.group.pdc_assignment_rpg.cli.GameTerminal;
 import com.group.pdc_assignment_rpg.cli.InventoryScene;
 import com.group.pdc_assignment_rpg.cli.InventorySceneConstants;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_END;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_START;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_STEP;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_END;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_START;
+import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_STEP;
 import com.group.pdc_assignment_rpg.cli.MapScene;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.*;
@@ -60,16 +66,16 @@ public class MainDriver {
 
         // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(
-                InventorySceneConstants.CURSOR_X_START,
-                InventorySceneConstants.CURSOR_Y_START,
-                InventorySceneConstants.CURSOR_X_STEP,
-                InventorySceneConstants.CURSOR_Y_STEP);
+                CURSOR_X_START,
+                CURSOR_Y_START,
+                CURSOR_X_STEP,
+                CURSOR_Y_STEP);
 
         Boundaries inventoryBounds = new Boundaries(
-                InventorySceneConstants.CURSOR_X_START,
-                InventorySceneConstants.CURSOR_Y_START,
-                InventorySceneConstants.CURSOR_X_END,
-                InventorySceneConstants.CURSOR_Y_END);
+                CURSOR_X_START,
+                CURSOR_Y_START,
+                CURSOR_X_END,
+                CURSOR_Y_END);
 
         Navigation inventoryNavigation = new Navigation(
                 inventoryCoords,

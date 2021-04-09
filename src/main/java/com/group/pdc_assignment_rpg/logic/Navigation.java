@@ -29,27 +29,39 @@ public class Navigation {
         return boundaries;
     }
     
-    public void up() {
+    public boolean up() {
         if (coordinates.getY() > boundaries.getYBoundStart()) {
             coordinates.decrementY();
+            return true;
         }
+        
+        return false;
     }
 
-    public void down() {
+    public boolean down() {
         if (coordinates.getY() < boundaries.getYBoundEnd()) {
             coordinates.incrementY();
+            return true;
         }
+        
+        return false;
     }
 
-    public void right() {
+    public boolean right() {
         if (coordinates.getX() < boundaries.getXBoundEnd()) {
             coordinates.incrementX();
+            return true;
         }
+        
+        return false;
     }
 
-    public void left() {
+    public boolean left() {
         if (coordinates.getX() > boundaries.getXBoundStart()) {
             coordinates.decrementX();
+            return true;
         }
+        
+        return false;
     }
 }

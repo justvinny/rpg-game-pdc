@@ -12,8 +12,8 @@ package com.group.pdc_assignment_rpg.logic;
  */
 public class Boundaries {
     
-    private int xBoundStart, yBoundStart;
-    private int xBoundEnd, yBoundEnd;
+    private final int xBoundStart, yBoundStart;
+    private final int xBoundEnd, yBoundEnd;
     
     public Boundaries(
             int xBoundStart, 

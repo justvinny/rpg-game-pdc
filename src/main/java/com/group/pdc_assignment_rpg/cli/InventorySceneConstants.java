@@ -17,6 +17,8 @@ public class InventorySceneConstants {
     public static final int CURSOR_X_START = 2;
     public static final int CURSOR_X_STEP = 31;
     public static final int CURSOR_X_END = CURSOR_X_START + 31 * 2;
+    public static final int ITEM_X_STEP = 1;
+    public static final int ITEM_Y_STEP = 3;
     public static final int MAX_WORD_LENGTH = 30;
     public static final int MAX_COLUMNS = 3;
     public static final int N_ROW_DASHES = ((MAX_WORD_LENGTH + 1) * MAX_COLUMNS) + 1;

@@ -1,6 +1,7 @@
 package com.group.pdc_assignment_rpg.logic;
 
 import com.googlecode.lanterna.TextColor;
+import java.lang.*;
 
 /**
  * Holds data and information of a mob in the game. Based on player design from
@@ -63,11 +64,11 @@ public class Mob extends Creature {
      *
      */
     public void setName(String name) throws IllegalArgumentException {
-        if (!name.isBlank()) {
-            this.name = name;
-        } else {
-            throw new IllegalArgumentException("Cannot set name to null.");
-        }
+        if (name.trim().isEmpty()) {
+	    throw new IllegalArgumentException("Cannot set name to null.");
+	} else {
+	    this.name = name;
+	}
     }
 
     public void setLevel(int level) throws IllegalArgumentException {

@@ -52,10 +52,10 @@ public class Player extends Creature implements Killable {
      * 
      */
     public void setName(String name) throws IllegalArgumentException {
-        if (!name.isBlank()) {
-          this.name = name;  
-        } else {
+        if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("Cannot set name to null.");
+        } else {
+          this.name = name;  
         }
     }
 

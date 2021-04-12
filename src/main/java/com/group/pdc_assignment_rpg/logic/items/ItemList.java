@@ -1,6 +1,6 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.items;
 
-import static com.group.pdc_assignment_rpg.logic.ItemType.*;
+import static com.group.pdc_assignment_rpg.logic.items.ItemType.*;
 
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
 

@@ -10,9 +10,9 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.ITEM_Y_ST
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUMNS;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
-import com.group.pdc_assignment_rpg.logic.Inventory;
-import com.group.pdc_assignment_rpg.logic.Item;
-import com.group.pdc_assignment_rpg.logic.Navigation;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.items.Item;
+import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
 import java.util.ArrayList;
 import java.util.Arrays;

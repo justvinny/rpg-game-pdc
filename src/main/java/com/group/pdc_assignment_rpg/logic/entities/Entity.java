@@ -1,4 +1,4 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
 

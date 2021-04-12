@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.navigation;
 
 /**
  * This class handles the movement logic for any object that needs to move

@@ -1,6 +1,9 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.Killable;
+import com.group.pdc_assignment_rpg.logic.StatBlock;
 
 /**
  * Holds basic character/player data and actions. 

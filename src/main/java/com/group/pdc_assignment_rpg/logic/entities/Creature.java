@@ -1,7 +1,10 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.entities;
 
 import java.util.*;
 import com.googlecode.lanterna.TextColor;
+import com.group.pdc_assignment_rpg.logic.CStats;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.StatBlock;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to

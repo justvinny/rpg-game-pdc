@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.navigation;
 
 /**
  * Class that contains boundaries where an object is confined in for movement.

@@ -10,12 +10,12 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import com.group.pdc_assignment_rpg.logic.Boundaries;
-import com.group.pdc_assignment_rpg.logic.Coordinates;
-import com.group.pdc_assignment_rpg.logic.Creature;
-import com.group.pdc_assignment_rpg.logic.Mob;
-import com.group.pdc_assignment_rpg.logic.Navigation;
-import com.group.pdc_assignment_rpg.logic.Player;
+import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
+import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
+import com.group.pdc_assignment_rpg.logic.entities.Creature;
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
+import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import java.io.IOException;
 import java.util.List;
 

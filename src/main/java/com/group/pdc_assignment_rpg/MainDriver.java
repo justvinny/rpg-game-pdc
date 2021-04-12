@@ -1,8 +1,15 @@
 package com.group.pdc_assignment_rpg;
 
+import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
+import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
+import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
+import com.group.pdc_assignment_rpg.logic.items.Item;
+import com.group.pdc_assignment_rpg.logic.items.ItemList;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.cli.GameTerminal;
 import com.group.pdc_assignment_rpg.cli.InventoryScene;
-import com.group.pdc_assignment_rpg.cli.InventorySceneConstants;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_END;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_START;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_STEP;

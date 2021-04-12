@@ -1,6 +1,8 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.StatBlock;
 
 /**
  * Holds data and information of a mob in the game. Based on player design from

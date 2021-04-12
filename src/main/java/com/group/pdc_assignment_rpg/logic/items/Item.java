@@ -1,4 +1,4 @@
-package com.group.pdc_assignment_rpg.logic;
+package com.group.pdc_assignment_rpg.logic.items;
 
 import java.io.IOException;
 

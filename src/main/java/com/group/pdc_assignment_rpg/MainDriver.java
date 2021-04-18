@@ -18,8 +18,8 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_STEP;
 import com.group.pdc_assignment_rpg.cli.MapScene;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
-import com.group.pdc_assignment_rpg.logic.*;
 import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -38,22 +38,28 @@ public class MainDriver {
     }
 
     private static void init() throws InvalidMapException {
-        // Dummy map.
-        List<String> map = MapLoaderUtility.loadMap("sample");
-        MapScene mapScene = new MapScene(map);
-        mapScene.toggle(); // Make map visible.
-
-        // Make inventory scene.
-        InventoryScene inventoryScene = generateInventoryScene();
-
         // Dummy player.
         Player player = new Player("Bob");
 
         // Dummy mob.
         Mob mob = new Mob("Red Slime");
 
+        // Dummy map.
+        List<String> map = MapLoaderUtility.loadMap("sample");
+        MapScene mapScene = new MapScene(map, player);
+        mapScene.toggle(); // Make map visible.
+
+        // Make inventory scene.
+        InventoryScene inventoryScene = generateInventoryScene();
+
         // Start our game.
-        GameTerminal.start(mapScene, inventoryScene, player, mob);
+        GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
+
+        try {
+            gameTerminal.start();
+        } catch (IOException | InterruptedException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     /**

@@ -5,7 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.cli;
 
-import java.util.ArrayList;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import java.util.List;
 
 /**
@@ -16,10 +16,14 @@ import java.util.List;
 public class MapScene extends Scene {
 
     private List<String> map;
-
-    public MapScene(List<String> map) {
+    private Player player;
+    
+    public MapScene(List<String> map, Player player) {
         super();
         this.map = map;
+        this.player = player;
+        
+        addPlayerBar();
         addKeysAvailable();
     }
 
@@ -28,6 +32,12 @@ public class MapScene extends Scene {
         return map;
     }
 
+    private void addPlayerBar() {
+        String playerBar = String.format("Name: %s | HP: %d/%d",
+                player.getName(), player.getHP(), player.getMaxHP());
+        map.add(playerBar);
+    }
+    
     private void addKeysAvailable() {
         map.add(" ");
         map.add("Keys: [I] - Inventory   [Esc] - Exit Game");

@@ -34,27 +34,35 @@ public class GameTerminal {
     private static final int TERMINAL_WIDTH = 120;
     private static final int TERMINAL_HEIGHT = 40;
     private static final String CURSOR = ">>>";
+    private static final String GAME_TITLE = "RPG Game";
+
+    private MapScene mapScene;
+    private InventoryScene inventoryScene;
+    private BattleScene battleScene;
+    private Player player;
+    private Mob mob;
+    private Terminal terminal;
+    private Screen screen;
+    private TextGraphics textGraphics;
 
     /**
-     * Method that starts our game and its game loop.
      *
      * @param mapScene is the first game map we're playing on.
      * @param player is our playable character.
      * @param inventoryScene contains the CLI for our inventory.
      * @param mob is a monster/s in the map.
      */
-    public static void start(MapScene mapScene, InventoryScene inventoryScene, Player player, Mob mob) {
-        // Create our Lanterna Terminal which we will use for the game.
-        DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
-        TerminalSize terminalSize = new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT);
-        defaultTerminalFactory.setInitialTerminalSize(terminalSize);
+    public GameTerminal(MapScene mapScene, InventoryScene inventoryScene, Player player, Mob mob) {
+        this.mapScene = mapScene;
+        this.inventoryScene = inventoryScene;
+        this.player = player;
+        this.mob = mob;
+    }
 
-        Screen screen = null;
-
-        // Placeholder for map visibility. Needs to be refactored later on 
-        // in its own Map Scene class.
-        boolean mapIsVisible = true;
-
+    /**
+     * Method that starts our game and its game loop.
+     */
+    public void start() throws IOException, InterruptedException {
         // Placeholder for dummy Battle Scene.
         Coordinates battleSceneCoords = new Coordinates(
                 BattleSceneConstants.CURSOR_X,
@@ -67,127 +75,109 @@ public class GameTerminal {
         Navigation battleSceneNavigation = new Navigation(
                 battleSceneCoords,
                 battleSceneBounds);
-        BattleScene battleScene = new BattleScene(
+        battleScene = new BattleScene(
                 battleSceneNavigation,
                 player,
                 mob);
 
-        try {
-            Terminal terminal = defaultTerminalFactory.createTerminal();
-            screen = new TerminalScreen(terminal);
-            screen.startScreen();
-            screen.setCursorPosition(null);
-
-            // Will be used for drawing things on the console.
-            TextGraphics textGraphics = screen.newTextGraphics();
-
-            // Game loop
-            while (true) {
-                screen.clear();
-
-                // Non-blocking read input from keyboard which means
-                // the program won't come to a stop to wait for input.
-                KeyStroke keyStroke = screen.pollInput();
-
-                // Null check since we're using non-blocking read input
-                // which means keyStroke will be null if we don't press
-                // a key on the keyboard.
-                if (keyStroke != null) {
-                    // If the key pressed is Esc, quit the game.
-                    if (keyStroke.getKeyType() == KeyType.Escape) {
-                        screen.clear();
-                        printExitMessage(textGraphics, terminal);
-                        screen.refresh();
-                        Thread.sleep(1000);
-                        break;
-                    } else if (keyStroke.getKeyType() == KeyType.Character
-                            && keyStroke.getCharacter() == 'i'
-                            && !battleScene.isVisible()) {
-                        // Check if the key pressed is a character.
-                        // if the character pressed is the letter i and
-                        // the battle scene is not visible,
-                        // toggle the inventory's visibility.
-                        inventoryScene.toggle();
-                        mapScene.toggle();
-                    } else if (inventoryScene.isVisible()) {
-                        // Navigating the inventory.
-                        inventoryNavigation(keyStroke, inventoryScene);
-                    } else if (battleScene.isVisible()) {
-                        // If the battle scene is visible,
-                        // enable battle scene navigation.
-                        battleNavigation(keyStroke, battleScene);
-                    } else if (mapIsVisible) {
-                        // Navigate the map.
-                        mapNavigation(keyStroke, player, mapScene.createScene());
-                    }
-                }
-
-                // Detect monster and player collision
-                if (player.getX() == mob.getX()
-                        && player.getY() == mob.getY()
-                        && !battleScene.isVisible()) {
-                    battleScene.toggle();
-                    mapScene.toggle();
-                }
-
-                int cursorPos = 0;
-                // Print the inventory to the console if it is toggled by the user.
-                if (inventoryScene.isVisible()) {
-                    cursorPos = drawScene(inventoryScene, textGraphics);
-                    drawNavigationCursor(inventoryScene.getNavigation(), textGraphics);
-                } else if (battleScene.isVisible()) {
-                    cursorPos = drawScene(battleScene, textGraphics);
-                    drawNavigationCursor(battleScene.getNavigation(), textGraphics);
-                } else if (mapIsVisible) {
-                    // Print the game map instead if the inventory is invisbile.
-                    cursorPos = drawScene(mapScene, textGraphics);
-
-                    // Draw Player
-                    drawCreature(player, mapScene, textGraphics);
-                    
-                    // Draw Mob
-                    drawCreature(mob, mapScene, textGraphics);
-                }
-
-                // Print out the keys the user can press for the game.
-//                printAvailableKeys(textGraphics, cursorPos);
-
-                // Refresh the screen to show changes if any.
-                screen.refresh();
-
-                // Game speed.
-                Thread.sleep(FPS);
-            }
-        } catch (IOException | InterruptedException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            // Close the terminal once the game loop ends.
-            if (screen != null) {
-                try {
-                    screen.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
-                }
-            }
-        }
-
+        initTerminal();
+        gameLoop();
     }
 
-//    /**
-//     * Prints the available keys that the user can press during the game.
-//     *
-//     * @param textGraphics used for drawing to our Lanterna console.
-//     * @param row is y position on where we want to start drawing on the
-//     * console.
-//     */
-//    private static void printAvailableKeys(TextGraphics textGraphics, int row) {
-//        String keysMenu = "Keys: [I] - Inventory   [Esc] - Exit Game\n";
-//        textGraphics.putString(0, ++row, keysMenu);
-//        
-//        
-//        String keysMovement = "Movement/Navigation: Arrow Keys - Up, Down, Left, Right";
-//        textGraphics.putString(0, ++row, keysMovement);
-//    }
+    private void initTerminal() throws IOException {
+        // Create our Lanterna Terminal which we will use for the game.
+        DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
+        TerminalSize terminalSize = new TerminalSize(TERMINAL_WIDTH, TERMINAL_HEIGHT);
+        defaultTerminalFactory.setInitialTerminalSize(terminalSize);
+        defaultTerminalFactory.setTerminalEmulatorTitle(GAME_TITLE);
+        terminal = defaultTerminalFactory.createTerminal();
+        
+        // Create the screen for the terminal.
+        screen = new TerminalScreen(terminal);
+        screen.startScreen();
+        screen.setCursorPosition(null);
+
+        // Will be used for drawing things on the console.
+        textGraphics = screen.newTextGraphics();
+    }
+
+    private void gameLoop() throws IOException, InterruptedException {
+        // Game loop
+        while (true) {
+            screen.clear();
+
+            // Non-blocking read input from keyboard which means
+            // the program won't come to a stop to wait for input.
+            KeyStroke keyStroke = screen.pollInput();
+
+            // Null check since we're using non-blocking read input
+            // which means keyStroke will be null if we don't press
+            // a key on the keyboard.
+            if (keyStroke != null) {
+                // If the key pressed is Esc, quit the game.
+                if (keyStroke.getKeyType() == KeyType.Escape) {
+                    screen.clear();
+                    printExitMessage();
+                    screen.refresh();
+                    Thread.sleep(1000);
+                    screen.close();
+                    break;
+                } else if (keyStroke.getKeyType() == KeyType.Character
+                        && keyStroke.getCharacter() == 'i'
+                        && !battleScene.isVisible()) {
+                    // Check if the key pressed is a character.
+                    // if the character pressed is the letter i and
+                    // the battle scene is not visible,
+                    // toggle the inventory's visibility.
+                    inventoryScene.toggle();
+                    mapScene.toggle();
+                } else if (inventoryScene.isVisible()) {
+                    // Navigating the inventory.
+                    inventoryNavigation(keyStroke);
+                } else if (battleScene.isVisible()) {
+                    // If the battle scene is visible,
+                    // enable battle scene navigation.
+                    battleNavigation(keyStroke);
+                } else if (mapScene.isVisible()) {
+                    // Navigate the map.
+                    mapNavigation(keyStroke);
+                }
+            }
+
+            // Detect monster and player collision
+            if (player.getX() == mob.getX()
+                    && player.getY() == mob.getY()
+                    && !battleScene.isVisible()) {
+                battleScene.toggle();
+                mapScene.toggle();
+            }
+
+            int cursorPos = 0;
+            // Print the inventory to the console if it is toggled by the user.
+            if (inventoryScene.isVisible()) {
+                cursorPos = drawScene(inventoryScene);
+                drawNavigationCursor(inventoryScene.getNavigation());
+            } else if (battleScene.isVisible()) {
+                cursorPos = drawScene(battleScene);
+                drawNavigationCursor(battleScene.getNavigation());
+            } else if (mapScene.isVisible()) {
+                // Print the game map instead if the inventory is invisbile.
+                cursorPos = drawScene(mapScene);
+
+                // Draw Player
+                drawCreature(player);
+
+                // Draw Mob
+                drawCreature(mob);
+            }
+
+            // Refresh the screen to show changes if any.
+            screen.refresh();
+
+            // Game speed.
+            Thread.sleep(FPS);
+        }
+    }
 
     /**
      * Prints the exit message when user presses the Esc key.
@@ -197,7 +187,7 @@ public class GameTerminal {
      * @throws IOException exception thrown when using TextGraphics putString
      * method.
      */
-    private static void printExitMessage(TextGraphics textGraphics, Terminal terminal) throws IOException {
+    private void printExitMessage() throws IOException {
         String message = "Thanks for playing our game!";
         int colPos = (terminal.getTerminalSize().getColumns() / 2) - message.length() / 2;
         int rowPos = terminal.getTerminalSize().getRows() / 2;
@@ -210,7 +200,7 @@ public class GameTerminal {
      * @param keyStroke is the key pressed.
      * @param inventoryScene contains the CLI for our inventory.
      */
-    private static void inventoryNavigation(KeyStroke keyStroke, InventoryScene inventoryScene) {
+    private void inventoryNavigation(KeyStroke keyStroke) {
         // Resets the action message in the inventory scene if we pressed 
         // a key that is not a character. For example, Arrow Keys are considered
         // as keys that are not characters. Hence, pressing these will trigger
@@ -218,8 +208,8 @@ public class GameTerminal {
         if (keyStroke.getKeyType() != KeyType.Character) {
             inventoryScene.resetActionMessage();
         }
-        
-        switch (keyStroke.getKeyType()) {                
+
+        switch (keyStroke.getKeyType()) {
             case ArrowDown:
                 inventoryScene.down();
                 break;
@@ -239,7 +229,7 @@ public class GameTerminal {
                         break;
                     case 'd':
                         inventoryScene.drop();
-                }     
+                }
         }
     }
 
@@ -249,7 +239,9 @@ public class GameTerminal {
      * @param keyStroke
      * @param player
      */
-    private static void mapNavigation(KeyStroke keyStroke, Player player, List<String> map) {
+    private void mapNavigation(KeyStroke keyStroke) {
+        List<String> map = mapScene.createScene();
+
         switch (keyStroke.getKeyType()) {
             case ArrowDown:
                 if (player.getY() < map.size()
@@ -287,7 +279,7 @@ public class GameTerminal {
      * @param keyStroke
      * @param battleScene
      */
-    private static void battleNavigation(KeyStroke keyStroke, BattleScene battleScene) {
+    private void battleNavigation(KeyStroke keyStroke) {
         switch (keyStroke.getKeyType()) {
             case ArrowDown:
                 battleScene.down();
@@ -306,6 +298,9 @@ public class GameTerminal {
                         break;
                     case ESCAPE:
                         System.out.println("You have escaped!");
+                        player.up();
+                        battleScene.toggle();
+                        mapScene.toggle();
                 }
         }
     }
@@ -319,10 +314,7 @@ public class GameTerminal {
      * @param mapFullRow a full for from the map.
      * @param textGraphics used to draw to our Lanterna console.
      */
-    private static void drawCreature(
-            Creature creature,
-            MapScene mapScene,
-            TextGraphics textGraphics) {
+    private void drawCreature(Creature creature) {
 
         List<String> map = mapScene.createScene();
 
@@ -340,7 +332,7 @@ public class GameTerminal {
      * @param scene is a scene to draw.
      * @param textGraphics is used to draw to our Lanterna console.
      */
-    private static int drawScene(Scene scene, TextGraphics textGraphics) {
+    private int drawScene(Scene scene) {
         List<String> sceneStrList = scene.createScene();
 
         int cursorPos = 0;
@@ -354,10 +346,11 @@ public class GameTerminal {
 
     /**
      * Draws the cursor we use for Inventory/Battle Scene navigation.
+     *
      * @param navigation
-     * @param textGraphics 
+     * @param textGraphics
      */
-    private static void drawNavigationCursor(Navigation navigation, TextGraphics textGraphics) {
+    private void drawNavigationCursor(Navigation navigation) {
         textGraphics.setForegroundColor(TextColor.ANSI.BLUE);
         textGraphics.putString(navigation.getCoordinates().getX(),
                 navigation.getCoordinates().getY(), CURSOR, SGR.BOLD);

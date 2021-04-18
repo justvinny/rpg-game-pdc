@@ -3,6 +3,8 @@ package com.group.pdc_assignment_rpg.cli;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
+import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import com.group.pdc_assignment_rpg.utilities.TextUtility;
 import java.util.Arrays;
 import java.util.List;
@@ -98,5 +100,10 @@ public class BattleScene extends Scene {
 
     public void down() {
         navigation.down();
+    }
+    
+    public void startBattle(Mob mob) {
+        this.mob = mob;
+        this.toggle();
     }
 }

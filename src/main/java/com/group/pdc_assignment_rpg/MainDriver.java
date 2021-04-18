@@ -1,5 +1,7 @@
 package com.group.pdc_assignment_rpg;
 
+import com.group.pdc_assignment_rpg.cli.BattleScene;
+import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
@@ -41,9 +43,6 @@ public class MainDriver {
         // Dummy player.
         Player player = new Player("Bob");
 
-        // Dummy mob.
-        Mob mob = new Mob("Red Slime");
-
         // Dummy map.
         List<String> map = MapLoaderUtility.loadMap("sample");
         MapScene mapScene = new MapScene(map, player);
@@ -52,8 +51,11 @@ public class MainDriver {
         // Make inventory scene.
         InventoryScene inventoryScene = generateInventoryScene();
 
+        // Make battle scene.
+        BattleScene battleScene = generateBattleScene(player);
+        
         // Start our game.
-        GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
+        GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, battleScene, player);
 
         try {
             gameTerminal.start();
@@ -100,5 +102,29 @@ public class MainDriver {
                 inventory);
 
         return inventoryScene;
+    }
+
+    private static BattleScene generateBattleScene(Player player) {
+        // Placeholder mob to generate battle scene.
+        Mob mob = new Mob("No Mob");
+        
+        // Placeholder for dummy Battle Scene.
+        Coordinates battleSceneCoords = new Coordinates(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START);
+        Boundaries battleSceneBounds = new Boundaries(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START,
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_END);
+        Navigation battleSceneNavigation = new Navigation(
+                battleSceneCoords,
+                battleSceneBounds);
+        BattleScene battleScene = new BattleScene(
+                battleSceneNavigation,
+                player,
+                mob);
+
+        return battleScene;
     }
 }

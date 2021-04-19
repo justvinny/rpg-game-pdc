@@ -6,6 +6,8 @@
 package com.group.pdc_assignment_rpg.cli;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,32 +18,56 @@ import java.util.List;
 public class MapScene extends Scene {
 
     private List<String> map;
+    private List<String> scene;
     private Player player;
-    
-    public MapScene(List<String> map, Player player) {
+    private List<Treasure> treasures;
+
+    public MapScene(List<String> map, List<Treasure> treasures, Player player) {
         super();
         this.map = map;
+        this.treasures = treasures;
         this.player = player;
-        
+
         addPlayerBar();
         addKeysAvailable();
     }
 
     @Override
     public List<String> createScene() {
-        return map;
+        if (scene == null) {
+            scene = new ArrayList<>();
+            scene.addAll(map);
+            scene.add(addPlayerBar());
+            scene.addAll(addKeysAvailable());
+        }
+
+        return scene;
     }
 
-    private void addPlayerBar() {
+    public void refreshScene() {
+        scene = new ArrayList<>();
+        scene.addAll(map);
+        scene.add(addPlayerBar());
+        scene.addAll(addKeysAvailable());
+    }
+
+    public List<Treasure> getTreasures() {
+        return treasures;
+    }
+
+    private String addPlayerBar() {
         String playerBar = String.format("Name: %s | HP: %d/%d",
                 player.getName(), player.getHP(), player.getMaxHP());
-        map.add(playerBar);
+        return playerBar;
     }
-    
-    private void addKeysAvailable() {
-        map.add(" ");
-        map.add("Keys: [I] - Inventory   [Esc] - Exit Game");
-        map.add("Player Movement: Arrow Keys - Up, Down, Left, Right");
+
+    private List<String> addKeysAvailable() {
+        List<String> keys = new ArrayList<>();
+        keys.add(" ");
+        keys.add("Keys: [I] - Inventory   [Esc] - Exit Game");
+        keys.add("Player Movement: Arrow Keys - Up, Down, Left, Right");
+
+        return keys;
     }
 
 }

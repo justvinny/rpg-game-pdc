@@ -16,7 +16,9 @@ import com.group.pdc_assignment_rpg.logic.entities.Creature;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -91,7 +93,7 @@ public class GameTerminal {
         defaultTerminalFactory.setInitialTerminalSize(terminalSize);
         defaultTerminalFactory.setTerminalEmulatorTitle(GAME_TITLE);
         terminal = defaultTerminalFactory.createTerminal();
-        
+
         // Create the screen for the terminal.
         screen = new TerminalScreen(terminal);
         screen.startScreen();
@@ -152,6 +154,9 @@ public class GameTerminal {
                 mapScene.toggle();
             }
 
+            // Detect collision for treasures
+            detectCollision();
+
             int cursorPos = 0;
             // Print the inventory to the console if it is toggled by the user.
             if (inventoryScene.isVisible()) {
@@ -169,6 +174,10 @@ public class GameTerminal {
 
                 // Draw Mob
                 drawCreature(mob);
+
+                // Colour treasures yellow.
+                colourTreasures();
+
             }
 
             // Refresh the screen to show changes if any.
@@ -315,7 +324,6 @@ public class GameTerminal {
      * @param textGraphics used to draw to our Lanterna console.
      */
     private void drawCreature(Creature creature) {
-
         List<String> map = mapScene.createScene();
 
         if (map.get(creature.getY()).charAt(creature.getX()) != '#') {
@@ -355,5 +363,37 @@ public class GameTerminal {
         textGraphics.putString(navigation.getCoordinates().getX(),
                 navigation.getCoordinates().getY(), CURSOR, SGR.BOLD);
         textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+    }
+
+    private void colourTreasures() {
+        List<String> map = mapScene.createScene();
+        for (Treasure treasure : mapScene.getTreasures()) {
+            if (map.get(treasure.getCoordinates().getY()).charAt(treasure.getCoordinates().getX()) != '#') {
+                textGraphics.setForegroundColor(TextColor.ANSI.valueOf(Treasure.COLOUR));
+                textGraphics.setCharacter(treasure.getCoordinates().getX(), treasure.getCoordinates().getY(),
+                        Treasure.SYMBOl);
+                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+            }
+        }
+
+    }
+
+    private void detectCollision() {
+        Iterator<Treasure> iterator = mapScene.getTreasures().iterator();
+        
+        // Detect collision with treasures.
+        while (iterator.hasNext()) {
+            Treasure treasure = iterator.next();
+            
+            if (player.getX() == treasure.getCoordinates().getX()
+                    && player.getY() == treasure.getCoordinates().getY()
+                    && mapScene.isVisible()) {
+                inventoryScene.getInventory().add(treasure.open());
+                inventoryScene.getInventory().toString();
+                iterator.remove();
+                System.out.println("Got treasure!");
+            }
+        }
+
     }
 }

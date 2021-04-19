@@ -18,7 +18,8 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_STEP;
 import com.group.pdc_assignment_rpg.cli.MapScene;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
-import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,15 +39,18 @@ public class MainDriver {
     }
 
     private static void init() throws InvalidMapException {
-        // Dummy player.
+        // Load player.
         Player player = new Player("Bob");
 
-        // Dummy mob.
+        // Load dummy mob.
         Mob mob = new Mob("Red Slime");
 
-        // Dummy map.
-        List<String> map = MapLoaderUtility.loadMap("sample");
-        MapScene mapScene = new MapScene(map, player);
+        // Load map treasures.
+        List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
+        
+        // Load map.
+        List<String> map = ResourceLoaderUtility.loadMap("sample");
+        MapScene mapScene = new MapScene(map, treasures, player);
         mapScene.toggle(); // Make map visible.
 
         // Make inventory scene.

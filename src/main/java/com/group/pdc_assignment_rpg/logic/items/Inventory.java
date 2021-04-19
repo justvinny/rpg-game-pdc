@@ -44,10 +44,10 @@ public class Inventory {
         return capacity;
     }
 
-    public int size() { 
+    public int size() {
         return inventory.size();
     }
-    
+
     /**
      * Setters
      *
@@ -75,16 +75,21 @@ public class Inventory {
      */
     public void add(Item item) {
         if (inventory.size() <= capacity) {
-            if (inventory.put(item, 1) == null) {
-                inventory.put(item, inventory.get(item) + 1);
+            if (item != null) {
+                if (inventory.put(item, 1) == null) {
+                    inventory.put(item, inventory.get(item) + 1);
+                }
             }
+
         }
     }
 
     public void add(Item item, int amount) {
         if (inventory.size() <= capacity) {
-            if (inventory.put(item, amount) == null) {
-                inventory.put(item, inventory.get(item) + amount);
+            if (item != null) {
+                if (inventory.put(item, amount) == null) {
+                    inventory.put(item, inventory.get(item) + amount);
+                }
             }
         }
     }
@@ -112,9 +117,10 @@ public class Inventory {
 
         return items[index];
     }
-    
+
     /**
      * Removes an item from the inventory
+     *
      * @param item to remove
      * @return previous mapping of the code or null
      */

@@ -18,6 +18,12 @@ public class BattleScene extends Scene {
     private Player player;
     private Mob mob;
 
+    /**
+     * Constructor for our battle scene which will be used for combat with mobs.
+     * @param navigation - allows player to choose commands related to combat.
+     * @param player - our playable player which will go against a mob.
+     * @param mob - the enemy that the play is in combat with.
+     */
     public BattleScene(Navigation navigation, Player player, Mob mob) {
         super();
         this.navigation = navigation;
@@ -25,10 +31,18 @@ public class BattleScene extends Scene {
         this.mob = mob;
     }
 
+    /*
+     * Getters
+     */
     public Navigation getNavigation() {
         return navigation;
     }
 
+    /**
+     * String representation for player and mob status bars which has their
+     * symbol, name, health, and max health.
+     * @return the status bars.
+     */
     public String statusBars() {
         String playerBar = String.format("# %c %-20s      HP %3d/%3d #",
                 player.getSymbol(), player.getName(),
@@ -45,6 +59,11 @@ public class BattleScene extends Scene {
 
     }
 
+    /**
+     * String representation for the command menu where the player can choose from
+     * Attack, Defend, and Escape commands.
+     * @return the command menu.
+     */
     public String commandMenu() {
         String attack = String.format("#     %-7s #\n", "Attack");
         String defend = String.format("#     %-7s #\n", "Defend");
@@ -54,6 +73,13 @@ public class BattleScene extends Scene {
         return hashLine + attack + defend + escape + hashLine;
     }
 
+    /**
+     * String representation for the battle log where all the actions by the 
+     * player and mob in battle are printed to for each turn. 
+     * For example, if a player attack for 10 damage to the mob, this action
+     * will be printed to our log.
+     * @return battle log.
+     */
     public String battleLog() {
         String hashLineLog = TextUtility.repeatCharacter(69, '#') + "\n";
         String hashMiddleLog = "#" + TextUtility.repeatCharacter(67, ' ') + "#\n";
@@ -61,12 +87,23 @@ public class BattleScene extends Scene {
         return hashLineLog + String.join("", TextUtility.repeatStringIntoArray(18, hashMiddleLog)) + hashLineLog;
     }
 
+    /**
+     * Creates our battle scene by incorporating the different UIs like Status
+     * Bars, Battle Logs, and Command Menu.
+     * @return our battle scene.
+     */
+    @Override
     public List<String> createScene() {
         String[] strArr = (statusBars() + mergeCommandMenuAndBattleLog()).split("\n");
         
         return Arrays.asList(strArr);
     }
 
+    /**
+     * Merges our command menu and battle log side by side to give that more 
+     * classic J-RPG look and feel.
+     * @return our merged command menu and battle log.
+     */
     private String mergeCommandMenuAndBattleLog() {
         String[] commandMenu = commandMenu().split("\n");
         String[] battleLog = battleLog().split("\n");

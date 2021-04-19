@@ -19,6 +19,9 @@ import java.util.List;
  */
 public class ResourceLoaderUtility {
 
+    /**
+     * Constants
+     */
     private static final String RESOURCE_PATH = "./resources";
     private static final String TREASURES_PATH = RESOURCE_PATH + "/treasures.txt";
 
@@ -81,6 +84,11 @@ public class ResourceLoaderUtility {
         return gameMap.stream().noneMatch(line -> (mapWidth != line.length()));
     }
 
+    /**
+     * Method to load the treasures located in a map which allows our player
+     * to interact with it and pick them up.
+     * @return a list of treasures on the map.
+     */
     public static List<Treasure> loadTreasures() {
         File file = new File(TREASURES_PATH);
 
@@ -90,12 +98,15 @@ public class ResourceLoaderUtility {
             bufferedReader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
+                // Convert the comma separated string into a treasure.
                 String[] item = line.split(",");
                 String itemName = item[0];
                 ItemList itemType = ItemList.valueOf(item[1].toUpperCase());
                 int x = Integer.valueOf(item[2]);
                 int y = Integer.valueOf(item[3]);
                 Coordinates coordinates = new Coordinates(x,y);
+                
+                // Add the treasure to our list.
                 treasures.add(new Treasure(new Item(itemName, itemType), coordinates));
             }
         } catch (IOException ex) {

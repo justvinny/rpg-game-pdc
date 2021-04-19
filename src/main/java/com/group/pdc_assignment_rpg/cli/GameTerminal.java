@@ -38,6 +38,9 @@ public class GameTerminal {
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
 
+    /**
+     * Fields
+     */
     private MapScene mapScene;
     private InventoryScene inventoryScene;
     private BattleScene battleScene;
@@ -86,6 +89,10 @@ public class GameTerminal {
         gameLoop();
     }
 
+    /**
+     * Setup our Lanterna Terminal for the game.
+     * @throws IOException 
+     */
     private void initTerminal() throws IOException {
         // Create our Lanterna Terminal which we will use for the game.
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
@@ -103,6 +110,11 @@ public class GameTerminal {
         textGraphics = screen.newTextGraphics();
     }
 
+    /**
+     * Our main game loop where are our core gameplay is located.
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private void gameLoop() throws IOException, InterruptedException {
         // Game loop
         while (true) {
@@ -146,15 +158,7 @@ public class GameTerminal {
                 }
             }
 
-            // Detect monster and player collision
-            if (player.getX() == mob.getX()
-                    && player.getY() == mob.getY()
-                    && !battleScene.isVisible()) {
-                battleScene.toggle();
-                mapScene.toggle();
-            }
-
-            // Detect collision for treasures
+            // Detect collision of player with other objects.
             detectCollision();
 
             int cursorPos = 0;
@@ -204,7 +208,9 @@ public class GameTerminal {
     }
 
     /**
-     * Handles inventory navigation.
+     * Handles inventory navigation. Using arrow keys (Up, Down, Left, Right) in
+     * the inventory will allow the inventory cursor to move around our UI and
+     * select your items.
      *
      * @param keyStroke is the key pressed.
      * @param inventoryScene contains the CLI for our inventory.
@@ -243,7 +249,8 @@ public class GameTerminal {
     }
 
     /**
-     * Handles player navigation in the map.
+     * Handles player navigation in the map. Using the arrow keys (up, down,
+     * left, right) will allow the player to move on the map.
      *
      * @param keyStroke
      * @param player
@@ -365,6 +372,9 @@ public class GameTerminal {
         textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
     }
 
+    /**
+     * Colours the treasures on the map so it really pops out to the user.
+     */
     private void colourTreasures() {
         List<String> map = mapScene.createScene();
         for (Treasure treasure : mapScene.getTreasures()) {
@@ -378,13 +388,16 @@ public class GameTerminal {
 
     }
 
+    /**
+     * Detects collision by the player and different objects.
+     */
     private void detectCollision() {
         Iterator<Treasure> iterator = mapScene.getTreasures().iterator();
-        
+
         // Detect collision with treasures.
         while (iterator.hasNext()) {
             Treasure treasure = iterator.next();
-            
+
             if (player.getX() == treasure.getCoordinates().getX()
                     && player.getY() == treasure.getCoordinates().getY()
                     && mapScene.isVisible()) {
@@ -393,6 +406,14 @@ public class GameTerminal {
                 iterator.remove();
                 System.out.println("Got treasure!");
             }
+        }
+
+        // Detect monster and player collision
+        if (player.getX() == mob.getX()
+                && player.getY() == mob.getY()
+                && !battleScene.isVisible()) {
+            battleScene.toggle();
+            mapScene.toggle();
         }
 
     }

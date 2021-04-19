@@ -18,11 +18,14 @@ public abstract class Scene {
     
     private boolean visible;
     
+    /**
+     * Constructor that sets visibility of a scene to false by default.
+     */
     public Scene() {
         visible = false; 
     }
 
-    /**
+    /*
      * Getter method
      */
     public boolean isVisible() {

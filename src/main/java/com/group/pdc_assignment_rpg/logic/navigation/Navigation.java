@@ -16,11 +16,20 @@ public class Navigation {
     private Coordinates coordinates;
     private Boundaries boundaries;
 
+    /**
+     * Constructor.
+     * 
+     * @param coordinates - x and y values for our navigation.
+     * @param boundaries - boundaries where we're not allowed to navigate to.
+     */
     public Navigation(Coordinates coordinates, Boundaries boundaries) {
         this.coordinates = coordinates;
         this.boundaries = boundaries;
     }
 
+    /*
+     * Getters 
+     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
@@ -29,6 +38,16 @@ public class Navigation {
         return boundaries;
     }
     
+    /*
+     * Movement/navigation.
+     * Up - decrements y
+     * Down -increments y
+     * Left - increments x
+     * Right - decrements x
+     *
+     * return - all of them return a boolean value on whether they successfully
+     *          moved or not.
+     */
     public boolean up() {
         if (coordinates.getY() > boundaries.getYBoundStart()) {
             coordinates.decrementY();

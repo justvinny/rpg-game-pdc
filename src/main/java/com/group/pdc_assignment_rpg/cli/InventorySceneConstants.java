@@ -6,7 +6,9 @@
 package com.group.pdc_assignment_rpg.cli;
 
 /**
- *
+ * Constants that are useful for our inventory scene such as boundaries for
+ * our cursor, maximum item name length, number of dashes for our boxes.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class InventorySceneConstants {

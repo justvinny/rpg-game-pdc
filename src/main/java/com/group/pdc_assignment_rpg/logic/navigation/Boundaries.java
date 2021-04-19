@@ -15,6 +15,13 @@ public class Boundaries {
     private final int xBoundStart, yBoundStart;
     private final int xBoundEnd, yBoundEnd;
     
+    /**
+     * Constructor
+     * @param xBoundStart - west boundaries for x value.
+     * @param yBoundStart - north boundaries for y value.
+     * @param xBoundEnd - east boundaries for x value.
+     * @param yBoundEnd - south boundaries for y value.
+     */
     public Boundaries(
             int xBoundStart, 
             int yBoundStart, 
@@ -27,6 +34,9 @@ public class Boundaries {
         this.yBoundEnd = yBoundEnd;
     }
 
+    /*
+     * Getters 
+     */
     public int getXBoundStart() {
         return xBoundStart;
     }

@@ -42,7 +42,7 @@ public class MainDriver {
         List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
         
         // Load map.
-        List<String> map = ResourceLoaderUtility.loadMap("sample");
+        List<String> map = ResourceLoaderUtility.loadMap("game-map");
         MapScene mapScene = new MapScene(map, treasures, player);
         mapScene.toggle(); // Make map visible.
 

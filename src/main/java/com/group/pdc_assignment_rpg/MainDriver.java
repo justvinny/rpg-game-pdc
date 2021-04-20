@@ -43,7 +43,7 @@ public class MainDriver {
         mapScene.toggle(); // Make map visible.
 
         // Make inventory scene.
-        InventoryScene inventoryScene = generateInventoryScene();
+        InventoryScene inventoryScene = generateInventoryScene(player.getInventory());
 
         // Start our game.
         GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
@@ -60,9 +60,8 @@ public class MainDriver {
      *
      * @return
      */
-    private static InventoryScene generateInventoryScene() {
+    private static InventoryScene generateInventoryScene(Inventory inventory) {
         // Dummy inventory data.
-        Inventory inventory = new Inventory();
         inventory.addMultiple(
                 new Weapon("Sword of Stabbing", ItemList.SWORD, 10),
                 new Weapon("Woodaxe", ItemList.HANDAXE, 7),

@@ -49,18 +49,18 @@ public class Inventory {
         return capacity;
     }
 
-    public int size() { 
+    public int size() {
         return inventory.size();
     }
-    
+
     public EnumMap<EquipmentSlot, Item> getEquipment() {
         return equipment;
     }
-    
-    public Item getItem(EquipmentSlot e){
+
+    public Item getItem(EquipmentSlot e) {
         return this.getEquipment().get(e);
     }
-    
+
     /**
      * Setters
      *
@@ -76,16 +76,16 @@ public class Inventory {
     public void setEquipment(EnumMap<EquipmentSlot, Item> equipment) {
         this.equipment = equipment;
     }
-    
+
     public void blankEquipment() {
         this.equipment.put(EquipmentSlot.ARMOUR, null);
         this.equipment.put(EquipmentSlot.HAND, null);
     }
-    
-    public void setEquip(EquipmentSlot e, Item i){
+
+    public void setEquip(EquipmentSlot e, Item i) {
         this.equipment.put(e, i);
     }
-    
+
     /**
      * Item in inventory methods
      *
@@ -138,27 +138,27 @@ public class Inventory {
 
         return items[index];
     }
-    
+
     /**
      * Removes an item from the inventory
+     *
      * @param item to remove
      * @return previous mapping of the code or null
      */
     public int remove(Item item) {
         return inventory.remove(item);
     }
-    
+
     /**
      * Equips an item from the inventory.
+     *
      * @param item to equip.
      * @return confirmation of equip.
      */
-    
-    public boolean equip(Item item){
+    public boolean equip(Item item) {
         if (item instanceof EquippableItem) {
             if (item instanceof Armour) {
                 this.setEquip(EquipmentSlot.ARMOUR, item);
-                this.remove(item);
                 return true;
             } else if (item instanceof Weapon) {
                 this.setEquip(EquipmentSlot.HAND, item);
@@ -170,9 +170,16 @@ public class Inventory {
             return false;
         }
     }
-    
+
     public void unequip(EquipmentSlot e) {
-        this.add(this.getItem(e));
         this.setEquip(e, null);
+    }
+
+    public void unequip(Item item) {
+        if (item instanceof Weapon) {
+            this.setEquip(EquipmentSlot.HAND, null);
+        } else if (item instanceof Armour) {
+            this.setEquip(EquipmentSlot.ARMOUR, null);
+        }
     }
 }

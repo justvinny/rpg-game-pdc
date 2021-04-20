@@ -10,6 +10,7 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.ITEM_Y_ST
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUMNS;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
+import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import com.group.pdc_assignment_rpg.logic.items.EquippableItem;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.items.Item;
@@ -101,6 +102,9 @@ public class InventoryScene extends Scene {
 
         }
 
+        // Show what the player currently has equipped.
+        builder.append(makeEquipmentDisplayBox());
+        
         // Add description box. 
         builder.append(makeDescriptionBox(getSelectedItem()));
 
@@ -152,6 +156,22 @@ public class InventoryScene extends Scene {
     }
 
     /**
+     * Prints out the currently equipped items to the inventory UI.
+     * 
+     * @return the currently equipped items. 
+     */
+    private String makeEquipmentDisplayBox() {
+        Item weapon = inventory.getEquipment().get(EquipmentSlot.HAND);
+        Item armour = inventory.getEquipment().get(EquipmentSlot.ARMOUR);
+        String weaponString = (weapon == null) ? "None" : weapon.toString();
+        String armourString = (armour == null) ? "None" : armour.toString();
+        String equipped = String.format("Equipped:\n Weapon - %s\n Armour - %s\n",
+                weaponString, armourString);
+        
+        return makeRowHashes() + equipped;
+    }
+
+    /**
      * Prints out our description box for an item currently hovered on by our
      * cursor.
      *
@@ -164,8 +184,13 @@ public class InventoryScene extends Scene {
         if (item == null) {
             description = " This is an empty slot.\n";
         } else {
-            description = String.format(" %s | Type: %s | Weight: %d Value: %d\n",
-                    item.getName(), item.getItem().getType(),
+            String equipped = "";
+            if (inventory.getEquipment().values().contains(item)) {
+                equipped = "[Equipped] ";
+            }
+
+            description = String.format(" %s%s | Type: %s | Weight: %d Value: %d\n",
+                    equipped, item.getName(), item.getItem().getType(),
                     item.getItem().getWeight(), item.getItem().getValue());
         }
 
@@ -220,12 +245,16 @@ public class InventoryScene extends Scene {
         Item item = getSelectedItem();
 
         if (item != null) {
-            if (item instanceof EquippableItem){
-                if (inventory.equip(item)){
+            if (item instanceof EquippableItem) {
+                if (inventory.getEquipment().values().contains(item)) {
+                    inventory.unequip(item);
+                    actionMessage = String.format(" %s unequipped!\n", item.getName());
+                } else if (inventory.equip(item)) {
                     actionMessage = String.format(" %s equipped!\n", item.getName());
-                }   
-            } 
-            actionMessage = String.format(" %s used!\n", item.getName());
+                }
+            } else {
+                actionMessage = String.format(" %s used!\n", item.getName());
+            }
         } else {
             actionMessage = " No item selected. Cannot use!\n";
         }
@@ -242,5 +271,5 @@ public class InventoryScene extends Scene {
         }
 
     }
-    
+
 }

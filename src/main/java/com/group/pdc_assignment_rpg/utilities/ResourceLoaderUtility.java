@@ -1,6 +1,10 @@
 package com.group.pdc_assignment_rpg.utilities;
 
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
+import com.group.pdc_assignment_rpg.logic.items.Item;
+import com.group.pdc_assignment_rpg.logic.items.ItemList;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,9 +17,13 @@ import java.util.List;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class MapLoaderUtility {
+public class ResourceLoaderUtility {
 
+    /**
+     * Constants
+     */
     private static final String RESOURCE_PATH = "./resources";
+    private static final String TREASURES_PATH = RESOURCE_PATH + "/treasures.txt";
 
     /**
      * Method to load a map from a text file depending on map name argument
@@ -50,7 +58,7 @@ public class MapLoaderUtility {
                 }
             }
         }
-        
+
         // Check if file loaded is a valid map.
         if (!isValidMap(map)) {
             throw new InvalidMapException();
@@ -62,7 +70,8 @@ public class MapLoaderUtility {
     /**
      * Helper method to ensure the text file we're loading is a valid map.
      *
-     * @param gameMap is a list we have to check whether it's a valid map or not.
+     * @param gameMap is a list we have to check whether it's a valid map or
+     * not.
      * @return a boolean value on whether the map loaded is valid or not.
      */
     private static boolean isValidMap(List<String> gameMap) {
@@ -75,4 +84,43 @@ public class MapLoaderUtility {
         return gameMap.stream().noneMatch(line -> (mapWidth != line.length()));
     }
 
+    /**
+     * Method to load the treasures located in a map which allows our player
+     * to interact with it and pick them up.
+     * @return a list of treasures on the map.
+     */
+    public static List<Treasure> loadTreasures() {
+        File file = new File(TREASURES_PATH);
+
+        List<Treasure> treasures = new ArrayList<>();     
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                // Convert the comma separated string into a treasure.
+                String[] item = line.split(",");
+                String itemName = item[0];
+                ItemList itemType = ItemList.valueOf(item[1].toUpperCase());
+                int x = Integer.valueOf(item[2]);
+                int y = Integer.valueOf(item[3]);
+                Coordinates coordinates = new Coordinates(x,y);
+                
+                // Add the treasure to our list.
+                treasures.add(new Treasure(new Item(itemName, itemType), coordinates));
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+        
+        return treasures;
+    }
 }

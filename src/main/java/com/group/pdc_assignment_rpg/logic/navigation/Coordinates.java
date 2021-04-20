@@ -12,9 +12,23 @@ package com.group.pdc_assignment_rpg.logic.navigation;
  */
 public class Coordinates {
 
+    /**
+     * Constants
+     */
     private static final int DEFAULT_STEP = 1;
+    
+    /**
+     * Fields
+     */
     private int x, y, xStep, yStep;
 
+    /**
+     * Constructor
+     * @param x - starting x position.
+     * @param y - starting y position.
+     * @param xStep - number of steps for each movement of x.
+     * @param yStep - numbers of steps for each movement of y.
+     */
     public Coordinates(int x, int y, int xStep, int yStep) {
         this.x = x;
         this.y = y;
@@ -22,10 +36,18 @@ public class Coordinates {
         this.yStep = yStep;
     }
 
+    /**
+     * Alternate constructor
+     * @param x - starting x position.
+     * @param y - starting y position.
+     */
     public Coordinates(int x, int y) {
         this(x, y, DEFAULT_STEP, DEFAULT_STEP);
     }
 
+    /*
+     * Getters
+     */
     public int getX() {
         return x;
     }
@@ -34,6 +56,9 @@ public class Coordinates {
         return y;
     }
 
+    /*
+     * Movement in a 2d plane by manipulating x and y values.
+     */
     public void incrementX() {
         x += xStep;
     }

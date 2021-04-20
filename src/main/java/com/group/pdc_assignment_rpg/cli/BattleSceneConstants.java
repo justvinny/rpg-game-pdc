@@ -6,6 +6,7 @@
 package com.group.pdc_assignment_rpg.cli;
 
 /**
+ * Constants that will be used for our battle scene.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
@@ -22,6 +23,12 @@ public enum BattleSceneConstants {
         this.rowNum = rowNum;
     }
 
+    /**
+     * Alternate method for initialising the enums for battles based
+     * on cursor position from the UI's command menu.
+     * @param value y position of the cursor in the command menu.
+     * @return an enum value.
+     */
     public static BattleSceneConstants toEnum(int value) {
         switch (value) {
             case 5:

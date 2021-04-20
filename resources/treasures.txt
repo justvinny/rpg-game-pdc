@@ -1,0 +1,5 @@
+Mighty Sword,sword,4,1
+Bloody Chainmail,armour,42,9
+Red Potion,red_potion,4,21
+Red Potion,red_potion,37,22
+Red Potion,red_potion,103,17

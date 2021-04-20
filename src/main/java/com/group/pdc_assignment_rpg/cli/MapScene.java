@@ -6,6 +6,8 @@
 package com.group.pdc_assignment_rpg.cli;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,31 +19,86 @@ public class MapScene extends Scene {
 
     private List<String> map;
     private Player player;
-    
-    public MapScene(List<String> map, Player player) {
+    private List<Treasure> treasures;
+    private List<String> scene;
+
+    /**
+     * Constructor for map scene.
+     * @param map - the map we are loading for our main game.
+     * @param treasures - treasures around the map in the game.
+     * @param player - the main player which we control. 
+     */
+    public MapScene(List<String> map, List<Treasure> treasures, Player player) {
         super();
         this.map = map;
+        this.treasures = treasures;
         this.player = player;
-        
+
         addPlayerBar();
         addKeysAvailable();
     }
 
-    @Override
-    public List<String> createScene() {
-        return map;
+    /*
+     * Getters
+     */
+    public List<Treasure> getTreasures() {
+        return treasures;
     }
 
-    private void addPlayerBar() {
+    /**
+     * Combines all the elements needed to form our main game map where our
+     * player can play on.
+     *
+     * @return the main game map representation.
+     */
+    @Override
+    public List<String> createScene() {
+        if (scene == null) {
+            scene = new ArrayList<>();
+            scene.addAll(map);
+            scene.add(addPlayerBar());
+            scene.addAll(addKeysAvailable());
+        }
+
+        return scene;
+    }
+
+    /**
+     * Updates the scene for any UI changes such as player HP reduction after a
+     * battle.
+     */
+    public void refreshScene() {
+        scene = new ArrayList<>();
+        scene.addAll(map);
+        scene.add(addPlayerBar());
+        scene.addAll(addKeysAvailable());
+    }
+
+    /**
+     * String representation of the player bar that would be shown on the map as
+     * part of the HUD. This details the player name, current hp, and max hp.
+     *
+     * @return the player bar.
+     */
+    private String addPlayerBar() {
         String playerBar = String.format("Name: %s | HP: %d/%d",
                 player.getName(), player.getHP(), player.getMaxHP());
-        map.add(playerBar);
+        return playerBar;
     }
-    
-    private void addKeysAvailable() {
-        map.add(" ");
-        map.add("Keys: [I] - Inventory   [Esc] - Exit Game");
-        map.add("Player Movement: Arrow Keys - Up, Down, Left, Right");
+
+    /**
+     * String representation of the keys available for the player to press. Keys
+     * such as movement navigation, opening inventory, and exiting the game.
+     *
+     * @return the keys available.
+     */
+    private List<String> addKeysAvailable() {
+        List<String> keys = new ArrayList<>();
+        keys.add(" ");
+        keys.add("Keys: [I] - Inventory   [Esc] - Exit Game");
+        keys.add("Player Movement: Arrow Keys - Up, Down, Left, Right");
+
+        return keys;
     }
 
 }

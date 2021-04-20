@@ -16,7 +16,9 @@ import com.group.pdc_assignment_rpg.logic.entities.Creature;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,6 +38,9 @@ public class GameTerminal {
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
 
+    /**
+     * Fields
+     */
     private MapScene mapScene;
     private InventoryScene inventoryScene;
     private BattleScene battleScene;
@@ -84,6 +89,10 @@ public class GameTerminal {
         gameLoop();
     }
 
+    /**
+     * Setup our Lanterna Terminal for the game.
+     * @throws IOException 
+     */
     private void initTerminal() throws IOException {
         // Create our Lanterna Terminal which we will use for the game.
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
@@ -91,7 +100,7 @@ public class GameTerminal {
         defaultTerminalFactory.setInitialTerminalSize(terminalSize);
         defaultTerminalFactory.setTerminalEmulatorTitle(GAME_TITLE);
         terminal = defaultTerminalFactory.createTerminal();
-        
+
         // Create the screen for the terminal.
         screen = new TerminalScreen(terminal);
         screen.startScreen();
@@ -101,6 +110,11 @@ public class GameTerminal {
         textGraphics = screen.newTextGraphics();
     }
 
+    /**
+     * Our main game loop where are our core gameplay is located.
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private void gameLoop() throws IOException, InterruptedException {
         // Game loop
         while (true) {
@@ -144,13 +158,8 @@ public class GameTerminal {
                 }
             }
 
-            // Detect monster and player collision
-            if (player.getX() == mob.getX()
-                    && player.getY() == mob.getY()
-                    && !battleScene.isVisible()) {
-                battleScene.toggle();
-                mapScene.toggle();
-            }
+            // Detect collision of player with other objects.
+            detectCollision();
 
             int cursorPos = 0;
             // Print the inventory to the console if it is toggled by the user.
@@ -169,6 +178,10 @@ public class GameTerminal {
 
                 // Draw Mob
                 drawCreature(mob);
+
+                // Colour treasures yellow.
+                colourTreasures();
+
             }
 
             // Refresh the screen to show changes if any.
@@ -195,7 +208,9 @@ public class GameTerminal {
     }
 
     /**
-     * Handles inventory navigation.
+     * Handles inventory navigation. Using arrow keys (Up, Down, Left, Right) in
+     * the inventory will allow the inventory cursor to move around our UI and
+     * select your items.
      *
      * @param keyStroke is the key pressed.
      * @param inventoryScene contains the CLI for our inventory.
@@ -234,7 +249,8 @@ public class GameTerminal {
     }
 
     /**
-     * Handles player navigation in the map.
+     * Handles player navigation in the map. Using the arrow keys (up, down,
+     * left, right) will allow the player to move on the map.
      *
      * @param keyStroke
      * @param player
@@ -315,7 +331,6 @@ public class GameTerminal {
      * @param textGraphics used to draw to our Lanterna console.
      */
     private void drawCreature(Creature creature) {
-
         List<String> map = mapScene.createScene();
 
         if (map.get(creature.getY()).charAt(creature.getX()) != '#') {
@@ -355,5 +370,51 @@ public class GameTerminal {
         textGraphics.putString(navigation.getCoordinates().getX(),
                 navigation.getCoordinates().getY(), CURSOR, SGR.BOLD);
         textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+    }
+
+    /**
+     * Colours the treasures on the map so it really pops out to the user.
+     */
+    private void colourTreasures() {
+        List<String> map = mapScene.createScene();
+        for (Treasure treasure : mapScene.getTreasures()) {
+            if (map.get(treasure.getCoordinates().getY()).charAt(treasure.getCoordinates().getX()) != '#') {
+                textGraphics.setForegroundColor(TextColor.ANSI.valueOf(Treasure.COLOUR));
+                textGraphics.setCharacter(treasure.getCoordinates().getX(), treasure.getCoordinates().getY(),
+                        Treasure.SYMBOl);
+                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
+            }
+        }
+
+    }
+
+    /**
+     * Detects collision by the player and different objects.
+     */
+    private void detectCollision() {
+        Iterator<Treasure> iterator = mapScene.getTreasures().iterator();
+
+        // Detect collision with treasures.
+        while (iterator.hasNext()) {
+            Treasure treasure = iterator.next();
+
+            if (player.getX() == treasure.getCoordinates().getX()
+                    && player.getY() == treasure.getCoordinates().getY()
+                    && mapScene.isVisible()) {
+                inventoryScene.getInventory().add(treasure.open());
+                inventoryScene.getInventory().toString();
+                iterator.remove();
+                System.out.println("Got treasure!");
+            }
+        }
+
+        // Detect monster and player collision
+        if (player.getX() == mob.getX()
+                && player.getY() == mob.getY()
+                && !battleScene.isVisible()) {
+            battleScene.toggle();
+            mapScene.toggle();
+        }
+
     }
 }

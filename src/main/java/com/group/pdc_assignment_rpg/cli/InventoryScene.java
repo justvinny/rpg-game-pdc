@@ -35,6 +35,12 @@ public class InventoryScene extends Scene {
     private String actionMessage;
     private int itemSelected;
 
+    /**
+     * Constructor for inventory.
+     * @param navigation - allows navigation in our inventory so we can select
+     *                     an item.
+     * @param inventory - model for our inventory which stores the backend logic.
+     */
     public InventoryScene(Navigation navigation, Inventory inventory) {
         super();
         this.itemsPrinted = new ArrayList<>();
@@ -44,6 +50,9 @@ public class InventoryScene extends Scene {
         this.itemSelected = 0;
     }
 
+    /*
+     * Getters 
+     */
     public Navigation getNavigation() {
         return navigation;
     }
@@ -69,6 +78,13 @@ public class InventoryScene extends Scene {
         actionMessage = "\n";
     }
 
+    /**
+     * Combines all the elements needed to make our Inventory Scene that the user
+     * will see in the game.
+     * 
+     * @return the inventory scene.
+     */
+    @Override
     public List<String> createScene() {
         StringBuilder builder = new StringBuilder();
 
@@ -125,6 +141,13 @@ public class InventoryScene extends Scene {
         return String.format("%s\n", TextUtility.repeatCharacter(N_ROW_DASHES, '-'));
     }
 
+    /**
+     * Helper method to add x amount of characters before and after a string for
+     * UI purposes.
+     * @param word string we want to add characters to.
+     * @param character the character we want to add. For example, a hash #.
+     * @return beautified string that suits our UI theme.
+     */
     private String addLeadingTrailing(String word, char character) {
         double nLeadingSpaces = Math.ceil((double) (MAX_WORD_LENGTH - word.length()) / 2.0);
         String leadingSpaces = TextUtility.repeatCharacter((int) nLeadingSpaces, character);
@@ -253,6 +276,11 @@ public class InventoryScene extends Scene {
         }
     }
 
+    /**
+     * Use will consume an item if it is consumable or equip it if it is
+     * an equipment. Selecting an empty inventory slot will do nothing
+     * and prints an appropriate message.
+     */
     public void use() {
         Item item = getSelectedItem();
 
@@ -271,7 +299,12 @@ public class InventoryScene extends Scene {
             actionMessage = " No item selected. Cannot use!\n";
         }
     }
-
+    
+    /**
+     * Drop will delete an item from the inventory permanently. Same as
+     * use, drop will not work on an empty slot and will print an appropriate
+     * message that tells you so.
+     */
     public void drop() {
         Item item = getSelectedItem();
 

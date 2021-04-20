@@ -91,7 +91,8 @@ public class GameTerminal {
 
     /**
      * Setup our Lanterna Terminal for the game.
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private void initTerminal() throws IOException {
         // Create our Lanterna Terminal which we will use for the game.
@@ -112,8 +113,9 @@ public class GameTerminal {
 
     /**
      * Our main game loop where are our core gameplay is located.
+     *
      * @throws IOException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private void gameLoop() throws IOException, InterruptedException {
         // Game loop
@@ -145,6 +147,7 @@ public class GameTerminal {
                     // toggle the inventory's visibility.
                     inventoryScene.toggle();
                     mapScene.toggle();
+                    mapScene.refreshScene();
                 } else if (inventoryScene.isVisible()) {
                     // Navigating the inventory.
                     inventoryNavigation(keyStroke);

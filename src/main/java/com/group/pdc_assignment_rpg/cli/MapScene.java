@@ -24,9 +24,10 @@ public class MapScene extends Scene {
 
     /**
      * Constructor for map scene.
+     *
      * @param map - the map we are loading for our main game.
      * @param treasures - treasures around the map in the game.
-     * @param player - the main player which we control. 
+     * @param player - the main player which we control.
      */
     public MapScene(List<String> map, List<Treasure> treasures, Player player) {
         super();
@@ -35,7 +36,7 @@ public class MapScene extends Scene {
         this.player = player;
 
         addPlayerBar();
-        addKeysAvailable();
+        addLegend();
     }
 
     /*
@@ -57,7 +58,7 @@ public class MapScene extends Scene {
             scene = new ArrayList<>();
             scene.addAll(map);
             scene.add(addPlayerBar());
-            scene.addAll(addKeysAvailable());
+            scene.addAll(addLegend());
         }
 
         return scene;
@@ -71,7 +72,7 @@ public class MapScene extends Scene {
         scene = new ArrayList<>();
         scene.addAll(map);
         scene.add(addPlayerBar());
-        scene.addAll(addKeysAvailable());
+        scene.addAll(addLegend());
     }
 
     /**
@@ -81,8 +82,17 @@ public class MapScene extends Scene {
      * @return the player bar.
      */
     private String addPlayerBar() {
-        String playerBar = String.format("Name: %s | HP: %d/%d",
-                player.getName(), player.getHP(), player.getMaxHP());
+        String playerBar = String.format("Name: %s | Lv. %d | HP: %d/%d | Vitality: %d "
+                + "| Endurance: %d | Willpower: %d | Damage: %d | Protection: %d",
+                player.getName(),
+                player.getLevel(),
+                player.getHP(),
+                player.getMaxHP(),
+                player.getStats().getVitality(),
+                player.getStats().getEndurance(),
+                player.getStats().getWillpower(),
+                player.getDamage(),
+                player.getProtection());
         return playerBar;
     }
 
@@ -92,13 +102,12 @@ public class MapScene extends Scene {
      *
      * @return the keys available.
      */
-    private List<String> addKeysAvailable() {
-        List<String> keys = new ArrayList<>();
-        keys.add(" ");
-        keys.add("Keys: [I] - Inventory   [Esc] - Exit Game");
-        keys.add("Player Movement: Arrow Keys - Up, Down, Left, Right");
-
-        return keys;
+    private List<String> addLegend() {
+        List<String> legend = new ArrayList<>();
+        legend.add(" ");
+        legend.add("Keys: [I] - Inventory | [Esc] - Exit Game");
+        legend.add("Symbols: P - Player (You) | T - Treasures | B - Final Boss");
+        legend.add("Use arrow keys for player movement. Up, Down, Left, or Right.");
+        return legend;
     }
-
 }

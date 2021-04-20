@@ -1,22 +1,15 @@
 package com.group.pdc_assignment_rpg;
 
-import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
-import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
-import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
-import com.group.pdc_assignment_rpg.logic.items.Item;
-import com.group.pdc_assignment_rpg.logic.items.ItemList;
-import com.group.pdc_assignment_rpg.logic.items.Inventory;
-import com.group.pdc_assignment_rpg.logic.entities.Mob;
-import com.group.pdc_assignment_rpg.logic.entities.Player;
-import com.group.pdc_assignment_rpg.cli.GameTerminal;
-import com.group.pdc_assignment_rpg.cli.InventoryScene;
+import com.group.pdc_assignment_rpg.logic.navigation.*;
+import com.group.pdc_assignment_rpg.logic.items.*;
+import com.group.pdc_assignment_rpg.logic.entities.*;
+import com.group.pdc_assignment_rpg.cli.*;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_END;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_START;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_STEP;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_END;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_START;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_STEP;
-import com.group.pdc_assignment_rpg.cli.MapScene;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.utilities.MapLoaderUtility;
 import java.io.IOException;
@@ -50,7 +43,7 @@ public class MainDriver {
         mapScene.toggle(); // Make map visible.
 
         // Make inventory scene.
-        InventoryScene inventoryScene = generateInventoryScene();
+        InventoryScene inventoryScene = generateInventoryScene(player.getInventory());
 
         // Start our game.
         GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
@@ -67,15 +60,15 @@ public class MainDriver {
      *
      * @return
      */
-    private static InventoryScene generateInventoryScene() {
+    private static InventoryScene generateInventoryScene(Inventory inventory) {
         // Dummy inventory data.
-        Inventory inventory = new Inventory();
         inventory.addMultiple(
-                new Item("Sword of Stabbing", ItemList.SWORD),
-                new Item("Woodaxe", ItemList.HANDAXE),
-                new Item("Breastplate", ItemList.ARMOUR),
+                new Weapon("Sword of Stabbing", ItemList.SWORD, 10),
+                new Weapon("Woodaxe", ItemList.HANDAXE, 7),
+                new Armour("Breastplate", ItemList.ARMOUR, 12),
                 new Item("Potion of Healing", ItemList.RED_POTION),
-                new Item("Mythical Somnos' Spear", ItemList.SPEAR));
+                new Item("Mythical Somnos' Spear", ItemList.SPEAR),
+                new Item("Yellow Rock", ItemList.JUNK));
 
         // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(

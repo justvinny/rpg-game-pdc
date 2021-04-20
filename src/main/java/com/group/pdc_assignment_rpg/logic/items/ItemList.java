@@ -11,7 +11,8 @@ public enum ItemList {
 	HANDAXE(0, 30, EQUIP), 
 	SPEAR(0, 40, EQUIP), 
 	ARMOUR(0, 100, EQUIP), 	
-	RED_POTION(0, 25, CONSUME);
+	RED_POTION(0, 25, CONSUME),
+        JUNK (1, 0, NORMAL);
 	
 	private int weight;
 	private int value;

@@ -1,5 +1,6 @@
 package com.group.pdc_assignment_rpg.logic.items;
 
+import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import java.util.*;
 
 /**
@@ -15,10 +16,13 @@ public class Inventory {
 
     private Map<Item, Integer> inventory;
     private int capacity;
+    private EnumMap<EquipmentSlot, Item> equipment;
 
     public Inventory() {
         this.setInventory(new HashMap<Item, Integer>());
         this.setCapacity(MAX_INVENTORY_CAPACITY);
+        this.equipment = new EnumMap<EquipmentSlot, Item>(EquipmentSlot.class);
+        this.blankEquipment();
     }
 
     /**
@@ -30,6 +34,7 @@ public class Inventory {
     public Inventory(int c) {
         this.setInventory(new HashMap<Item, Integer>());
         this.setCapacity(c);
+        this.blankEquipment();
     }
 
     /**
@@ -44,10 +49,18 @@ public class Inventory {
         return capacity;
     }
 
-    public int size() { 
+    public int size() {
         return inventory.size();
     }
-    
+
+    public EnumMap<EquipmentSlot, Item> getEquipment() {
+        return equipment;
+    }
+
+    public Item getItem(EquipmentSlot e) {
+        return this.getEquipment().get(e);
+    }
+
     /**
      * Setters
      *
@@ -58,6 +71,19 @@ public class Inventory {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public void setEquipment(EnumMap<EquipmentSlot, Item> equipment) {
+        this.equipment = equipment;
+    }
+
+    public void blankEquipment() {
+        this.equipment.put(EquipmentSlot.ARMOUR, null);
+        this.equipment.put(EquipmentSlot.HAND, null);
+    }
+
+    public void setEquip(EquipmentSlot e, Item i) {
+        this.equipment.put(e, i);
     }
 
     /**
@@ -112,13 +138,48 @@ public class Inventory {
 
         return items[index];
     }
-    
+
     /**
      * Removes an item from the inventory
+     *
      * @param item to remove
      * @return previous mapping of the code or null
      */
     public int remove(Item item) {
         return inventory.remove(item);
+    }
+
+    /**
+     * Equips an item from the inventory.
+     *
+     * @param item to equip.
+     * @return confirmation of equip.
+     */
+    public boolean equip(Item item) {
+        if (item instanceof EquippableItem) {
+            if (item instanceof Armour) {
+                this.setEquip(EquipmentSlot.ARMOUR, item);
+                return true;
+            } else if (item instanceof Weapon) {
+                this.setEquip(EquipmentSlot.HAND, item);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public void unequip(EquipmentSlot e) {
+        this.setEquip(e, null);
+    }
+
+    public void unequip(Item item) {
+        if (item instanceof Weapon) {
+            this.setEquip(EquipmentSlot.HAND, null);
+        } else if (item instanceof Armour) {
+            this.setEquip(EquipmentSlot.ARMOUR, null);
+        }
     }
 }

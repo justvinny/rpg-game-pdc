@@ -143,6 +143,7 @@ public class GameTerminal {
                 playerSteps = 0;
                 createBattleScene();
                 mapScene.toggle();
+                generateRandomEncounterSteps();
             }
             
             int cursorPos = 0;

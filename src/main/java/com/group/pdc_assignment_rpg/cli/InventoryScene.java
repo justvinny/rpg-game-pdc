@@ -10,6 +10,7 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.ITEM_Y_ST
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUMNS;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
+import com.group.pdc_assignment_rpg.logic.items.EquippableItem;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
@@ -219,6 +220,11 @@ public class InventoryScene extends Scene {
         Item item = getSelectedItem();
 
         if (item != null) {
+            if (item instanceof EquippableItem){
+                if (inventory.equip(item)){
+                    actionMessage = String.format(" %s equipped!\n", item.getName());
+                }   
+            } 
             actionMessage = String.format(" %s used!\n", item.getName());
         } else {
             actionMessage = " No item selected. Cannot use!\n";
@@ -236,4 +242,5 @@ public class InventoryScene extends Scene {
         }
 
     }
+    
 }

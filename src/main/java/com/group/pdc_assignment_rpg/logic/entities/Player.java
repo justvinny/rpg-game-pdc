@@ -1,7 +1,9 @@
 package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
+import java.util.*;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 
@@ -66,6 +68,8 @@ public class Player extends Creature implements Killable {
             throw new IllegalArgumentException("Level must be greater than or equal to 1.");
         }
     }
+    
+    
     
     /**
      * Utility methods

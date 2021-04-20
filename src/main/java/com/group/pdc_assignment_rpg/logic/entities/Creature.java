@@ -2,9 +2,8 @@ package com.group.pdc_assignment_rpg.logic.entities;
 
 import java.util.*;
 import com.googlecode.lanterna.TextColor;
-import com.group.pdc_assignment_rpg.logic.CStats;
-import com.group.pdc_assignment_rpg.logic.items.Inventory;
-import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.*;
+import com.group.pdc_assignment_rpg.logic.items.*;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to
@@ -85,13 +84,13 @@ public abstract class Creature extends Entity {
     }    
     public int getMaxSP() {
 		return this.getStats().getValue(CStats.STAMINA);
-	}
-	public int getMaxWP() {
-		return this.getStats().getValue(CStats.WILL);
-	}
-	public Map<CStats, Integer> getConsumables() {
-		return consumables;
-	}
+    }
+    public int getMaxWP() {
+            return this.getStats().getValue(CStats.WILL);
+    }
+    public Map<CStats, Integer> getConsumables() {
+            return consumables;
+    }
 
 	
 
@@ -130,6 +129,7 @@ public abstract class Creature extends Entity {
     	this.consumables = consumables;
     }
 
+    
     /**
      * Utility methods
      *

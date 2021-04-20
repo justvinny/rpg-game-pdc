@@ -1,9 +1,11 @@
 package com.group.pdc_assignment_rpg.utilities;
 
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
+import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.ItemList;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
@@ -85,14 +87,15 @@ public class ResourceLoaderUtility {
     }
 
     /**
-     * Method to load the treasures located in a map which allows our player
-     * to interact with it and pick them up.
+     * Method to load the treasures located in a map which allows our player to
+     * interact with it and pick them up.
+     *
      * @return a list of treasures on the map.
      */
     public static List<Treasure> loadTreasures() {
         File file = new File(TREASURES_PATH);
 
-        List<Treasure> treasures = new ArrayList<>();     
+        List<Treasure> treasures = new ArrayList<>();
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(file));
@@ -104,10 +107,26 @@ public class ResourceLoaderUtility {
                 ItemList itemType = ItemList.valueOf(item[1].toUpperCase());
                 int x = Integer.valueOf(item[2]);
                 int y = Integer.valueOf(item[3]);
-                Coordinates coordinates = new Coordinates(x,y);
-                
+                Coordinates coordinates = new Coordinates(x, y);
+
+                Item itemToAdd = null;
+                switch (itemType) {
+                    case ARMOUR:
+                        int protection = Integer.valueOf(item[4]);
+                        itemToAdd = new Armour(itemName, itemType, protection);
+                        break;
+                    case SWORD:
+                    case HANDAXE:
+                    case SPEAR:
+                        int damage = Integer.valueOf(item[4]);
+                        itemToAdd = new Weapon(itemName, itemType, damage);
+                        break;
+                    default:
+                        itemToAdd = new Item(itemName, itemType);
+                }
+
                 // Add the treasure to our list.
-                treasures.add(new Treasure(new Item(itemName, itemType), coordinates));
+                treasures.add(new Treasure(itemToAdd, coordinates));
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
@@ -120,7 +139,7 @@ public class ResourceLoaderUtility {
                 System.err.println(ex.getMessage());
             }
         }
-        
+
         return treasures;
     }
 }

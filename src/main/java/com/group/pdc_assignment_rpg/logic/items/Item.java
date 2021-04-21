@@ -23,10 +23,6 @@ public class Item {
 		}
 		this.setItem(i);
 	}
-
-        public Item(String n) {
-            
-        }
         
 	public String getName() {
 		return name;

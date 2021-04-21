@@ -134,8 +134,10 @@ public class GameTerminal {
             if (keyStroke != null) {
                 // If the key pressed is Esc, quit the game.
                 if (keyStroke.getKeyType() == KeyType.Escape) {
-                    // Save the players inventory upon exit to persisent storage.
+                    // Save the player and its inventory upon exit to persisent storage.
+                    ResourceLoaderUtility.writePlayerData(player);
                     ResourceLoaderUtility.writeInventoryData(player);
+                    
                     screen.clear();
                     printExitMessage();
                     screen.refresh();

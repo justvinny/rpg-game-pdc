@@ -16,6 +16,7 @@ import com.group.pdc_assignment_rpg.logic.entities.Creature;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import java.io.IOException;
 import java.util.Iterator;
@@ -404,10 +405,11 @@ public class GameTerminal {
             if (player.getX() == treasure.getCoordinates().getX()
                     && player.getY() == treasure.getCoordinates().getY()
                     && mapScene.isVisible()) {
-                inventoryScene.getInventory().add(treasure.open());
+                Item item = treasure.open();
+                inventoryScene.getInventory().add(item);
                 inventoryScene.getInventory().toString();
+                mapScene.setActionMessage("Picked up " + item);
                 iterator.remove();
-                System.out.println("Got treasure!");
             }
         }
 

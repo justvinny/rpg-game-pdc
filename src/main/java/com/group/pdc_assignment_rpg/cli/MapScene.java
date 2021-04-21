@@ -7,6 +7,7 @@ package com.group.pdc_assignment_rpg.cli;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.utilities.TextUtility;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class MapScene extends Scene {
     private Player player;
     private List<Treasure> treasures;
     private List<String> scene;
+    private String actionMessage;
 
     /**
      * Constructor for map scene.
@@ -34,6 +36,7 @@ public class MapScene extends Scene {
         this.map = map;
         this.treasures = treasures;
         this.player = player;
+        this.actionMessage = "None";
 
         addPlayerBar();
         addLegend();
@@ -55,10 +58,7 @@ public class MapScene extends Scene {
     @Override
     public List<String> createScene() {
         if (scene == null) {
-            scene = new ArrayList<>();
-            scene.addAll(map);
-            scene.add(addPlayerBar());
-            scene.addAll(addLegend());
+            refreshScene();
         }
 
         return scene;
@@ -71,8 +71,10 @@ public class MapScene extends Scene {
     public void refreshScene() {
         scene = new ArrayList<>();
         scene.addAll(map);
+        scene.add(createDashes());
         scene.add(addPlayerBar());
         scene.addAll(addLegend());
+        scene.addAll(addActionMessage());
     }
 
     /**
@@ -104,10 +106,46 @@ public class MapScene extends Scene {
      */
     private List<String> addLegend() {
         List<String> legend = new ArrayList<>();
-        legend.add(" ");
+        legend.add(createDashes());
         legend.add("Keys: [I] - Inventory | [Esc] - Exit Game");
         legend.add("Symbols: P - Player (You) | T - Treasures | B - Final Boss");
         legend.add("Use arrow keys for player movement. Up, Down, Left, or Right.");
         return legend;
+    }
+
+    /**
+     * Shows the last event that happened to the UI so our players knows
+     * they've picked up an item from a treasure for example.
+     * 
+     * @return the event UI.
+     */
+    private List<String> addActionMessage() {
+        List<String> message = new ArrayList<>();
+        message.add(createDashes());
+        message.add("Event: " + actionMessage);
+        message.add(createDashes());
+        return message;
+    }
+
+    /**
+     * Makes a row dashes at the same width of our map for UI decoration
+     * purposes.
+     * 
+     * @return a row of dashes.
+     */
+    private String createDashes() {
+        int dashLength = map.get(0).length();
+        return TextUtility.repeatCharacter(dashLength, '-');
+    }
+
+    /**
+     * Changes the message in response to events like picking up items, 
+     * fighting a mob, or fighting a boss.
+     * 
+     * @param message of the event that is happening.
+     */
+    public void setActionMessage(String message) {
+        actionMessage = message;
+        refreshScene();
     }
 }

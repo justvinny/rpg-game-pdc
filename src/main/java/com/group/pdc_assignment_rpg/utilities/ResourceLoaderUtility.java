@@ -225,6 +225,14 @@ public class ResourceLoaderUtility {
      */
     public static void writePlayerData(Player player) {
         List<Player> players = loadAllPlayersFromDB();
+        
+        // Check if player already exists.
+        if (players.contains(player)) {
+            // Delete the player.
+            players.remove(player);
+        }
+        
+        // Update player.
         players.add(player);
 
         PrintWriter printWriter = null;

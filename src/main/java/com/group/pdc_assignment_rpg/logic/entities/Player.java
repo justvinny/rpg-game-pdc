@@ -105,6 +105,12 @@ public class Player extends Creature implements Killable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return getName().equals(((Player) obj).getName());
+    }
+
+    
+    @Override
     public String toString() {
         String str = "Name: " + getName() + " (Lvl: " + getLevel() + ")\n";
         return str += super.toString();

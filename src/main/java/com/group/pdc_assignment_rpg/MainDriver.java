@@ -15,6 +15,7 @@ import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Entry point to the RPG game.
@@ -32,48 +33,82 @@ public class MainDriver {
     }
 
     private static void init() throws InvalidMapException {
-        // Load player.
-        Player player = new Player("Bob");
-
-        // Load dummy mob.
-        Mob mob = new Mob("Red Slime");
-
-        // Load map treasures.
-        List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
-        
-        // Load map.
-        List<String> map = ResourceLoaderUtility.loadMap("game-map");
-        MapScene mapScene = new MapScene(map, treasures, player);
-        mapScene.toggle(); // Make map visible.
-
-        // Make inventory scene.
-        InventoryScene inventoryScene = generateInventoryScene(player.getInventory());
-
-        // Start our game.
-        GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
-
         try {
+            // Load player and start screen.
+            Player player = loadStartScreen();
+
+            // Load dummy mob.
+            Mob mob = new Mob("Red Slime");
+
+            // Load map treasures.
+            List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
+
+            // Load map.
+            List<String> map = ResourceLoaderUtility.loadMap("game-map");
+            MapScene mapScene = new MapScene(map, treasures, player);
+            mapScene.toggle(); // Make map visible.
+
+            // Make inventory scene.
+            InventoryScene inventoryScene = generateInventoryScene(player.getInventory());
+
+            // Start our game.
+            GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
+            // Message that says game terminal is loaded.
+            System.out.println("Game terminal is now running! Check the new popup window.");
             gameTerminal.start();
+
         } catch (IOException | InterruptedException ex) {
             System.err.println(ex.getMessage());
         }
     }
 
     /**
-     * Helper method to generate inventory and inventory scene.
+     * Helper method to initialise our start screen which asks the user
+     * for their player name. Then it checks the name in our database and
+     * loads the player if it exists, otherwise, it will create a new player.
+     * @return either a new player or a saved player.
+     * @throws InterruptedException 
+     */
+    private static Player loadStartScreen() throws InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to our RPG game!");
+        System.out.println("What is your name?");
+        String playerName = scanner.nextLine();
+
+        // Default if no records exist of player.
+        Player player = new Player(playerName);
+        // Add default items for new character.
+        player.getInventory().addMultiple(
+            ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
+            ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
+            ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
+        
+        // Check if player exists in the system.
+        // Load the player from the DB if it exists.
+        // Otherwise, create a new player.
+        if (ResourceLoaderUtility.playerExists(playerName)) {
+            player = Player.loadPlayerFactory(playerName);
+            System.out.println("Welcome back!");
+            System.out.println("Loading player...");
+        } else {
+            ResourceLoaderUtility.writePlayerData(player);
+            ResourceLoaderUtility.writeInventoryData(player);
+            System.out.println("Creating new player...");
+        }
+
+        System.out.println("Loading game terminal...");
+        Thread.sleep(1000); // Adds delay to emulate loading screen.
+        return player;
+    }
+
+    /**
+     * Helper method to generate inventory and inventory scene. This helps
+     * set up the navigation for the inventory and make sure the cursor
+     * does not go out of bounds.
      *
      * @return
      */
     private static InventoryScene generateInventoryScene(Inventory inventory) {
-        // Dummy inventory data.
-        inventory.addMultiple(
-                new Weapon("Sword of Stabbing", ItemList.SWORD, 10),
-                new Weapon("Woodaxe", ItemList.HANDAXE, 7),
-                new Armour("Breastplate", ItemList.ARMOUR, 12),
-                new Item("Potion of Healing", ItemList.RED_POTION),
-                new Item("Mythical Somnos' Spear", ItemList.SPEAR),
-                new Item("Yellow Rock", ItemList.JUNK));
-
         // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(
                 CURSOR_X_START,

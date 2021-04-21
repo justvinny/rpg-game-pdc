@@ -7,10 +7,12 @@ therefore it is assumed to be part of version control checkout.
 Without this configuration present, some functionality in the IDE may be limited or fail altogether.
 -->
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
-        <word>backend</word>
+        <word>armour</word>
         <word>Colours</word>
-        <word>gameplay</word>
+        <word>csv</word>
         <word>Getters</word>
+        <word>initialise</word>
         <word>Lanterna</word>
+        <word>unequip</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

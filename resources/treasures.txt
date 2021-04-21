@@ -1,5 +1,5 @@
-Mighty Sword,sword,4,1,15
-Bloody Chainmail,armour,42,9,11
-Red Potion,red_potion,4,21
-Red Potion,red_potion,37,22
-Red Potion,red_potion,103,17
+Mighty Sword,4,1
+Bloody Chainmail,42,9
+Potion of Healing,4,21
+Potion of Healing,37,22
+Potion of Healing,103,17

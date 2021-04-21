@@ -1,0 +1,10 @@
+Broken Sword,sword,4
+Sword of Stabbing,sword,10
+Mighty Sword,sword,15
+Sky Sunderer,sword,250
+Woodaxe,handaxe,7
+Tattered Clothing,armour,2
+Bloody Chainmail,armour,11
+Divine Bulwark,armour,100
+Potion of Healing,red_potion
+Yellow Rock,junk

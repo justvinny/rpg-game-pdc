@@ -1,6 +1,7 @@
 package com.group.pdc_assignment_rpg.logic.items;
 
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.*;
 
 /**
@@ -176,15 +177,60 @@ public class Inventory {
         }
     }
 
+    /**
+     * This will unequip the item specified. This will unequip an item
+     * based on the slot provided. 
+     * HAND will remove any weapon.
+     * ARMOUR will remove any armour/clothing.
+     *
+     * @param e either HAND or ARMOUR slot to unequip.
+     */
     public void unequip(EquipmentSlot e) {
         this.setEquip(e, null);
     }
 
+    /**
+     * This will unequip the item specified. Overloaded method for unequip that
+     * accepts an item as an argument.
+     *
+     * @param item to unequip.
+     */
     public void unequip(Item item) {
         if (item instanceof Weapon) {
             this.setEquip(EquipmentSlot.HAND, null);
         } else if (item instanceof Armour) {
             this.setEquip(EquipmentSlot.ARMOUR, null);
         }
+    }
+
+    /**
+     * Method to convert object into comma separated data to store in text/CSV
+     * files.
+     *
+     * @return a comma separated string representing our player.
+     */
+    public String toCommaSeparatedString(String playerName) {
+        StringBuilder inventoryBuilder = new StringBuilder();
+        inventoryBuilder.append(playerName).append(",");
+        
+        // Add all items in inventory to builder.
+        for (Item item : inventory.keySet()) {
+            inventoryBuilder.append(item.getName());
+            inventoryBuilder.append(",");
+        }
+        // Delete last comma.
+        inventoryBuilder.deleteCharAt(inventoryBuilder.length() - 1);
+        return inventoryBuilder.toString();
+    }
+
+    /**
+     * Alternate way to initialise a inventory. This is particularly used for
+     * loading inventory data from the database.
+     *
+     * @param playerName data loaded from database
+     * @return an inventory object based on the data loaded.
+     */
+    public static Inventory loadInventory(String playerName) {
+        return ResourceLoaderUtility.loadPlayerInventory(playerName);
     }
 }

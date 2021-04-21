@@ -18,6 +18,7 @@ import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -111,7 +112,7 @@ public class GameTerminal {
         // Will be used for drawing things on the console.
         textGraphics = screen.newTextGraphics();
     }
-
+    
     /**
      * Our main game loop where are our core gameplay is located.
      *
@@ -133,6 +134,8 @@ public class GameTerminal {
             if (keyStroke != null) {
                 // If the key pressed is Esc, quit the game.
                 if (keyStroke.getKeyType() == KeyType.Escape) {
+                    // Save the players inventory upon exit to persisent storage.
+                    ResourceLoaderUtility.writeInventoryData(player);
                     screen.clear();
                     printExitMessage();
                     screen.refresh();

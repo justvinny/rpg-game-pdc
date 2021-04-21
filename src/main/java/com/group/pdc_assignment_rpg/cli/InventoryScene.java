@@ -37,9 +37,11 @@ public class InventoryScene extends Scene {
 
     /**
      * Constructor for inventory.
+     *
      * @param navigation - allows navigation in our inventory so we can select
-     *                     an item.
-     * @param inventory - model for our inventory which stores the backend logic.
+     * an item.
+     * @param inventory - model for our inventory which stores the backend
+     * logic.
      */
     public InventoryScene(Navigation navigation, Inventory inventory) {
         super();
@@ -79,9 +81,9 @@ public class InventoryScene extends Scene {
     }
 
     /**
-     * Combines all the elements needed to make our Inventory Scene that the user
-     * will see in the game.
-     * 
+     * Combines all the elements needed to make our Inventory Scene that the
+     * user will see in the game.
+     *
      * @return the inventory scene.
      */
     @Override
@@ -144,6 +146,7 @@ public class InventoryScene extends Scene {
     /**
      * Helper method to add x amount of characters before and after a string for
      * UI purposes.
+     *
      * @param word string we want to add characters to.
      * @param character the character we want to add. For example, a hash #.
      * @return beautified string that suits our UI theme.
@@ -277,9 +280,9 @@ public class InventoryScene extends Scene {
     }
 
     /**
-     * Use will consume an item if it is consumable or equip it if it is
-     * an equipment. Selecting an empty inventory slot will do nothing
-     * and prints an appropriate message.
+     * Use will consume an item if it is consumable or equip it if it is an
+     * equipment. Selecting an empty inventory slot will do nothing and prints
+     * an appropriate message.
      */
     public void use() {
         Item item = getSelectedItem();
@@ -299,18 +302,19 @@ public class InventoryScene extends Scene {
             actionMessage = " No item selected. Cannot use!\n";
         }
     }
-    
+
     /**
-     * Drop will delete an item from the inventory permanently. Same as
-     * use, drop will not work on an empty slot and will print an appropriate
-     * message that tells you so.
+     * Drop will delete an item from the inventory permanently. Same as use,
+     * drop will not work on an empty slot and will print an appropriate message
+     * that tells you so.
      */
     public void drop() {
         Item item = getSelectedItem();
 
         if (item != null) {
             actionMessage = String.format(" %s dropped!\n", item.getName());
-            inventory.remove(item);
+            inventory.unequip(item); // Unequip if selected item is equipped.
+            inventory.remove(item); // Delete the item.
         } else {
             actionMessage = " No item selected. Cannot drop!\n";
         }

@@ -6,6 +6,7 @@ import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.Weapon;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 
 /**
  * Holds basic character/player data and actions.
@@ -27,8 +28,6 @@ public class Player extends Creature implements Killable {
         super(5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory());
         setName(name);
         setLevel(1);
-        this.damage = 5;
-        this.protection = 1;
     }
 
     /**
@@ -39,8 +38,6 @@ public class Player extends Creature implements Killable {
         super(x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory);
         this.setName(name);
         this.setLevel(level);
-        this.damage = 5;
-        this.protection = 1;
     }
 
     /**
@@ -54,13 +51,13 @@ public class Player extends Creature implements Killable {
     public int getLevel() {
         return level;
     }
-    
+
     public int getDamage() {
         Weapon weapon = (Weapon) super.getInventory().getEquipment().get(EquipmentSlot.HAND);
         int weaponDamage = (weapon == null) ? 0 : weapon.getDamage();
         return damage + weaponDamage;
     }
-    
+
     public int getProtection() {
         Armour armour = (Armour) super.getInventory().getEquipment().get(EquipmentSlot.ARMOUR);
         int armourProtection = (armour == null) ? 0 : armour.getProtection();
@@ -82,11 +79,12 @@ public class Player extends Creature implements Killable {
     public void setLevel(int level) throws IllegalArgumentException {
         if (level >= 1) {
             this.level = level;
+            setStats();
         } else {
             throw new IllegalArgumentException("Level must be greater than or equal to 1.");
         }
     }
-
+    
     /**
      * Utility methods
      *
@@ -100,9 +98,36 @@ public class Player extends Creature implements Killable {
         damage += 2;
         protection++;
     }
+
+    public void setStats() {
+        damage = 5 + (level - 1) * 2;
+        protection = level;
+    }
+
     @Override
     public String toString() {
         String str = "Name: " + getName() + " (Lvl: " + getLevel() + ")\n";
         return str += super.toString();
+    }
+
+    /**
+     * Method to convert object into comma separated data to store in text/CSV
+     * files.
+     * @return a comma separated string representing our player. 
+     */
+    public String toCommaSeparatedString() {
+        return String.format("%s,%d,%d,%d,%d,%,d,%d",
+                name, level, x, y, stats.getStrength(), stats.getDexterity(),
+                stats.getIntellect());
+    }
+    
+    /**
+     * Alternate way to initialise a player. 
+     * This is particularly used for loading player data from the database.
+     * @param playerName player name used to query the db.
+     * @return a player object based on the data loaded.
+     */
+    public static Player loadPlayerFactory(String playerName) {
+        return ResourceLoaderUtility.loadPlayerFromDB(playerName);
     }
 }

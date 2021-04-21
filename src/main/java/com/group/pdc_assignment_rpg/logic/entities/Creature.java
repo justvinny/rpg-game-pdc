@@ -13,10 +13,11 @@ import com.group.pdc_assignment_rpg.logic.items.*;
  *
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
+ * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com> 
  */
 public abstract class Creature extends Entity {
 
-    private StatBlock stats;
+    protected StatBlock stats;
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
 

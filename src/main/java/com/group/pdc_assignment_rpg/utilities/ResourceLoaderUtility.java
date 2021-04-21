@@ -1,7 +1,11 @@
 package com.group.pdc_assignment_rpg.utilities;
 
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
+import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
+import com.group.pdc_assignment_rpg.logic.items.ConsumableItem;
+import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.ItemList;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
@@ -9,10 +13,15 @@ import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Utility class to for loading game maps from text files.
@@ -26,6 +35,9 @@ public class ResourceLoaderUtility {
      */
     private static final String RESOURCE_PATH = "./resources";
     private static final String TREASURES_PATH = RESOURCE_PATH + "/treasures.txt";
+    private static final String PLAYER_LIST_PATH = RESOURCE_PATH + "/players.txt";
+    private static final String PLAYER_INVENTORY_PATH = RESOURCE_PATH + "/player-inventories.txt";
+    private static final String ITEM_LIST_PATH = RESOURCE_PATH + "/item-list.txt";
 
     /**
      * Method to load a map from a text file depending on map name argument
@@ -104,28 +116,12 @@ public class ResourceLoaderUtility {
                 // Convert the comma separated string into a treasure.
                 String[] item = line.split(",");
                 String itemName = item[0];
-                ItemList itemType = ItemList.valueOf(item[1].toUpperCase());
-                int x = Integer.valueOf(item[2]);
-                int y = Integer.valueOf(item[3]);
+                int x = Integer.valueOf(item[1]);
+                int y = Integer.valueOf(item[2]);
                 Coordinates coordinates = new Coordinates(x, y);
 
-                Item itemToAdd = null;
-                switch (itemType) {
-                    case ARMOUR:
-                        int protection = Integer.valueOf(item[4]);
-                        itemToAdd = new Armour(itemName, itemType, protection);
-                        break;
-                    case SWORD:
-                    case HANDAXE:
-                    case SPEAR:
-                        int damage = Integer.valueOf(item[4]);
-                        itemToAdd = new Weapon(itemName, itemType, damage);
-                        break;
-                    default:
-                        itemToAdd = new Item(itemName, itemType);
-                }
-
                 // Add the treasure to our list.
+                Item itemToAdd = itemLoaderFactory(itemName);
                 treasures.add(new Treasure(itemToAdd, coordinates));
             }
         } catch (IOException ex) {
@@ -141,5 +137,235 @@ public class ResourceLoaderUtility {
         }
 
         return treasures;
+    }
+
+    /**
+     * Load the player from the database.
+     *
+     * @param playerName
+     * @return
+     */
+    public static Player loadPlayerFromDB(String playerName) {
+        return loadAllPlayersFromDB().stream()
+                .filter(p -> p.getName().equals(playerName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Loads all the players that exist in our database.
+     *
+     * @return a list of existing players.
+     */
+    public static List<Player> loadAllPlayersFromDB() {
+        List<Player> players = new ArrayList<>();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(PLAYER_LIST_PATH));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] playerData = line.split(",");
+                String playerName = playerData[0];
+                int playerLevel = Integer.valueOf(playerData[1]);
+
+                // Player inventory.
+                Inventory playerInventory = loadPlayerInventory(playerName);
+
+                // Player coordinates.
+                int playerX = Integer.valueOf(playerData[2]);
+                int playerY = Integer.valueOf(playerData[3]);
+
+                // Stat block
+                int playerStrength = Integer.valueOf(playerData[4]);
+                int playerDexterity = Integer.valueOf(playerData[5]);
+                int playerIntellect = Integer.valueOf(playerData[6]);
+                StatBlock playerStatBlock = new StatBlock(
+                        playerStrength,
+                        playerDexterity,
+                        playerIntellect);
+
+                // Make player
+                Player player = new Player(
+                        playerName,
+                        playerLevel,
+                        playerInventory,
+                        playerX,
+                        playerY,
+                        playerStatBlock);
+
+                players.add(player);
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+        return players;
+    }
+
+    /**
+     * Checks if player exists in our database.
+     *
+     * @param name of the player we need to search.
+     * @return boolean value if there's a match or not.
+     */
+    public static boolean playerExists(String name) {
+        return loadAllPlayersFromDB().stream()
+                .anyMatch(p -> p.getName().equals(name));
+    }
+
+    /**
+     * Write a new player or update an existing player to our database.
+     */
+    public static void writePlayerData(Player player) {
+        List<Player> players = loadAllPlayersFromDB();
+        players.add(player);
+
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(new FileOutputStream(PLAYER_LIST_PATH));
+
+            for (Player p : players) {
+                printWriter.println(p.toCommaSeparatedString());
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (printWriter != null) {
+                printWriter.close();
+            }
+        }
+    }
+
+    /**
+     * Write a new inventory or update an existing one.
+     * @param player the player who we wish to write the inventory data for.
+     */
+    public static void writeInventoryData(Player player) {
+        Map<String, Inventory> inventories = loadAllPlayerInventories();
+
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(new FileOutputStream(PLAYER_INVENTORY_PATH));
+
+            // Update inventory of player.
+            inventories.put(player.getName(), player.getInventory());
+            
+            for (String playerName : inventories.keySet()) {
+                printWriter.println(inventories.get(playerName).toCommaSeparatedString(playerName));
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (printWriter != null) {
+                printWriter.close();
+            }
+        }
+    }
+
+    /**
+     * Loads all the inventory items of a player from the database using their
+     * player name.
+     *
+     * @param playerName name of the player used to query the DB.
+     * @return an Inventory of the player.
+     */
+    public static Inventory loadPlayerInventory(String playerName) {
+        return Objects.requireNonNull(loadAllPlayerInventories().get(playerName));
+    }
+
+    /**
+     * Loads all the inventories in the database.
+     *
+     * @return all the player inventories.
+     */
+    public static Map<String, Inventory> loadAllPlayerInventories() {
+        Map<String, Inventory> inventories = new HashMap<>();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(PLAYER_INVENTORY_PATH));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] inventoryData = line.split(",");
+                String playerNameDB = inventoryData[0];
+
+                Inventory inventory = new Inventory();
+                for (int i = 1; i < inventoryData.length; i++) {
+                    inventory.add(itemLoaderFactory(inventoryData[i]));
+                }
+
+                inventories.put(playerNameDB, inventory);
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+        return inventories;
+    }
+
+    /**
+     * Factory method to generate items of different types based on our
+     * item-list database which uses the item name as the key.
+     *
+     * @param itemName name of the item.
+     * @return an item that can either be a weapon, armour, consumable, etc.
+     */
+    public static Item itemLoaderFactory(String itemName) {
+        Item item = null;
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(ITEM_LIST_PATH));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] itemData = line.split(",");
+                String itemNameDB = itemData[0];
+                ItemList itemType = ItemList.valueOf(itemData[1].toUpperCase());
+
+                // Create an item depending on type.
+                if (itemNameDB.equals(itemName)) {
+                    switch (itemType) {
+                        case ARMOUR:
+                            int protection = Integer.valueOf(itemData[2]);
+                            item = new Armour(itemNameDB, itemType, protection);
+                            break;
+                        case RED_POTION:
+                            item = new ConsumableItem(itemNameDB, itemType);
+                            break;
+                        case SWORD:
+                        case HANDAXE:
+                        case SPEAR:
+                            int damage = Integer.valueOf(itemData[2]);
+                            item = new Weapon(itemNameDB, itemType, damage);
+                            break;
+                        default:
+                            item = new Item(itemNameDB, itemType);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+        return item;
     }
 }

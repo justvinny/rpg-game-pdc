@@ -71,8 +71,7 @@ public class MapScene extends Scene {
     public void refreshScene() {
         scene = new ArrayList<>();
         scene.addAll(map);
-        scene.add(createDashes());
-        scene.add(addPlayerBar());
+        scene.addAll(addPlayerBar());
         scene.addAll(addLegend());
         scene.addAll(addActionMessage());
     }
@@ -83,18 +82,25 @@ public class MapScene extends Scene {
      *
      * @return the player bar.
      */
-    private String addPlayerBar() {
-        String playerBar = String.format("Name: %s | Lv. %d | HP: %d/%d | Vitality: %d "
-                + "| Endurance: %d | Willpower: %d | Damage: %d | Protection: %d",
+    private List<String> addPlayerBar() {
+        List<String> playerBar = new ArrayList<>();
+        String playerInfo1 = String.format("Name: %s | Lv. %d | HP: %d/%d",
                 player.getName(),
                 player.getLevel(),
                 player.getHP(),
-                player.getMaxHP(),
+                player.getMaxHP());
+        
+        String playerInfo2 = String.format("Vitality: %d | Endurance: %d |"
+                + " Willpower: %d | Damage: %d | Protection: %d",
                 player.getStats().getVitality(),
                 player.getStats().getEndurance(),
                 player.getStats().getWillpower(),
                 player.getDamage(),
                 player.getProtection());
+        
+        playerBar.add(createDashes());
+        playerBar.add(playerInfo1);
+        playerBar.add(playerInfo2);
         return playerBar;
     }
 

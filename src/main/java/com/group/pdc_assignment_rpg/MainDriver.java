@@ -49,7 +49,7 @@ public class MainDriver {
             mapScene.toggle(); // Make map visible.
 
             // Make inventory scene.
-            InventoryScene inventoryScene = generateInventoryScene(player.getInventory());
+            InventoryScene inventoryScene = generateInventoryScene(player);
 
             // Start our game.
             GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
@@ -93,6 +93,7 @@ public class MainDriver {
         } else {
             ResourceLoaderUtility.writePlayerData(player);
             ResourceLoaderUtility.writeInventoryData(player);
+            ResourceLoaderUtility.writeEquippedData(player);
             System.out.println("Creating new player...");
         }
 
@@ -108,7 +109,7 @@ public class MainDriver {
      *
      * @return
      */
-    private static InventoryScene generateInventoryScene(Inventory inventory) {
+    private static InventoryScene generateInventoryScene(Player player) {
         // Set up navigtaion for inventory scene.
         Coordinates inventoryCoords = new Coordinates(
                 CURSOR_X_START,
@@ -129,7 +130,7 @@ public class MainDriver {
         // Make inventory scene.
         InventoryScene inventoryScene = new InventoryScene(
                 inventoryNavigation,
-                inventory);
+                player);
 
         return inventoryScene;
     }

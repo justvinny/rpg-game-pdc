@@ -6,5 +6,5 @@ Woodaxe,handaxe,7
 Tattered Clothing,armour,2
 Bloody Chainmail,armour,11
 Divine Bulwark,armour,100
-Potion of Healing,red_potion
+Potion of Healing,red_potion,10
 Yellow Rock,junk

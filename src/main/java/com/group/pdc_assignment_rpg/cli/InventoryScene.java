@@ -11,7 +11,9 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_COLUM
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.MAX_WORD_LENGTH;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.N_ROW_DASHES;
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
+import com.group.pdc_assignment_rpg.logic.items.ConsumableItem;
 import com.group.pdc_assignment_rpg.logic.items.EquippableItem;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.items.Item;
@@ -29,6 +31,7 @@ import java.util.List;
  */
 public class InventoryScene extends Scene {
 
+    private Player player;
     private List<Item> itemsPrinted;
     private Inventory inventory;
     private Navigation navigation;
@@ -40,14 +43,15 @@ public class InventoryScene extends Scene {
      *
      * @param navigation - allows navigation in our inventory so we can select
      * an item.
-     * @param inventory - model for our inventory which stores the backend
+     * @param player - model for player which stores the inventory data we need.
      * logic.
      */
-    public InventoryScene(Navigation navigation, Inventory inventory) {
+    public InventoryScene(Navigation navigation, Player player) {
         super();
+        this.player = player;
         this.itemsPrinted = new ArrayList<>();
         this.navigation = navigation;
-        this.inventory = inventory;
+        this.inventory = player.getInventory();
         this.actionMessage = "\n";
         this.itemSelected = 0;
     }
@@ -296,6 +300,12 @@ public class InventoryScene extends Scene {
                     actionMessage = String.format(" %s equipped!\n", item.getName());
                 }
             } else {
+                if (item instanceof ConsumableItem) {
+                    if (item.getName().equals("Potion of Healing")) {
+                        player.heal(((ConsumableItem) item).getSpecialValue());
+                        inventory.remove(item);
+                    }
+                }
                 actionMessage = String.format(" %s used!\n", item.getName());
             }
         } else {

@@ -1,0 +1,5 @@
+Bob,Sky Sunderer,Divine Bulwark
+bob,None,None
+Greg,None,None
+Jack,Broken Sword,Tattered Clothing
+Jane,None,None

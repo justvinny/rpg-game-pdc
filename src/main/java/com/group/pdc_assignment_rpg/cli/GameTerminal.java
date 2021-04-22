@@ -139,6 +139,7 @@ public class GameTerminal {
                     // Save the player and its inventory upon exit to persisent storage.
                     ResourceLoaderUtility.writePlayerData(player);
                     ResourceLoaderUtility.writeInventoryData(player);
+                    ResourceLoaderUtility.writeEquippedData(player);
 
                     screen.clear();
                     printExitMessage();
@@ -187,6 +188,8 @@ public class GameTerminal {
                         screen.refresh();
                         // Pause screen to show player who won the battle.
                         Thread.sleep(2000);
+                        mapScene.setActionMessage(
+                                combat.getLog().get(combat.getLog().size() - 1));
                         player.up();
                         battleScene.toggle();
                         mapScene.toggle();
@@ -331,16 +334,13 @@ public class GameTerminal {
                 switch (action) {
                     case ATTACK:
                         combat.battle(action);
-                        System.out.println("You have attacked!");
                         break;
                     case DEFEND:
                         combat.battle(action);
-                        System.out.println("You have defended!");
                         break;
                     case ESCAPE:
                         combat.battle(action);
                         if (!combat.isFighting()) {
-                            System.out.println("You have escaped!");
                         }
                 }
         }

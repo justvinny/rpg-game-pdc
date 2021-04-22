@@ -143,6 +143,21 @@ public abstract class Creature extends Entity {
         return protection + armourProtection;
     }
 
+    public boolean isWeaponEquipped() {
+        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
+    }
+    
+    public boolean isArmourEquipped() {
+        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
+    }
+    
+    public String getWeaponName() {
+        return (isWeaponEquipped()) ? inventory.getEquipment().get(EquipmentSlot.HAND).getName() : "None";
+    }
+    
+    public String getArmourName() {
+        return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
+    }
     /**
      * Setter methods
      *

@@ -22,6 +22,7 @@ public abstract class Creature extends Entity {
     private StatBlock stats;
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
+    private boolean defending;
 
     /**
      * Constructor for creating a creature with all values known.
@@ -35,6 +36,7 @@ public abstract class Creature extends Entity {
         this.setHP(hp);
         this.setSP(sp);
         this.setWP(wp);
+        this.setDefending(false);
     }
 
 
@@ -100,14 +102,17 @@ public abstract class Creature extends Entity {
         return this.getStats().getValue(CStats.HEALTH);
     }    
     public int getMaxSP() {
-		return this.getStats().getValue(CStats.STAMINA);
-	}
-	public int getMaxWP() {
-		return this.getStats().getValue(CStats.WILL);
-	}
-	public Map<CStats, Integer> getConsumables() {
-		return consumables;
-	}
+        return this.getStats().getValue(CStats.STAMINA);
+    }
+    public int getMaxWP() {
+        return this.getStats().getValue(CStats.WILL);
+    }
+    public Map<CStats, Integer> getConsumables() {
+        return consumables;
+    }
+    public boolean isDefending() {
+        return this.defending;
+    }
 
 	
 
@@ -154,6 +159,11 @@ public abstract class Creature extends Entity {
     public void setConsumables(Map<CStats, Integer> consumables) {
     	this.consumables = consumables;
     }
+
+    public void setDefending(boolean defending) {
+        this.defending = defending;
+    }
+    
 
     /**
      * Utility methods

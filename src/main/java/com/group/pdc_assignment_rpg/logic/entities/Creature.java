@@ -8,6 +8,7 @@ import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.Stats;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.Weapon;
+import com.group.pdc_assignment_rpg.logic.character.Level;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to
@@ -19,6 +20,7 @@ import com.group.pdc_assignment_rpg.logic.items.Weapon;
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
 public abstract class Creature extends Entity {
 
     private StatBlock stats;
@@ -26,12 +28,14 @@ public abstract class Creature extends Entity {
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
     private boolean defending;
-    private int level, damage, protection;
+    private int damage, protection;
+    private Level level;
+    private int xp;
 
     /**
      * Constructor for creating a creature with all values known.
      */
-    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp, int level) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp, Level level) {
         super(x, y, s, c);
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setName(name);
@@ -47,7 +51,7 @@ public abstract class Creature extends Entity {
     /**
      * Constructor for creating a creature with default (full) hit-points.
      */
-    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int level) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, Level level) {
         super(x, y, s, c);
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setName(name);
@@ -72,7 +76,7 @@ public abstract class Creature extends Entity {
         this.setHP(getMaxHP());
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
-        this.setLevel(1);
+        this.setLevel(Level.L1);
     }
 
     /**
@@ -127,7 +131,7 @@ public abstract class Creature extends Entity {
         return this.defending;
     }
 
-    public int getLevel() {
+    public Level getLevel() {
         return level;
     }
 
@@ -143,20 +147,12 @@ public abstract class Creature extends Entity {
         return protection + armourProtection;
     }
 
-    public boolean isWeaponEquipped() {
-        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
-    }
-    
-    public boolean isArmourEquipped() {
-        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
-    }
-    
-    public String getWeaponName() {
-        return (isWeaponEquipped()) ? inventory.getEquipment().get(EquipmentSlot.HAND).getName() : "None";
-    }
-    
-    public String getArmourName() {
-        return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
+    public int getXP(){
+        Random r = new Random();
+        
+        int xp = r.nextInt((5 - 3) + 1) * ((int)Math.round(this.getLevel().getLvl() * 1.8));
+        
+        return xp;
     }
     /**
      * Setter methods
@@ -210,8 +206,8 @@ public abstract class Creature extends Entity {
         this.defending = defending;
     }
 
-    public void setLevel(int level) throws IllegalArgumentException {
-        if (level >= 1) {
+    public void setLevel(Level level) throws IllegalArgumentException {
+        if (level.ordinal() >= 0) {
             this.level = level;
             setStats();
         } else {
@@ -220,10 +216,21 @@ public abstract class Creature extends Entity {
     }
     
     public void setStats() {
-        damage = 5 + (level - 1) * 2;
-        protection = level;
+        damage = (this.getStat(Stats.STRENGTH) + (this.getLevel().getLvl() - 1) * 2);
+        protection = level.getLvl();
     }
 
+    /**
+     * Setters
+     */
+    public void setXP(int xp) {
+        this.xp = xp;
+    }
+    
+    public void addXP(int xp) {
+        this.xp += xp;
+    }
+    
     /**
      * Utility methods
      *

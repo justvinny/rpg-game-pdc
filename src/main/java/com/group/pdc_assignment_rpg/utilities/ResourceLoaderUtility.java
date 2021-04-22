@@ -2,8 +2,9 @@ package com.group.pdc_assignment_rpg.utilities;
 
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
-import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
+
+import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.ConsumableItem;
@@ -42,6 +43,7 @@ public class ResourceLoaderUtility {
     private static final String ITEM_LIST_PATH = RESOURCE_PATH + "/item-list.txt";
     private static final String EQUIPPED_ITEMS_PATH = RESOURCE_PATH + "/equipped.txt";
     private static final String MOBS_PATH = RESOURCE_PATH + "/mobs.txt";
+
 
     /**
      * Method to load a map from a text file depending on map name argument
@@ -170,23 +172,10 @@ public class ResourceLoaderUtility {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] playerData = line.split(",");
                 String playerName = playerData[0];
-                int playerLevel = Integer.valueOf(playerData[1]);
+                Level playerLevel = Level.valueOf(playerData[1]);
 
                 // Player inventory.
                 Inventory playerInventory = loadPlayerInventory(playerName);
-
-                // Equip items
-                List<String> playerEquipped = loadPlayerEquippedItems(playerName);
-
-                if (!playerEquipped.get(0).equals("None")) {
-                    playerInventory.getEquipment().put(EquipmentSlot.HAND,
-                            playerInventory.getItem(playerEquipped.get(0)));
-                }
-
-                if (!playerEquipped.get(1).equals("None")) {
-                    playerInventory.getEquipment().put(EquipmentSlot.ARMOUR,
-                            playerInventory.getItem(playerEquipped.get(1)));
-                }
 
                 // Player coordinates.
                 int playerX = Integer.valueOf(playerData[2]);
@@ -242,13 +231,13 @@ public class ResourceLoaderUtility {
      */
     public static void writePlayerData(Player player) {
         List<Player> players = loadAllPlayersFromDB();
-
+        
         // Check if player already exists.
         if (players.contains(player)) {
             // Delete the player.
             players.remove(player);
         }
-
+        
         // Update player.
         players.add(player);
 
@@ -258,6 +247,32 @@ public class ResourceLoaderUtility {
 
             for (Player p : players) {
                 printWriter.println(p.toCommaSeparatedString());
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (printWriter != null) {
+                printWriter.close();
+            }
+        }
+    }
+
+    /**
+     * Write a new inventory or update an existing one.
+     * @param player the player who we wish to write the inventory data for.
+     */
+    public static void writeInventoryData(Player player) {
+        Map<String, Inventory> inventories = loadAllPlayerInventories();
+
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(new FileOutputStream(PLAYER_INVENTORY_PATH));
+
+            // Update inventory of player.
+            inventories.put(player.getName(), player.getInventory());
+            
+            for (String playerName : inventories.keySet()) {
+                printWriter.println(inventories.get(playerName).toCommaSeparatedString(playerName));
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
@@ -313,109 +328,6 @@ public class ResourceLoaderUtility {
             }
         }
         return inventories;
-    }
-
-    /**
-     * Write a new inventory or update an existing one.
-     *
-     * @param player the player who we wish to write the inventory data for.
-     */
-    public static void writeInventoryData(Player player) {
-        Map<String, Inventory> inventories = loadAllPlayerInventories();
-
-        PrintWriter printWriter = null;
-        try {
-            printWriter = new PrintWriter(new FileOutputStream(PLAYER_INVENTORY_PATH));
-
-            // Update inventory of player.
-            inventories.put(player.getName(), player.getInventory());
-
-            for (String playerName : inventories.keySet()) {
-                printWriter.println(inventories.get(playerName).toCommaSeparatedString(playerName));
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (printWriter != null) {
-                printWriter.close();
-            }
-        }
-    }
-
-    /**
-     * Write a new data for player's equipped items or update an existing one.
-     *
-     * @param player the player who we wish to write the inventory data for.
-     */
-    public static void writeEquippedData(Player player) {
-        Map<String, List<String>> equippedItems = loadAllPlayerEquippedItems();
-
-        PrintWriter printWriter = null;
-        try {
-            printWriter = new PrintWriter(new FileOutputStream(EQUIPPED_ITEMS_PATH));
-
-            // Update equpped items of player
-            equippedItems.put(player.getName(), new ArrayList<>());
-            equippedItems.get(player.getName()).add(player.getWeaponName());
-            equippedItems.get(player.getName()).add(player.getArmourName());
-
-            for (String playerName : equippedItems.keySet()) {
-                List<String> equippedItemsPlayer = equippedItems.get(playerName);
-                String weapon = equippedItemsPlayer.get(0);
-                String armour = equippedItemsPlayer.get(1);
-                printWriter.println(String.format("%s,%s,%s",
-                        playerName, weapon, armour));
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (printWriter != null) {
-                printWriter.close();
-            }
-        }
-    }
-
-    /**
-     * Loads the equipped items for the player using their name.
-     *
-     * @param playerName name of the player used to query the DB.
-     * @return a list of the equipped items of the player.
-     */
-    public static List<String> loadPlayerEquippedItems(String playerName) {
-        return Objects.requireNonNull(loadAllPlayerEquippedItems().get(playerName));
-    }
-
-    /**
-     * Loads all the equipped items for players from the database.
-     *
-     * @return all the player equipped items.
-     */
-    public static Map<String, List<String>> loadAllPlayerEquippedItems() {
-        Map<String, List<String>> equipped = new HashMap<>();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(EQUIPPED_ITEMS_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] equippedData = line.split(",");
-                String playerNameDB = equippedData[0];
-
-                equipped.put(playerNameDB, new ArrayList<>());
-                equipped.get(playerNameDB).add(equippedData[1]);
-                equipped.get(playerNameDB).add(equippedData[2]);
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
-                }
-            }
-        }
-        return equipped;
     }
 
     /**

@@ -128,7 +128,7 @@ public class GameTerminal {
                     // Save the player and its inventory upon exit to persisent storage.
                     ResourceLoaderUtility.writePlayerData(player);
                     ResourceLoaderUtility.writeInventoryData(player);
-                    ResourceLoaderUtility.writeEquippedData(player);
+//                    ResourceLoaderUtility.writeEquippedData(player);
 
                     screen.clear();
                     printExitMessage();
@@ -457,7 +457,7 @@ public class GameTerminal {
         // Same as a level 2 player who will only encounter slimes and goblins.
         // Anything over level 3 can encounter any mob except the boss randomly.
         Mob mob = null;
-        switch (player.getLevel()) {
+        switch (player.getLevel().getLvl()) {
             case 1:
                 mob = ResourceLoaderUtility.loadMobFromDB("Red Slime");
                 break;

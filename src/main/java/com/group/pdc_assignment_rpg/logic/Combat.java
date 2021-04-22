@@ -85,7 +85,7 @@ public class Combat {
         int targetCheck = target.getStat(targetStat) + roll(20);
         
         if (targetBonus > 0) {
-            targetCheck *= targetBonus;
+            targetCheck = (int) (targetCheck * targetBonus);
         }
 
         return innitiatorCheck > targetCheck;

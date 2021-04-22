@@ -11,8 +11,6 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.group.pdc_assignment_rpg.logic.Combat;
-import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
-import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import com.group.pdc_assignment_rpg.logic.entities.Creature;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
@@ -38,6 +36,8 @@ public class GameTerminal {
     private static final int FPS = 1000 / 60;
     private static final int TERMINAL_WIDTH = 120;
     private static final int TERMINAL_HEIGHT = 40;
+    private static final int MIN_ENCOUNTER_STEPS = 20;
+    private static final int RAND_RANGE_STEPS = 15;
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
 
@@ -48,46 +48,35 @@ public class GameTerminal {
     private InventoryScene inventoryScene;
     private BattleScene battleScene;
     private Player player;
-    private Mob mob;
     private Terminal terminal;
     private Screen screen;
     private TextGraphics textGraphics;
     private Combat combat;
+    private Mob boss;
+    private int playerSteps, randomEncounterSteps;
 
     /**
      *
      * @param mapScene is the first game map we're playing on.
      * @param player is our playable character.
+     * @param battleScene UI for our battles.
      * @param inventoryScene contains the CLI for our inventory.
-     * @param mob is a monster/s in the map.
+     * @param mob boss monster.
      */
-    public GameTerminal(MapScene mapScene, InventoryScene inventoryScene, Player player, Mob mob) {
+    public GameTerminal(MapScene mapScene, InventoryScene inventoryScene, BattleScene battleScene, Player player, Mob mob) {
         this.mapScene = mapScene;
+        this.battleScene = battleScene;
         this.inventoryScene = inventoryScene;
         this.player = player;
-        this.mob = mob;
+        this.playerSteps = 0;
+        this.boss = mob;
+        generateRandomEncounterSteps();
     }
 
     /**
      * Method that starts our game and its game loop.
      */
     public void start() throws IOException, InterruptedException {
-        // Placeholder for dummy Battle Scene.
-        Coordinates battleSceneCoords = new Coordinates(
-                BattleSceneConstants.CURSOR_X,
-                BattleSceneConstants.CURSOR_Y_START);
-        Boundaries battleSceneBounds = new Boundaries(
-                BattleSceneConstants.CURSOR_X,
-                BattleSceneConstants.CURSOR_Y_START,
-                BattleSceneConstants.CURSOR_X,
-                BattleSceneConstants.CURSOR_Y_END);
-        Navigation battleSceneNavigation = new Navigation(
-                battleSceneCoords,
-                battleSceneBounds);
-        battleScene = new BattleScene(
-                battleSceneNavigation,
-                player,
-                mob);
 
         initTerminal();
         gameLoop();
@@ -171,6 +160,7 @@ public class GameTerminal {
                     // Detect collision of player with other objects.
                     detectCollision();
                 }
+
             }
 
             int cursorPos = 0;
@@ -190,7 +180,6 @@ public class GameTerminal {
                         Thread.sleep(2000);
                         mapScene.setActionMessage(
                                 combat.getLog().get(combat.getLog().size() - 1));
-                        player.up();
                         battleScene.toggle();
                         mapScene.toggle();
                     }
@@ -202,8 +191,8 @@ public class GameTerminal {
                 // Draw Player
                 drawCreature(player);
 
-                // Draw Mob
-                drawCreature(mob);
+                // Draw Boss
+                drawCreature(boss);
 
                 // Colour treasures yellow.
                 colourTreasures();
@@ -288,6 +277,7 @@ public class GameTerminal {
                 if (player.getY() < map.size()
                         && map.get(player.getY() + 1).charAt(player.getX()) != '#') {
                     player.down();
+                    playerSteps++;
                 }
 
                 break;
@@ -295,6 +285,7 @@ public class GameTerminal {
                 if (player.getY() > 0
                         && map.get(player.getY() - 1).charAt(player.getX()) != '#') {
                     player.up();
+                    playerSteps++;
                 }
 
                 break;
@@ -302,6 +293,7 @@ public class GameTerminal {
                 if (player.getX() < map.get(player.getY()).length()
                         && map.get(player.getY()).charAt(player.getX() + 1) != '#') {
                     player.right();
+                    playerSteps++;
                 }
 
                 break;
@@ -309,6 +301,7 @@ public class GameTerminal {
                 if (player.getX() > 0
                         && map.get(player.getY()).charAt(player.getX() - 1) != '#') {
                     player.left();
+                    playerSteps++;
                 }
         }
     }
@@ -340,8 +333,6 @@ public class GameTerminal {
                         break;
                     case ESCAPE:
                         combat.battle(action);
-                        if (!combat.isFighting()) {
-                        }
                 }
         }
     }
@@ -435,14 +426,58 @@ public class GameTerminal {
         }
 
         // Detect monster and player collision
-        if (player.getX() == mob.getX()
-                && player.getY() == mob.getY()
+        if (player.getX() == boss.getX()
+                && player.getY() == boss.getY()
                 && !battleScene.isVisible()) {
-            battleScene.toggle();
+            battleScene.startBattle(boss);
             mapScene.toggle();
-            combat = new Combat(player, mob);
+            combat = new Combat(player, boss);
             battleScene.setCombat(combat);
+            player.right();
         }
+
+        // Create random battles.
+        if (playerSteps == randomEncounterSteps) {
+            playerSteps = 0;
+            createBattleScene();
+            mapScene.toggle();
+            generateRandomEncounterSteps();
+        }
+    }
+
+    /**
+     * Creates a monster for our random battles and passes it to the battle scene
+     * UI to show to the player.
+     */
+    private void createBattleScene() {
+        // Dummy placeholder for mobs.
+        String[] mobs = {"Red Slime", "Red Goblin", "Red Bandit"};
+
+        // Make sure a level 1 player only encounters slimes that are weak.
+        // Same as a level 2 player who will only encounter slimes and goblins.
+        // Anything over level 3 can encounter any mob except the boss randomly.
+        Mob mob = null;
+        switch (player.getLevel()) {
+            case 1:
+                mob = ResourceLoaderUtility.loadMobFromDB("Red Slime");
+                break;
+            case 2:
+                mob = ResourceLoaderUtility.loadMobFromDB(mobs[(int) (Math.random() * (mobs.length - 1))]);
+                break;
+            default:
+                mob = ResourceLoaderUtility.loadMobFromDB(mobs[(int) (Math.random() * mobs.length)]);
+        }
+
+        combat = new Combat(player, mob);
+        battleScene.setCombat(combat);
+        battleScene.startBattle(mob);
+    }
+
+    /**
+     * Resets the number of steps to take before encountering a battle.
+     */
+    private void generateRandomEncounterSteps() {
+        randomEncounterSteps = (int) ((Math.random() * RAND_RANGE_STEPS) + MIN_ENCOUNTER_STEPS);
 
     }
 }

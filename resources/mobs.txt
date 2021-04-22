@@ -1,0 +1,4 @@
+Goblin King,5,50,50,50
+Red Slime,1,5,5,5
+Red Goblin,2,8,8,8
+Red Bandit,3,12,12,12

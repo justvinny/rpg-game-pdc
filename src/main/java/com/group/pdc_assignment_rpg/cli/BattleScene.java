@@ -173,4 +173,9 @@ public class BattleScene extends Scene {
     public void down() {
         navigation.down();
     }
+    
+    public void startBattle(Mob mob) {
+        this.mob = mob;
+        this.toggle();
+    }
 }

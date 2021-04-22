@@ -1,9 +1,15 @@
 package com.group.pdc_assignment_rpg;
 
-import com.group.pdc_assignment_rpg.logic.navigation.*;
-import com.group.pdc_assignment_rpg.logic.items.*;
-import com.group.pdc_assignment_rpg.logic.entities.*;
 import com.group.pdc_assignment_rpg.cli.*;
+import com.group.pdc_assignment_rpg.cli.BattleScene;
+import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
+import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
+import com.group.pdc_assignment_rpg.logic.navigation.Navigation;
+import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.cli.GameTerminal;
+import com.group.pdc_assignment_rpg.cli.InventoryScene;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_END;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_START;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_X_STEP;
@@ -37,8 +43,8 @@ public class MainDriver {
             // Load player and start screen.
             Player player = loadStartScreen();
 
-            // Load dummy mob.
-            Mob mob = new Mob("Red Slime");
+            // Load boss monster.
+            Mob boss = ResourceLoaderUtility.loadMobFromDB("Goblin King");
 
             // Load map treasures.
             List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
@@ -51,8 +57,12 @@ public class MainDriver {
             // Make inventory scene.
             InventoryScene inventoryScene = generateInventoryScene(player);
 
+            // Make battle scene.
+            BattleScene battleScene = generateBattleScene(player);
+
             // Start our game.
-            GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, player, mob);
+            GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, battleScene, player, boss);
+            
             // Message that says game terminal is loaded.
             System.out.println("Game terminal is now running! Check the new popup window.");
             gameTerminal.start();
@@ -63,11 +73,12 @@ public class MainDriver {
     }
 
     /**
-     * Helper method to initialise our start screen which asks the user
-     * for their player name. Then it checks the name in our database and
-     * loads the player if it exists, otherwise, it will create a new player.
+     * Helper method to initialise our start screen which asks the user for
+     * their player name. Then it checks the name in our database and loads the
+     * player if it exists, otherwise, it will create a new player.
+     *
      * @return either a new player or a saved player.
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private static Player loadStartScreen() throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
@@ -79,10 +90,10 @@ public class MainDriver {
         Player player = new Player(playerName);
         // Add default items for new character.
         player.getInventory().addMultiple(
-            ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
-            ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
-            ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
-        
+                ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
+                ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
+                ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
+
         // Check if player exists in the system.
         // Load the player from the DB if it exists.
         // Otherwise, create a new player.
@@ -103,9 +114,9 @@ public class MainDriver {
     }
 
     /**
-     * Helper method to generate inventory and inventory scene. This helps
-     * set up the navigation for the inventory and make sure the cursor
-     * does not go out of bounds.
+     * Helper method to generate inventory and inventory scene. This helps set
+     * up the navigation for the inventory and make sure the cursor does not go
+     * out of bounds.
      *
      * @return
      */
@@ -133,5 +144,29 @@ public class MainDriver {
                 player);
 
         return inventoryScene;
+    }
+
+    private static BattleScene generateBattleScene(Player player) {
+        // Placeholder mob to generate battle scene.
+        Mob mob = new Mob("No Mob");
+
+        // Placeholder for dummy Battle Scene.
+        Coordinates battleSceneCoords = new Coordinates(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START);
+        Boundaries battleSceneBounds = new Boundaries(
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_START,
+                BattleSceneConstants.CURSOR_X,
+                BattleSceneConstants.CURSOR_Y_END);
+        Navigation battleSceneNavigation = new Navigation(
+                battleSceneCoords,
+                battleSceneBounds);
+        BattleScene battleScene = new BattleScene(
+                battleSceneNavigation,
+                player,
+                mob);
+
+        return battleScene;
     }
 }

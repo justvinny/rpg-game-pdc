@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.utilities;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.ConsumableItem;
@@ -40,6 +41,7 @@ public class ResourceLoaderUtility {
     private static final String PLAYER_INVENTORY_PATH = RESOURCE_PATH + "/player-inventories.txt";
     private static final String ITEM_LIST_PATH = RESOURCE_PATH + "/item-list.txt";
     private static final String EQUIPPED_ITEMS_PATH = RESOURCE_PATH + "/equipped.txt";
+    private static final String MOBS_PATH = RESOURCE_PATH + "/mobs.txt";
 
     /**
      * Method to load a map from a text file depending on map name argument
@@ -468,5 +470,48 @@ public class ResourceLoaderUtility {
             }
         }
         return item;
+    }
+
+    /**
+     * Loads a mob from the database.
+     *
+     * @return all the player equipped items.
+     */
+    public static Mob loadMobFromDB(String mobName) {
+        Mob mob = null;
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(MOBS_PATH));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] mobData = line.split(",");
+                String mobNameFromDB = mobData[0];
+                int mobLevel = Integer.valueOf(mobData[1]);
+                int mobStrength = Integer.valueOf(mobData[2]);
+                int mobDexterity = Integer.valueOf(mobData[3]);
+                int mobIntellect = Integer.valueOf(mobData[4]);
+
+                if (mobNameFromDB.equals(mobName)) {
+                    if (mobName.equals("Goblin King")) {
+                           StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
+                        mob = new Mob(mobNameFromDB, 'B', mobLevel, 81, 10, statBlock);
+                    } else {
+                        StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
+                        mob = new Mob(mobNameFromDB, 'R', mobLevel, statBlock);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+        return mob;
     }
 }

@@ -40,6 +40,8 @@ public class Combat {
                     setCurrentTurn(Combatant.PLAYER);
                     break;
             }
+            
+            System.out.println("---");
         }
 
         System.out.println("Combat ended!");
@@ -83,7 +85,7 @@ public class Combat {
         int targetCheck = target.getStat(targetStat) + roll(20);
         
         if (targetBonus > 0) {
-            targetCheck *= targetBonus;
+            targetCheck = (int) (targetCheck * targetBonus);
         }
 
         return innitiatorCheck > targetCheck;
@@ -92,8 +94,10 @@ public class Combat {
     public void setFirstTurn() {
         if (statCompete(Stats.DEXTERITY, player, mob)) {
             currentTurn = Combatant.PLAYER;
+            System.out.println(player.getName() + " leaps into action, ready to make a move!\n");
         } else {
             currentTurn = Combatant.ENEMY;
+            System.out.println(mob.getName() + " catches " + player.getName() + " off guard and makes the first move!\n");
         }
     }
 

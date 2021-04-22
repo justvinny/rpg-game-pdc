@@ -40,7 +40,7 @@ public class Mob extends Creature {
         super(name, 13, 21, 'M', TextColor.ANSI.RED);
         setLevel(1);
         this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
-        populatePersonality(0.7, 0.2, 0.1);
+        populatePersonality(0.75, 0.2, 0.05);
     }
     
     /**

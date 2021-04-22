@@ -36,8 +36,8 @@ public class GameTerminal {
     private static final int FPS = 1000 / 60;
     private static final int TERMINAL_WIDTH = 120;
     private static final int TERMINAL_HEIGHT = 40;
-    private static final int MIN_ENCOUNTER_STEPS = 20;
-    private static final int RAND_RANGE_STEPS = 15;
+    private static final int MIN_ENCOUNTER_STEPS = 65;
+    private static final int RAND_RANGE_STEPS = 25;
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
 

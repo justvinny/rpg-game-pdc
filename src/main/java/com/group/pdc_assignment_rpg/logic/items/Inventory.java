@@ -58,6 +58,14 @@ public class Inventory {
         return equipment;
     }
 
+    public Item getItem(String equipmentName) {
+        return inventory.keySet()
+                .stream()
+                .filter(item -> item.getName().equals(equipmentName))
+                .findFirst()
+                .orElse(null);
+    }
+
     public Item getItem(EquipmentSlot e) {
         return this.getEquipment().get(e);
     }
@@ -178,10 +186,9 @@ public class Inventory {
     }
 
     /**
-     * This will unequip the item specified. This will unequip an item
-     * based on the slot provided. 
-     * HAND will remove any weapon.
-     * ARMOUR will remove any armour/clothing.
+     * This will unequip the item specified. This will unequip an item based on
+     * the slot provided. HAND will remove any weapon. ARMOUR will remove any
+     * armour/clothing.
      *
      * @param e either HAND or ARMOUR slot to unequip.
      */
@@ -212,7 +219,7 @@ public class Inventory {
     public String toCommaSeparatedString(String playerName) {
         StringBuilder inventoryBuilder = new StringBuilder();
         inventoryBuilder.append(playerName).append(",");
-        
+
         // Add all items in inventory to builder.
         for (Item item : inventory.keySet()) {
             inventoryBuilder.append(item.getName());

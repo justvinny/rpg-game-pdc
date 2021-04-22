@@ -41,6 +41,12 @@ public class Combat {
     }
 
     public List<String> getLog() {
+        if (battleLog.size() > BattleSceneConstants.BATTLE_LOG_LINES) {
+            for (int i = 0; i < battleLog.size() - BattleSceneConstants.BATTLE_LOG_LINES; i++) {
+                battleLog.remove(0);
+            }
+        }
+        
         return battleLog;
     }
 
@@ -198,7 +204,7 @@ public class Combat {
     private void enemyTurn() {
         if (fighting) {
             BattleSceneConstants mobChoice = mob.chooseAction();
-            runAction(mobChoice, mob, player);
+            fighting = runAction(mobChoice, mob, player);
             setCurrentTurn(Combatant.PLAYER);
         }
     }

@@ -29,10 +29,8 @@ Basic RPG game for Program Design and Construction paper.
 
 
 ### Jess 
-- [x] Entity, Creature, Player
-- [ ] Loading user data
-- [ ] Map Design
-- [ ] Edit and add tasks here.
+- [x] Entity, Creature, Player, Mob
+- [x] Combat System 
 
 
 ### Macauley 

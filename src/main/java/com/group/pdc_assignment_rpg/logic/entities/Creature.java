@@ -32,7 +32,7 @@ public abstract class Creature extends Entity {
     private Level level;
     private int xp;
 
-    /**
+    /*
      * Constructor for creating a creature with all values known.
      */
     public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp, Level level) {
@@ -48,7 +48,7 @@ public abstract class Creature extends Entity {
         this.setLevel(level);
     }
 
-    /**
+    /*
      * Constructor for creating a creature with default (full) hit-points.
      */
     public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, Level level) {
@@ -62,8 +62,8 @@ public abstract class Creature extends Entity {
         this.setWP(getMaxWP());
         this.setLevel(level);
     }
-
-    /**
+    
+    /*
      * Constructor for creating a creature with a default state (default stats,
      * empty inventory).
      */
@@ -79,7 +79,7 @@ public abstract class Creature extends Entity {
         this.setLevel(Level.L1);
     }
 
-    /**
+    /*
      * Getter methods
      *
      */
@@ -169,7 +169,7 @@ public abstract class Creature extends Entity {
         return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
     }
 
-    /**
+    /*
      * Setter methods
      *
      */
@@ -234,8 +234,8 @@ public abstract class Creature extends Entity {
         damage = (this.getStat(Stats.STRENGTH) + (this.getLevel().getLvl() - 1) * 2);
         protection = level.getLvl();
     }
-
-    /**
+    
+    /*
      * Setters
      */
     public void setXP(int xp) {
@@ -254,6 +254,7 @@ public abstract class Creature extends Entity {
      * Causes a creature to take a specified amount of damage to their HP.
      *
      * @param amount is the amount of damage.
+     * @return whether damage is valid or not.
      */
     public boolean damage(int amount) throws IllegalArgumentException {        
         // Validate that damage amount is positive

@@ -8,6 +8,7 @@ package com.group.pdc_assignment_rpg.logic.character;
 /**
  *
  * @author Macauley
+ * @param <E>
  */
 public interface IterableEnum<E extends Enum<E>> {
 

@@ -30,6 +30,12 @@ import java.util.Scanner;
  */
 public class MainDriver {
 
+    /**
+     * Constants
+     */
+    public static final String BOSS_MOB = "Goblin King";
+    public static final int GAME_PAUSE_MS = 1000;
+    
     public static void main(String[] args) {
         try {
             init();
@@ -44,7 +50,7 @@ public class MainDriver {
             Player player = loadStartScreen();
 
             // Load boss monster.
-            Mob boss = ResourceLoaderUtility.loadMobFromDB("Goblin King");
+            Mob boss = ResourceLoaderUtility.loadMobFromDB(BOSS_MOB);
 
             // Load map treasures.
             List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
@@ -88,11 +94,6 @@ public class MainDriver {
 
         // Default if no records exist of player.
         Player player = new Player(playerName);
-        // Add default items for new character.
-        player.getInventory().addMultiple(
-                ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
-                ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
-                ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
 
         // Check if player exists in the system.
         // Load the player from the DB if it exists.
@@ -102,6 +103,7 @@ public class MainDriver {
             System.out.println("Welcome back!");
             System.out.println("Loading player...");
         } else {
+            // Saves the new player data to our database.
             ResourceLoaderUtility.writePlayerData(player);
             ResourceLoaderUtility.writeInventoryData(player);
             ResourceLoaderUtility.writeEquippedData(player);
@@ -109,7 +111,7 @@ public class MainDriver {
         }
 
         System.out.println("Loading game terminal...");
-        Thread.sleep(1000); // Adds delay to emulate loading screen.
+        Thread.sleep(GAME_PAUSE_MS); // Adds delay to emulate loading screen.
         return player;
     }
 
@@ -146,6 +148,11 @@ public class MainDriver {
         return inventoryScene;
     }
 
+    /**
+     * Helper method to generate the battle scene UI for the our game. 
+     * @param player the player that will be playable by the user.
+     * @return the battle scene CLI.
+     */
     private static BattleScene generateBattleScene(Player player) {
         // Placeholder mob to generate battle scene.
         Mob mob = new Mob("No Mob");

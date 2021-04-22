@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class BattleScene extends Scene {
 
-    private Navigation navigation;
-    private Player player;
+    private final Navigation navigation;
+    private final Player player;
     private Mob mob;
     private Combat combat;
 

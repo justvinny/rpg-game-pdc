@@ -15,11 +15,11 @@ import java.util.Random;
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  */
-public class Mob extends Creature {
+public final class Mob extends Creature {
 
     private Map<BattleSceneConstants, Double> personality;
 
-    /**
+    /*
      * Constructor for creating a mob with existing data. All character data
      * must be given to the constructor.
      */
@@ -29,7 +29,7 @@ public class Mob extends Creature {
         this.setPersonality(personality);
     }
 
-    /**
+    /*
      * Alternate constructor for creating a mob with existing data from a text
      * file. Will be used for boss mob primarily.
      */
@@ -39,7 +39,7 @@ public class Mob extends Creature {
         populatePersonality(0.75, 0.2, 0.05);
     }
 
-    /**
+    /*
      * Alternate constructor for creating a mob with existing data from a text
      * file.
      */
@@ -49,7 +49,7 @@ public class Mob extends Creature {
         populatePersonality(0.75, 0.2, 0.05);
     }
 
-    /**
+    /*
      * Constructor for creating a new mob for the first time. Takes only a name
      * and sets everything else to default values.
      */
@@ -59,7 +59,7 @@ public class Mob extends Creature {
         populatePersonality(0.75, 0.2, 0.05);
     }
 
-    /**
+    /*
      * Constructor for creating a default mob. Takes only name, level and
      * personality values, everything else is default.
      */
@@ -67,8 +67,9 @@ public class Mob extends Creature {
         super(name, 81, 10, 'M', TextColor.ANSI.RED);
         setLevel(Level.createLvl(level));
     }
-        
-    /** Constructor for creating a new mob for the first time. Takes only a
+
+    /*
+     * Constructor for creating a new mob for the first time. Takes only a
      * name and level, and sets everything else to default values.
      */
     public Mob(String name, Level level) {
@@ -77,17 +78,21 @@ public class Mob extends Creature {
         this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
         populatePersonality(0.75, 0.2, 0.05);
     }
-    
-    /**
+
+    /*
      * Constructor for creating a default mob. Takes only
      * name, level and personality values, everything else is default.
      */
     public Mob(String name, Level level, double attackVal, double defendVal, double escapeVal) {
-    	super(name, 13, 21, 'M', TextColor.ANSI.RED);
-    	setLevel(level);
+        super(name, 13, 21, 'M', TextColor.ANSI.RED);
+        setLevel(level);
         this.populatePersonality(attackVal, defendVal, escapeVal);
     }
 
+    /*
+     * Getter methods
+     *
+     */
     public int getX() {
         return this.x;
     }
@@ -96,10 +101,6 @@ public class Mob extends Creature {
         return this.y;
     }
 
-    /**
-     * Getter methods
-     *
-     */
     public Map<BattleSceneConstants, Double> getPersonality() {
         return personality;
     }
@@ -107,9 +108,9 @@ public class Mob extends Creature {
     public double getPersonalityTrait(BattleSceneConstants trait) {
         return personality.get(trait);
     }
-    
 
-    /**
+
+    /*
      * Setter methods
      *
      */

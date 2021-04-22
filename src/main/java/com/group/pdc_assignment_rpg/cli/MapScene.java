@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class MapScene extends Scene {
 
-    private List<String> map;
-    private Player player;
-    private List<Treasure> treasures;
+    private final List<String> map;
+    private final Player player;
+    private final List<Treasure> treasures;
     private List<String> scene;
     private String actionMessage;
 

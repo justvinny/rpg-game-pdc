@@ -31,10 +31,10 @@ import java.util.List;
  */
 public class InventoryScene extends Scene {
 
-    private Player player;
-    private List<Item> itemsPrinted;
-    private Inventory inventory;
-    private Navigation navigation;
+    private final Player player;
+    private final List<Item> itemsPrinted;
+    private final Inventory inventory;
+    private final Navigation navigation;
     private String actionMessage;
     private int itemSelected;
 
@@ -166,6 +166,10 @@ public class InventoryScene extends Scene {
         return String.format("|%s%s%s", leadingSpaces, word, trailingSpaces);
     }
 
+    /**
+     * Creates the ASCII art for the inventory title header show on the UI.
+     * @return an ASCII art for inventory title header.
+     */
     private String makeHeader() {
         String nLeadingSpaces = TextUtility.repeatCharacter(8, ' ');
         String title
@@ -292,6 +296,7 @@ public class InventoryScene extends Scene {
         Item item = getSelectedItem();
 
         if (item != null) {
+            // Equippable items will be equipped.
             if (item instanceof EquippableItem) {
                 if (inventory.getEquipment().values().contains(item)) {
                     inventory.unequip(item);

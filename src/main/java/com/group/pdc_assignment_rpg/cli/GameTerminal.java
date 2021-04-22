@@ -38,8 +38,13 @@ public class GameTerminal {
     private static final int TERMINAL_HEIGHT = 40;
     private static final int MIN_ENCOUNTER_STEPS = 45;
     private static final int RAND_RANGE_STEPS = 25;
+    private static final int DEFAULT_STARTING_STEPS = 0;
+    private static final int TERMINAL_CURSOR_START_POS = 0;
+    private static final int END_BATTLE_PAUSE_MS = 1500;
+    private static final int QUIT_GAME_PAUSE_MS = 1000;
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
+    private static final String[] MOBS_AVAILABLE = {"Red Slime", "Red Goblin", "Red Bandit"};
 
     /**
      * Fields
@@ -68,7 +73,7 @@ public class GameTerminal {
         this.battleScene = battleScene;
         this.inventoryScene = inventoryScene;
         this.player = player;
-        this.playerSteps = 0;
+        this.playerSteps = DEFAULT_STARTING_STEPS;
         this.boss = mob;
         generateRandomEncounterSteps();
     }
@@ -133,7 +138,7 @@ public class GameTerminal {
                     screen.clear();
                     printExitMessage();
                     screen.refresh();
-                    Thread.sleep(1000);
+                    Thread.sleep(QUIT_GAME_PAUSE_MS);
                     screen.close();
                     break;
                 } else if (keyStroke.getKeyType() == KeyType.Character
@@ -163,7 +168,7 @@ public class GameTerminal {
 
             }
 
-            int cursorPos = 0;
+            int cursorPos = TERMINAL_CURSOR_START_POS;
             // Print the inventory to the console if it is toggled by the user.
             if (inventoryScene.isVisible()) {
                 cursorPos = drawScene(inventoryScene);
@@ -177,7 +182,7 @@ public class GameTerminal {
                     if (!combat.isFighting()) {
                         screen.refresh();
                         // Pause screen to show player who won the battle.
-                        Thread.sleep(2000);
+                        Thread.sleep(END_BATTLE_PAUSE_MS);
                         mapScene.setActionMessage(
                                 combat.getLog().get(combat.getLog().size() - 1));
                         battleScene.toggle();
@@ -217,6 +222,7 @@ public class GameTerminal {
      */
     private void printExitMessage() throws IOException {
         String message = "Thanks for playing our game!";
+        // Center our text to the screen.
         int colPos = (terminal.getTerminalSize().getColumns() / 2) - message.length() / 2;
         int rowPos = terminal.getTerminalSize().getRows() / 2;
         textGraphics.putString(colPos, rowPos, message);
@@ -367,7 +373,7 @@ public class GameTerminal {
     private int drawScene(Scene scene) {
         List<String> sceneStrList = scene.createScene();
 
-        int cursorPos = 0;
+        int cursorPos = TERMINAL_CURSOR_START_POS;
         for (int i = 0; i < sceneStrList.size(); i++) {
             textGraphics.putString(0, i, sceneStrList.get(i));
             cursorPos = i;
@@ -398,7 +404,7 @@ public class GameTerminal {
             if (map.get(treasure.getCoordinates().getY()).charAt(treasure.getCoordinates().getX()) != '#') {
                 textGraphics.setForegroundColor(TextColor.ANSI.valueOf(Treasure.COLOUR));
                 textGraphics.setCharacter(treasure.getCoordinates().getX(), treasure.getCoordinates().getY(),
-                        Treasure.SYMBOl);
+                        Treasure.SYMBOL);
                 textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
             }
         }
@@ -439,7 +445,7 @@ public class GameTerminal {
 
         // Create random battles.
         if (playerSteps == randomEncounterSteps) {
-            playerSteps = 0;
+            playerSteps = DEFAULT_STARTING_STEPS;
             createBattleScene();
             mapScene.toggle();
             generateRandomEncounterSteps();
@@ -451,9 +457,6 @@ public class GameTerminal {
      * scene UI to show to the player.
      */
     private void createBattleScene() {
-        // Dummy placeholder for mobs.
-        String[] mobs = {"Red Slime", "Red Goblin", "Red Bandit"};
-
         // Make sure a level 1 player only encounters slimes that are weak.
         // Same as a level 2 player who will only encounter slimes and goblins.
         // Anything over level 3 can encounter any mob except the boss randomly.
@@ -463,10 +466,12 @@ public class GameTerminal {
                 mob = ResourceLoaderUtility.loadMobFromDB("Red Slime");
                 break;
             case 2:
-                mob = ResourceLoaderUtility.loadMobFromDB(mobs[(int) (Math.random() * (mobs.length - 1))]);
+                mob = ResourceLoaderUtility.loadMobFromDB(
+                        MOBS_AVAILABLE[(int) (Math.random() * (MOBS_AVAILABLE.length - 1))]);
                 break;
             default:
-                mob = ResourceLoaderUtility.loadMobFromDB(mobs[(int) (Math.random() * mobs.length)]);
+                mob = ResourceLoaderUtility.loadMobFromDB(
+                        MOBS_AVAILABLE[(int) (Math.random() * MOBS_AVAILABLE.length)]);
         }
 
         combat = new Combat(player, mob);

@@ -11,7 +11,7 @@ import java.util.*;
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
-public class Inventory {
+public final class Inventory {
 
     private final int MAX_INVENTORY_CAPACITY = 21;
 
@@ -26,7 +26,7 @@ public class Inventory {
         this.blankEquipment();
     }
 
-    /**
+    /*
      * Future-proofing: An integer will be assumed to be the creature's
      * individual carrying capacity. Always a multiple of 7.
      *
@@ -38,7 +38,7 @@ public class Inventory {
         this.blankEquipment();
     }
 
-    /**
+    /*
      * Getters
      *
      */
@@ -70,7 +70,7 @@ public class Inventory {
         return this.getEquipment().get(e);
     }
 
-    /**
+    /*
      * Setters
      *
      */
@@ -95,7 +95,7 @@ public class Inventory {
         this.equipment.put(e, i);
     }
 
-    /**
+    /*
      * Item in inventory methods
      *
      */
@@ -214,6 +214,10 @@ public class Inventory {
      * Method to convert object into comma separated data to store in text/CSV
      * files.
      *
+     * @param playerName name of the player that will be used as a primary key
+     *      in our database. Note: This is not optimal, and should be using an
+     *      integer id instead but since we are only using text files, we feel
+     *      that this is the easiest way to implement our relational text schema.
      * @return a comma separated string representing our player.
      */
     public String toCommaSeparatedString(String playerName) {

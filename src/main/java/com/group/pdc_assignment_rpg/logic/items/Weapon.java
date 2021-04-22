@@ -4,7 +4,7 @@ package com.group.pdc_assignment_rpg.logic.items;
  *
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
-public class Weapon extends EquippableItem {
+public final class Weapon extends EquippableItem {
 
     private int damage;
 

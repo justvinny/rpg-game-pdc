@@ -13,19 +13,19 @@ import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class Treasure {
+public final class Treasure {
 
-    /**
+    /*
      * Constants
      */
     public static final String COLOUR = "YELLOW";
-    public static final char SYMBOl = 'T';
+    public static final char SYMBOL = 'T';
     
-    /**
+    /*
      * Fields
      */
-    private Item item;
-    private Coordinates coordinates;
+    private final Item item;
+    private final Coordinates coordinates;
     private boolean opened;
 
     /*

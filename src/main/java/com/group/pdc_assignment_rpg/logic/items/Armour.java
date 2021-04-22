@@ -4,7 +4,7 @@ package com.group.pdc_assignment_rpg.logic.items;
  *
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
-public class Armour extends EquippableItem {
+public final class Armour extends EquippableItem {
     private int protection;
 
     public Armour(String n, ItemList i, int protection){

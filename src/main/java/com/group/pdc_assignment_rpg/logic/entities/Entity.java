@@ -29,7 +29,7 @@ public abstract class Entity {
 		this.setColor(TextColor.ANSI.RED);
 	}
 
-	/**
+	/*
 	 * Getter methods
 	 * 
 	 **/
@@ -49,23 +49,23 @@ public abstract class Entity {
 		return this.color;
 	}
 
-	/**
+	/*
 	 * Setter methods
 	 *
 	 */
-	public void setX(int x) {
+	public final void setX(int x) {
 		this.x = x;
 	}
 	
-	public void setY(int y) {
+	public final void setY(int y) {
 		this.y = y;
 	}
 
-	public void setSymbol(char symbol) {
+	public final void setSymbol(char symbol) {
 		this.symbol = symbol;
 	}
 	
-	public void setColor(TextColor colour) {
+	public final void setColor(TextColor colour) {
 		this.color = colour;
 	}
         
@@ -90,6 +90,7 @@ public abstract class Entity {
             x++;
         }
 
+        @Override
 	public String toString() {
 		return "" + this.symbol;
 	}

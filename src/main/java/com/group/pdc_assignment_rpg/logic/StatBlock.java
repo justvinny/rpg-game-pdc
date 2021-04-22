@@ -8,7 +8,7 @@ import java.util.*;
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class StatBlock {
+public final class StatBlock {
 
     private Map<Stats, Integer> stats;
     private Map<CStats, Integer> consumables;
@@ -38,7 +38,7 @@ public class StatBlock {
         this.populateConsumables();
     }
 
-    /**
+    /*
      * Getters
      *
      */
@@ -70,7 +70,7 @@ public class StatBlock {
         return this.consumables.get(stat);
     }
 
-    /**
+    /*
      * Setters
      *
      */
@@ -90,7 +90,7 @@ public class StatBlock {
         this.consumables.put(s, v);
     }
 
-    /**
+    /*
      * Utilities
      *
      */

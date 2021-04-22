@@ -24,7 +24,7 @@ public enum ItemList {
 		this.setType(t);
 	}
 	
-	/**
+	/*
 	 * Utility methods
 	 * 
 	 */
@@ -36,7 +36,7 @@ public enum ItemList {
 	
 	
 	
-	/**
+	/*
 	 * Getters
 	 * 
 	 */
@@ -64,6 +64,7 @@ public enum ItemList {
 		this.weight = weight;
 	}
 	
+        @Override
 	public String toString() {
 		return TextUtility.toTitleCase(this.name());
 	}

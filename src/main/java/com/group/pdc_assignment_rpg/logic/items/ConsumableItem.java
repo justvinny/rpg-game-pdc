@@ -8,7 +8,7 @@ package com.group.pdc_assignment_rpg.logic.items;
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com> 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class ConsumableItem extends Item {
+public final class ConsumableItem extends Item {
 
     private int specialValue;
     

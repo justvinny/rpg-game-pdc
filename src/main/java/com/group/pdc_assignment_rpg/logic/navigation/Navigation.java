@@ -13,8 +13,8 @@ package com.group.pdc_assignment_rpg.logic.navigation;
  */
 public class Navigation {
 
-    private Coordinates coordinates;
-    private Boundaries boundaries;
+    private final Coordinates coordinates;
+    private final Boundaries boundaries;
 
     /**
      * Constructor.

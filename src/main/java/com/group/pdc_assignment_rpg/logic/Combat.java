@@ -17,11 +17,11 @@ public class Combat {
 
     final float DEFENSEBONUS = 1.5f;
 
-    private Player player;
-    private Mob mob;
+    private final Player player;
+    private final Mob mob;
+    private final List<String> battleLog;
     private Combatant currentTurn;
     private boolean fighting;
-    private List<String> battleLog;
 
     public Combat(Player player, Mob mob) {
         this.player = player;
@@ -46,7 +46,7 @@ public class Combat {
                 battleLog.remove(0);
             }
         }
-        
+
         return battleLog;
     }
 
@@ -93,7 +93,7 @@ public class Combat {
         return initiatorCheck > targetCheck;
     }
 
-    public void setFirstTurn() {
+    public final void setFirstTurn() {
         if (statCompete(Stats.DEXTERITY, player, mob)) {
             currentTurn = Combatant.PLAYER;
             battleLog.add(player.getName() + " leaps into action, ready to make a move!");
@@ -123,7 +123,7 @@ public class Combat {
         return keepRunning;
     }
 
-    /**
+    /*
      * Actions
      *
      */
@@ -146,9 +146,9 @@ public class Combat {
             boolean downed = target.damage(damage);
 
             if (downed) {
-                battleLog.add(target.getName() + " was defeated by " 
+                battleLog.add(target.getName() + " was defeated by "
                         + initiator.getName() + "!");
-                battleLog.add(initiator.getName() + " gained " + target.getXP() 
+                battleLog.add(initiator.getName() + " gained " + target.getXP()
                         + " XP from " + target.getName() + "!");
                 initiator.addXP(target.getXP());
                 target.setDefending(false);

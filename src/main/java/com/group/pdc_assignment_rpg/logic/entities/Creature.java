@@ -30,7 +30,7 @@ public abstract class Creature extends Entity {
     private boolean defending;
     private int damage, protection;
     private Level level;
-    private int xp;
+    protected int xp;
 
     /*
      * Constructor for creating a creature with all values known.

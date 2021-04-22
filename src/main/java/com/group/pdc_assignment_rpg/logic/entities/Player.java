@@ -17,8 +17,6 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
  */
 public final class Player extends Creature implements Killable {
 
-    private int xp;
-
     /*
      * Constructor for creating a new player for the first time. Takes only a
      * name and sets everything else to default values.
@@ -48,6 +46,10 @@ public final class Player extends Creature implements Killable {
      */
     @Override
     public int getXP() {
+        if (xp >= getLevel().getThreshold()) {
+            levelUp();
+        }
+        
         return xp;
     }
 
@@ -64,6 +66,7 @@ public final class Player extends Creature implements Killable {
     public void levelUp() {
         setLevel(getLevel().next());
         incrementStats();
+        setHP(getMaxHP()); // Heal player for level up.
     }
 
     @Override

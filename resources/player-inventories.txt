@@ -1,8 +1,9 @@
-Bob,Potion of Healing,Divine Bulwark,Sky Sunderer,Potion of Healing,Potion of Healing,Mighty Sword
-bob,Tattered Clothing,Potion of Healing,Broken Sword
-Newb,Potion of Healing,Broken Sword,Tattered Clothing,Mighty Sword,Bloody Chainmail,Potion of Healing
-Jess,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword
+Bob,Divine Bulwark,Potion of Healing,Potion of Healing,Potion of Healing,Sky Sunderer,Mighty Sword
+bob,Broken Sword,Potion of Healing,Tattered Clothing
+Newb,Potion of Healing,Mighty Sword,Broken Sword,Tattered Clothing,Potion of Healing,Bloody Chainmail
+Jess,Tattered Clothing,Bloody Chainmail,Mighty Sword,Broken Sword
+Vinson,Broken Sword,Potion of Healing,Potion of Healing,Potion of Healing,Mighty Sword,Bloody Chainmail,Potion of Healing,Tattered Clothing
 Greg,Broken Sword,Tattered Clothing
-Jack,Tattered Clothing,Broken Sword
-Jane,Tattered Clothing,Potion of Healing,Broken Sword
-Mac,Potion of Healing,Broken Sword,Potion of Healing,Mighty Sword,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Tattered Clothing,Bloody Chainmail
+Jack,Broken Sword,Tattered Clothing
+Jane,Broken Sword,Tattered Clothing,Potion of Healing
+Mac,Potion of Healing,Broken Sword,Potion of Healing,Bloody Chainmail,Potion of Healing,Mighty Sword,Potion of Healing,Tattered Clothing,Potion of Healing,Potion of Healing

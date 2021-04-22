@@ -3,8 +3,8 @@ package com.group.pdc_assignment_rpg.logic.entities;
 import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
+import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
-import java.lang.*;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
@@ -23,9 +23,11 @@ public class Mob extends Creature {
      * Constructor for creating a mob with existing data. All character data
      * must be given to the constructor.
      */
-    public Mob(String name, int level, int x, int y, Inventory inventory, StatBlock statBlock, int hp, int sp, int wp, Map<BattleSceneConstants, Double> personality) {
+    public Mob(String name, Level level, int x, int y, Inventory inventory, StatBlock statBlock, int hp, int sp, int wp, Map<BattleSceneConstants, Double> personality) {
         super(name, x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp, level);
+        Random r = new Random();
         this.setPersonality(personality);
+        this.setXP(r.nextInt(((9 - 7) + 1) + 7) * level.getLvl());
     }
 
     /**
@@ -39,10 +41,21 @@ public class Mob extends Creature {
     }
     
     /**
+     * Constructor for creating a new mob for the first time. Takes only a
+     * name and level, and sets everything else to default values.
+     */
+    public Mob(String name, Level level) {
+        super(name, 13, 21, 'M', TextColor.ANSI.RED);
+        setLevel(level);
+        this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
+        populatePersonality(0.75, 0.2, 0.05);
+    }
+    
+    /**
      * Constructor for creating a default mob. Takes only
      * name, level and personality values, everything else is default.
      */
-    public Mob(String name, int level, double attackVal, double defendVal, double escapeVal) {
+    public Mob(String name, Level level, double attackVal, double defendVal, double escapeVal) {
     	super(name, 13, 21, 'M', TextColor.ANSI.RED);
     	setLevel(level);
         this.populatePersonality(attackVal, defendVal, escapeVal);
@@ -67,6 +80,7 @@ public class Mob extends Creature {
     public double getPersonalityTrait(BattleSceneConstants trait) {
         return personality.get(trait);
     }
+    
 
     /**
      * Setter methods

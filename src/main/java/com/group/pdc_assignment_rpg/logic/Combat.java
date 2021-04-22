@@ -62,29 +62,29 @@ public class Combat {
         return result;
     }
 
-    private boolean statCompete(Stats stat, Creature innitiator, Creature target) {
-        int innitiatorCheck = innitiator.getStat(stat) + roll(20);
+    private boolean statCompete(Stats stat, Creature initiator, Creature target) {
+        int initiatorCheck = initiator.getStat(stat) + roll(20);
         int targetCheck = target.getStat(stat) + roll(20);
 
-        return innitiatorCheck > targetCheck;
+        return initiatorCheck > targetCheck;
     }
 
-    private boolean statCompete(Stats innitiatorStat, Stats targetStat, Creature innitiator, Creature target) {
-        int innitiatorCheck = innitiator.getStat(innitiatorStat) + roll(20);
+    private boolean statCompete(Stats initiatorStat, Stats targetStat, Creature initiator, Creature target) {
+        int initiatorCheck = initiator.getStat(initiatorStat) + roll(20);
         int targetCheck = target.getStat(targetStat) + roll(20);
 
-        return innitiatorCheck > targetCheck;
+        return initiatorCheck > targetCheck;
     }
 
-    private boolean statCompete(Stats innitiatorStat, Stats targetStat, Creature innitiator, Creature target, float targetBonus) {
-        int innitiatorCheck = innitiator.getStat(innitiatorStat) + roll(20);
+    private boolean statCompete(Stats initiatorStat, Stats targetStat, Creature initiator, Creature target, float targetBonus) {
+        int initiatorCheck = initiator.getStat(initiatorStat) + roll(20);
         int targetCheck = target.getStat(targetStat) + roll(20);
 
         if (targetBonus > 0) {
             targetCheck = (int) (targetCheck * targetBonus);
         }
 
-        return innitiatorCheck > targetCheck;
+        return initiatorCheck > targetCheck;
     }
 
     public void setFirstTurn() {
@@ -97,18 +97,18 @@ public class Combat {
         }
     }
 
-    public boolean runAction(BattleSceneConstants action, Creature innitiator, Creature target) throws IllegalArgumentException {
+    public boolean runAction(BattleSceneConstants action, Creature initiator, Creature target) throws IllegalArgumentException {
         boolean keepRunning = true;
 
         switch (action) {
             case ATTACK:
-                keepRunning = attack(innitiator, target);
+                keepRunning = attack(initiator, target);
                 break;
             case DEFEND:
-                defend(innitiator);
+                defend(initiator);
                 break;
             case ESCAPE:
-                keepRunning = escape(innitiator, target);
+                keepRunning = escape(initiator, target);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid action given.");
@@ -140,6 +140,8 @@ public class Combat {
 
             if (downed) {
                 battleLog.add(target.getName() + " was defeated by " + initiator.getName() + "!");
+                battleLog.add(initiator.getName() + " gained " + target.getXP() + " XP!");
+                initiator.addXP(target.getXP());
                 target.setDefending(false);
                 return false;
             }
@@ -155,19 +157,19 @@ public class Combat {
         return true;
     }
 
-    public void defend(Creature innitiator) {
-        innitiator.setDefending(true);
-        battleLog.add(innitiator.getName() + " prepares a defense.");
+    public void defend(Creature initiator) {
+        initiator.setDefending(true);
+        battleLog.add(initiator.getName() + " prepares a defense.");
     }
 
-    public boolean escape(Creature innitiator, Creature target) {
-        boolean escapeSuccess = statCompete(Stats.DEXTERITY, innitiator, target);
+    public boolean escape(Creature initiator, Creature target) {
+        boolean escapeSuccess = statCompete(Stats.DEXTERITY, initiator, target);
 
         if (escapeSuccess) {
-            battleLog.add(innitiator.getName() + " fled the battle!");
+            battleLog.add(initiator.getName() + " fled the battle!");
             return false;
         } else {
-            battleLog.add(innitiator.getName() + " made an attempt to flee, but was stopped by " + target.getName());
+            battleLog.add(initiator.getName() + " made an attempt to flee, but was stopped by " + target.getName());
         }
         return true;
     }

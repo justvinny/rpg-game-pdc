@@ -2,6 +2,7 @@ package com.group.pdc_assignment_rpg.utilities;
 
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Armour;
 import com.group.pdc_assignment_rpg.logic.items.ConsumableItem;
@@ -166,7 +167,7 @@ public class ResourceLoaderUtility {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] playerData = line.split(",");
                 String playerName = playerData[0];
-                int playerLevel = Integer.valueOf(playerData[1]);
+                Level playerLevel = Level.valueOf(playerData[1]);
 
                 // Player inventory.
                 Inventory playerInventory = loadPlayerInventory(playerName);

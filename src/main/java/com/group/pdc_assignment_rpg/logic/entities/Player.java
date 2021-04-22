@@ -4,6 +4,8 @@ import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.Stats;
+import com.group.pdc_assignment_rpg.logic.character.*;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 
 /**
@@ -11,25 +13,50 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
+ * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
 public class Player extends Creature implements Killable {
 
+    private int xp;
     /**
      * Constructor for creating a new player for the first time. Takes only a
      * name and sets everything else to default values.
      */
     public Player(String name) {
-        super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory(), 1);
+        super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory(), Level.L1);
+        this.setXP(0);
     }
 
     /**
      * Constructor for creating a player with existing data. All character data
-     * must be given to the constructor.
+     * must be given to the constructor. XP is set to minimum for player's current
+     * level.
      */
-    public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock) {
+    public Player(String name, Level level, Inventory inventory, int x, int y, StatBlock statBlock) {
         super(name, x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory, level);
+        if(level != Level.L1){
+            this.setXP(level.previous().getThreshold());
+        } else {
+            this.setXP(0);
+        }
     }
-
+    /**
+     * Getters
+     */
+    public int getXP() {
+        return xp;
+    }
+    
+    public void addXP(int xp) {
+        if (this.xp + xp >= this.getLevel().getThreshold()) {
+            this.xp += xp;
+            this.levelUp();
+        } else {
+            this.xp += xp;
+        }
+    }
+    
+    
     /**
      * Utility methods
      *
@@ -39,7 +66,8 @@ public class Player extends Creature implements Killable {
     }
 
     public void levelUp() {
-        setLevel(getLevel() + 1);
+        setLevel(getLevel().next());
+        incrementStats();
     }
     
     @Override
@@ -47,6 +75,11 @@ public class Player extends Creature implements Killable {
         return getName().equals(((Player) obj).getName());
     }
 
+    public void incrementStats(){
+        this.getStats().writeStat(Stats.STRENGTH, this.getStats().getValue(Stats.STRENGTH) + 1);
+        this.getStats().writeStat(Stats.DEXTERITY, this.getStats().getValue(Stats.DEXTERITY) + 1);
+        this.getStats().writeStat(Stats.INTELLECT, this.getStats().getValue(Stats.INTELLECT) + 1);
+    }
     
     @Override
     public String toString() {
@@ -60,7 +93,7 @@ public class Player extends Creature implements Killable {
      * @return a comma separated string representing our player. 
      */
     public String toCommaSeparatedString() {
-        return String.format("%s,%d,%d,%d,%d,%,d,%d",
+        return String.format("%s,%s,%d,%d,%d,%,d,%d",
                 getName(), getLevel(), x, y, getStats().getStrength(),
                 getStats().getDexterity(), getStats().getIntellect());
     }
@@ -74,4 +107,7 @@ public class Player extends Creature implements Killable {
     public static Player loadPlayerFactory(String playerName) {
         return ResourceLoaderUtility.loadPlayerFromDB(playerName);
     }
+
+    
+
 }

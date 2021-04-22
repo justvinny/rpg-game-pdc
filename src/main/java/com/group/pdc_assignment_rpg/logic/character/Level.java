@@ -109,6 +109,6 @@ public enum Level implements IterableEnum<Level> {
     }
     
 	private static class Values {
-            public static int BASE_THRESHOLD = 32;
+            public static int BASE_THRESHOLD = 16;
     }
 }

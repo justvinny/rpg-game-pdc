@@ -12,7 +12,6 @@ public class StatBlock {
 
     private Map<Stats, Integer> stats;
     private Map<CStats, Integer> consumables;
-    private int strength, dexterity, intellect;
 
     /**
      * Stat values unknown, populates with base stats Consumable stats are
@@ -21,14 +20,8 @@ public class StatBlock {
     public StatBlock() {
         this.setStats(new EnumMap<Stats, Integer>(Stats.class));
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
-        this.strength = 5;
-        this.dexterity = 5;
-        this.intellect = 5;
-        this.populate(strength, dexterity, intellect);
-        this.populateConsumables(
-                this.calculateHealth(),
-                this.calculateStamina(),
-                this.calculateWill());
+        this.populate(5, 5, 5);
+        this.populateConsumables();
     }
 
     /**
@@ -41,14 +34,8 @@ public class StatBlock {
     public StatBlock(int strength, int dexterity, int intellect) {
         this.stats = new EnumMap<Stats, Integer>(Stats.class);
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
-        this.strength = strength;
-        this.dexterity = dexterity;
-        this.intellect = intellect;
         this.populate(strength, dexterity, intellect);
-        this.populateConsumables(
-                this.calculateHealth(),
-                this.calculateStamina(),
-                this.calculateWill());
+        this.populateConsumables();
     }
 
     /**
@@ -60,15 +47,15 @@ public class StatBlock {
     }
 
     public int getStrength() {
-        return strength;
+        return stats.get(Stats.STRENGTH);
     }
 
     public int getDexterity() {
-        return dexterity;
+        return stats.get(Stats.DEXTERITY);
     }
 
     public int getIntellect() {
-        return intellect;
+        return stats.get(Stats.INTELLECT);
     }
 
     public int getValue(Stats stat) {
@@ -113,10 +100,10 @@ public class StatBlock {
         this.writeStat(Stats.INTELLECT, i);
     }
 
-    public void populateConsumables(int s, int d, int i) {
-        this.writeStat(CStats.HEALTH, s);
-        this.writeStat(CStats.STAMINA, d);
-        this.writeStat(CStats.WILL, i);
+    public void populateConsumables() {
+        this.writeStat(CStats.HEALTH, calculateHealth());
+        this.writeStat(CStats.STAMINA, calculateStamina());
+        this.writeStat(CStats.WILL, calculateWill());
     }
 
     /**

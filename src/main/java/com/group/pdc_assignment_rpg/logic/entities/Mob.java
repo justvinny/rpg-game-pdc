@@ -27,7 +27,6 @@ public class Mob extends Creature {
         super(name, x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp, level);
         Random r = new Random();
         this.setPersonality(personality);
-        this.setXP(r.nextInt(((9 - 7) + 1) + 7) * level.getLvl());
     }
 
     /**

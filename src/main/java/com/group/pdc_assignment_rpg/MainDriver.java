@@ -104,7 +104,7 @@ public class MainDriver {
         } else {
             ResourceLoaderUtility.writePlayerData(player);
             ResourceLoaderUtility.writeInventoryData(player);
-//            ResourceLoaderUtility.writeEquippedData(player);
+            ResourceLoaderUtility.writeEquippedData(player);
             System.out.println("Creating new player...");
         }
 

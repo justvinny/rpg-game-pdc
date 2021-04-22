@@ -84,9 +84,11 @@ public class MapScene extends Scene {
      */
     private List<String> addPlayerBar() {
         List<String> playerBar = new ArrayList<>();
-        String playerInfo1 = String.format("Name: %s | Lv. %s | HP: %d/%d",
+        String playerInfo1 = String.format("Name: %s | Lv. %s | Exp %d/%d HP: %d/%d",
                 player.getName(),
                 player.getLevel().getLvl(),
+                player.getXP(),
+                player.getLevel().getThreshold(),
                 player.getHP(),
                 player.getMaxHP());
         

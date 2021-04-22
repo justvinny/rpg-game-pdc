@@ -20,7 +20,7 @@ import com.group.pdc_assignment_rpg.logic.character.Level;
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-    @SuppressWarnings("OverridableMethodCallInConstructor")
+@SuppressWarnings("OverridableMethodCallInConstructor")
 public abstract class Creature extends Entity {
 
     private StatBlock stats;
@@ -147,13 +147,28 @@ public abstract class Creature extends Entity {
         return protection + armourProtection;
     }
 
-    public int getXP(){
-        Random r = new Random();
-        
-        int xp = r.nextInt((5 - 3) + 1) * ((int)Math.round(this.getLevel().getLvl() * 1.8));
-        
+    public int getXP() {
+        int xp = 4 * ((int) Math.round(this.getLevel().getLvl() * 1.8));
+
         return xp;
     }
+
+    public boolean isWeaponEquipped() {
+        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
+    }
+
+    public boolean isArmourEquipped() {
+        return inventory.getEquipment().get(EquipmentSlot.HAND) != null;
+    }
+
+    public String getWeaponName() {
+        return (isWeaponEquipped()) ? inventory.getEquipment().get(EquipmentSlot.HAND).getName() : "None";
+    }
+
+    public String getArmourName() {
+        return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
+    }
+
     /**
      * Setter methods
      *
@@ -214,7 +229,7 @@ public abstract class Creature extends Entity {
             throw new IllegalArgumentException("Level must be greater than or equal to 1.");
         }
     }
-    
+
     public void setStats() {
         damage = (this.getStat(Stats.STRENGTH) + (this.getLevel().getLvl() - 1) * 2);
         protection = level.getLvl();
@@ -226,11 +241,11 @@ public abstract class Creature extends Entity {
     public void setXP(int xp) {
         this.xp = xp;
     }
-    
+
     public void addXP(int xp) {
         this.xp += xp;
     }
-    
+
     /**
      * Utility methods
      *
@@ -240,7 +255,7 @@ public abstract class Creature extends Entity {
      *
      * @param amount is the amount of damage.
      */
-    public boolean damage(int amount) throws IllegalArgumentException {
+    public boolean damage(int amount) throws IllegalArgumentException {        
         // Validate that damage amount is positive
         if (amount > 0) {
             // Check if the damage will cause the creature to hit 0 hit points or below
@@ -250,8 +265,8 @@ public abstract class Creature extends Entity {
                 setHP(0);
                 return true;
             }
-        } else if (amount <= 0) {
-            throw new IllegalArgumentException("Damage amount must be greater than 0.");
+        }  else {
+            throw new IllegalArgumentException("Damage cannot be less than 0.");
         }
         return false;
     }

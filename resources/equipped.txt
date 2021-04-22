@@ -1,5 +1,8 @@
 Bob,Sky Sunderer,Divine Bulwark
 bob,None,None
+Newb,Mighty Sword,Bloody Chainmail
+Jess,Mighty Sword,Bloody Chainmail
 Greg,None,None
 Jack,Broken Sword,Tattered Clothing
 Jane,None,None
+Mac,Mighty Sword,Bloody Chainmail

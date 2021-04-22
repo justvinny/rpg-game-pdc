@@ -36,7 +36,7 @@ public class GameTerminal {
     private static final int FPS = 1000 / 60;
     private static final int TERMINAL_WIDTH = 120;
     private static final int TERMINAL_HEIGHT = 40;
-    private static final int MIN_ENCOUNTER_STEPS = 65;
+    private static final int MIN_ENCOUNTER_STEPS = 45;
     private static final int RAND_RANGE_STEPS = 25;
     private static final String CURSOR = ">>>";
     private static final String GAME_TITLE = "RPG Game";
@@ -128,7 +128,7 @@ public class GameTerminal {
                     // Save the player and its inventory upon exit to persisent storage.
                     ResourceLoaderUtility.writePlayerData(player);
                     ResourceLoaderUtility.writeInventoryData(player);
-//                    ResourceLoaderUtility.writeEquippedData(player);
+                    ResourceLoaderUtility.writeEquippedData(player);
 
                     screen.clear();
                     printExitMessage();
@@ -182,6 +182,7 @@ public class GameTerminal {
                                 combat.getLog().get(combat.getLog().size() - 1));
                         battleScene.toggle();
                         mapScene.toggle();
+                        mapScene.refreshScene();
                     }
                 }
             } else if (mapScene.isVisible()) {
@@ -446,8 +447,8 @@ public class GameTerminal {
     }
 
     /**
-     * Creates a monster for our random battles and passes it to the battle scene
-     * UI to show to the player.
+     * Creates a monster for our random battles and passes it to the battle
+     * scene UI to show to the player.
      */
     private void createBattleScene() {
         // Dummy placeholder for mobs.

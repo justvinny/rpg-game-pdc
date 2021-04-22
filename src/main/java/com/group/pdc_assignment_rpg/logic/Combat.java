@@ -140,13 +140,16 @@ public class Combat {
             }
 
             int damage = roll(5) + initiator.getDamage() - target.getProtection();
+            damage = (damage <= 0) ? 1 : damage;
             battleLog.add(initiator.getName() + " managed to hit " + target.getName()
                     + " for " + damage + " damage.");
             boolean downed = target.damage(damage);
 
             if (downed) {
-                battleLog.add(target.getName() + " was defeated by " + initiator.getName() + "!");
-                battleLog.add(initiator.getName() + " gained " + target.getXP() + " XP!");
+                battleLog.add(target.getName() + " was defeated by " 
+                        + initiator.getName() + "!");
+                battleLog.add(initiator.getName() + " gained " + target.getXP() 
+                        + " XP from " + target.getName() + "!");
                 initiator.addXP(target.getXP());
                 target.setDefending(false);
                 return false;

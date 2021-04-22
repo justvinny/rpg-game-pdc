@@ -79,6 +79,7 @@ public class Player extends Creature implements Killable {
         this.getStats().writeStat(Stats.STRENGTH, this.getStats().getValue(Stats.STRENGTH) + 1);
         this.getStats().writeStat(Stats.DEXTERITY, this.getStats().getValue(Stats.DEXTERITY) + 1);
         this.getStats().writeStat(Stats.INTELLECT, this.getStats().getValue(Stats.INTELLECT) + 1);
+        this.getStats().populateConsumables();
     }
     
     @Override

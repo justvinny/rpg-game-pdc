@@ -13,7 +13,6 @@ import java.lang.*;
  */
 public class Mob extends Creature {
 
-    private String name;
     private int level;
 
     /**
@@ -21,8 +20,7 @@ public class Mob extends Creature {
      * must be given to the constructor.
      */
     public Mob(String name, int level, int x, int y, Inventory inventory, StatBlock statBlock, int hp, int sp, int wp) {
-        super(x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp);
-        setName(name);
+        super(name, x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp);
         setLevel(level);
     }
 
@@ -31,8 +29,7 @@ public class Mob extends Creature {
      * name and sets everything else to default values.
      */
     public Mob(String name) {
-        super(13, 21, 'M', TextColor.ANSI.RED);
-        setName(name);
+        super(name, 13, 21, 'M', TextColor.ANSI.RED);
         setLevel(1);
     }
     
@@ -41,17 +38,13 @@ public class Mob extends Creature {
      * name and level, everything else is default.
      */
     public Mob(String name, int level) {
-    	super(13, 21, 'M', TextColor.ANSI.RED);
-    	setName(name);
+    	super(name, 13, 21, 'M', TextColor.ANSI.RED);
     	setLevel(level);
     }
-
-    public String getName() {
-        return this.name;
+    
+    public int getLevel() {
+            return level;
     }
-	public int getLevel() {
-		return level;
-	}
 
     public int getX() {
         return this.x;
@@ -65,14 +58,6 @@ public class Mob extends Creature {
      * Setter methods
      *
      */
-    public void setName(String name) throws IllegalArgumentException {
-        if (name.trim().isEmpty()) {
-	    throw new IllegalArgumentException("Cannot set name to null.");
-	} else {
-	    this.name = name;
-	}
-    }
-
     public void setLevel(int level) throws IllegalArgumentException {
         if (level >= 1) {
             this.level = level;

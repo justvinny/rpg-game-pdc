@@ -13,7 +13,6 @@ import com.group.pdc_assignment_rpg.logic.StatBlock;
  */
 public class Player extends Creature implements Killable {
 
-    private String name;
     private int level;
     
     /**
@@ -21,8 +20,7 @@ public class Player extends Creature implements Killable {
      * name and sets everything else to default values.
      */
     public Player(String name) {
-        super(5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory());
-        setName(name);
+        super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory());
         setLevel(1);
     }
 
@@ -30,8 +28,7 @@ public class Player extends Creature implements Killable {
      * Constructor for creating a player with existing data. All character data must be given to the constructor.
      */
     public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock) {
-        super(x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory);
-        this.setName(name);
+        super(name, x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory);
         this.setLevel(level);
     }
     
@@ -39,10 +36,6 @@ public class Player extends Creature implements Killable {
      * Getter methods
      * 
      */
-    public String getName() {
-        return name;
-    }
-
     public int getLevel() {
         return level;
     }
@@ -51,14 +44,6 @@ public class Player extends Creature implements Killable {
      * Setter methods
      * 
      */
-    public void setName(String name) throws IllegalArgumentException {
-        if (name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Cannot set name to null.");
-        } else {
-          this.name = name;  
-        }
-    }
-
     public void setLevel(int level) throws IllegalArgumentException {
         if (level >= 1) {
             this.level = level;

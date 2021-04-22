@@ -5,6 +5,7 @@ import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.logic.CStats;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.Stats;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to
@@ -17,6 +18,7 @@ import com.group.pdc_assignment_rpg.logic.StatBlock;
  */
 public abstract class Creature extends Entity {
 
+    private String name;
     private StatBlock stats;
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
@@ -24,9 +26,10 @@ public abstract class Creature extends Entity {
     /**
      * Constructor for creating a creature with all values known.
      */
-    public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp) {
         super(x, y, s, c);
-		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
+	this.consumables = new EnumMap<CStats, Integer>(CStats.class);
+        this.setName(name);
         this.setStats(stats);
         this.setInventory(inventory);
         this.setHP(hp);
@@ -35,12 +38,13 @@ public abstract class Creature extends Entity {
     }
 
 
-	/**
+    /**
      * Constructor for creating a creature with default (full) hit-points.
      */
-    public Creature(int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory) {
         super(x, y, s, c);
-		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
+	this.consumables = new EnumMap<CStats, Integer>(CStats.class);
+        this.setName(name);
         this.setStats(stats);
         this.setInventory(inventory);
         this.setHP(getMaxHP());
@@ -51,10 +55,11 @@ public abstract class Creature extends Entity {
     /**
      * Constructor for creating a creature with a default state (default stats, empty inventory).
      */
-    public Creature(int x, int y, char s, TextColor c) {
+    public Creature(String name, int x, int y, char s, TextColor c) {
     	super(x, y, s, c);
-		this.consumables = new EnumMap<CStats, Integer>(CStats.class);
-    	this.setStats(new StatBlock());
+	this.consumables = new EnumMap<CStats, Integer>(CStats.class);
+    	this.setName(name);
+        this.setStats(new StatBlock());
     	this.setInventory(new Inventory());
     	this.setHP(getMaxHP());
     	this.setSP(getMaxSP());
@@ -65,9 +70,20 @@ public abstract class Creature extends Entity {
      * Getter methods
      *
      */
+    
+    
+    public String getName() {
+        return name;
+    }
+
     public StatBlock getStats() {
         return stats;
     }
+    
+    public int getStat(Stats stat) {
+        return getStats().getValue(stat);
+    }
+    
     public Inventory getInventory() {
         return inventory;
     }
@@ -99,6 +115,15 @@ public abstract class Creature extends Entity {
      * Setter methods
      *
      */
+    
+    public void setName(String name) throws IllegalArgumentException {
+        if (name.trim().isEmpty()) {
+	    throw new IllegalArgumentException("Cannot set name to null.");
+	} else {
+	    this.name = name;
+	}
+    }
+
     public void setStats(StatBlock stats) {
         this.stats = stats;
     }
@@ -140,18 +165,22 @@ public abstract class Creature extends Entity {
      *
      * @param amount is the amount of damage.
      */
-    public void damage(int amount) throws IllegalArgumentException {
+    public boolean damage(int amount) throws IllegalArgumentException {
         // Validate that damage amount is positive
         if (amount > 0) {
             // Check if the damage will cause the creature to hit 0 hit points or below
             if (getHP() - amount >= 0) {
+                System.out.println(getName() + " took " + amount + " point(s) of damage!");
                 setHP(getHP() - amount);
             } else {
+                System.out.println(getName() + " took " + getHP() + " point(s) of damage!");
                 setHP(0);
+                return true;
             }
         } else if (amount <= 0) {
             throw new IllegalArgumentException("Damage amount must be greater than 0.");
         }
+        return false;
     }
 
     /**

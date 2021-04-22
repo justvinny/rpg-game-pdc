@@ -6,6 +6,8 @@ import com.group.pdc_assignment_rpg.logic.CStats;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.Stats;
+import com.group.pdc_assignment_rpg.logic.items.Armour;
+import com.group.pdc_assignment_rpg.logic.items.Weapon;
 
 /**
  * Creatures are a physical thing on the map with a stat block, allowing them to
@@ -24,11 +26,12 @@ public abstract class Creature extends Entity {
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
     private boolean defending;
+    private int level, damage, protection;
 
     /**
      * Constructor for creating a creature with all values known.
      */
-    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int hp, int sp, int wp, int level) {
         super(x, y, s, c);
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setName(name);
@@ -38,12 +41,13 @@ public abstract class Creature extends Entity {
         this.setSP(sp);
         this.setWP(wp);
         this.setDefending(false);
+        this.setLevel(level);
     }
 
     /**
      * Constructor for creating a creature with default (full) hit-points.
      */
-    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory) {
+    public Creature(String name, int x, int y, char s, TextColor c, StatBlock stats, Inventory inventory, int level) {
         super(x, y, s, c);
         this.consumables = new EnumMap<CStats, Integer>(CStats.class);
         this.setName(name);
@@ -52,6 +56,7 @@ public abstract class Creature extends Entity {
         this.setHP(getMaxHP());
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
+        this.setLevel(level);
     }
 
     /**
@@ -67,6 +72,7 @@ public abstract class Creature extends Entity {
         this.setHP(getMaxHP());
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
+        this.setLevel(1);
     }
 
     /**
@@ -121,6 +127,22 @@ public abstract class Creature extends Entity {
         return this.defending;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public int getDamage() {
+        Weapon weapon = (Weapon) inventory.getEquipment().get(EquipmentSlot.HAND);
+        int weaponDamage = (weapon == null) ? 0 : weapon.getDamage();
+        return damage + weaponDamage;
+    }
+
+    public int getProtection() {
+        Armour armour = (Armour) inventory.getEquipment().get(EquipmentSlot.ARMOUR);
+        int armourProtection = (armour == null) ? 0 : armour.getProtection();
+        return protection + armourProtection;
+    }
+
     /**
      * Setter methods
      *
@@ -173,6 +195,20 @@ public abstract class Creature extends Entity {
         this.defending = defending;
     }
 
+    public void setLevel(int level) throws IllegalArgumentException {
+        if (level >= 1) {
+            this.level = level;
+            setStats();
+        } else {
+            throw new IllegalArgumentException("Level must be greater than or equal to 1.");
+        }
+    }
+    
+    public void setStats() {
+        damage = 5 + (level - 1) * 2;
+        protection = level;
+    }
+
     /**
      * Utility methods
      *
@@ -186,11 +222,9 @@ public abstract class Creature extends Entity {
         // Validate that damage amount is positive
         if (amount > 0) {
             // Check if the damage will cause the creature to hit 0 hit points or below
-            if (getHP() - amount >= 0) {
-                System.out.println(getName() + " took " + amount + " point(s) of damage!");
+            if (getHP() - amount > 0) {
                 setHP(getHP() - amount);
             } else {
-                System.out.println(getName() + " took " + getHP() + " point(s) of damage!");
                 setHP(0);
                 return true;
             }

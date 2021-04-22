@@ -10,6 +10,7 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.group.pdc_assignment_rpg.logic.Combat;
 import com.group.pdc_assignment_rpg.logic.navigation.Boundaries;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import com.group.pdc_assignment_rpg.logic.entities.Creature;
@@ -51,6 +52,7 @@ public class GameTerminal {
     private Terminal terminal;
     private Screen screen;
     private TextGraphics textGraphics;
+    private Combat combat;
 
     /**
      *
@@ -112,7 +114,7 @@ public class GameTerminal {
         // Will be used for drawing things on the console.
         textGraphics = screen.newTextGraphics();
     }
-    
+
     /**
      * Our main game loop where are our core gameplay is located.
      *
@@ -137,7 +139,7 @@ public class GameTerminal {
                     // Save the player and its inventory upon exit to persisent storage.
                     ResourceLoaderUtility.writePlayerData(player);
                     ResourceLoaderUtility.writeInventoryData(player);
-                    
+
                     screen.clear();
                     printExitMessage();
                     screen.refresh();
@@ -164,11 +166,11 @@ public class GameTerminal {
                 } else if (mapScene.isVisible()) {
                     // Navigate the map.
                     mapNavigation(keyStroke);
+
+                    // Detect collision of player with other objects.
+                    detectCollision();
                 }
             }
-
-            // Detect collision of player with other objects.
-            detectCollision();
 
             int cursorPos = 0;
             // Print the inventory to the console if it is toggled by the user.
@@ -178,6 +180,18 @@ public class GameTerminal {
             } else if (battleScene.isVisible()) {
                 cursorPos = drawScene(battleScene);
                 drawNavigationCursor(battleScene.getNavigation());
+
+                // Check if battle still ongoing.
+                if (combat != null) {
+                    if (!combat.isFighting()) {
+                        screen.refresh();
+                        // Pause screen to show player who won the battle.
+                        Thread.sleep(2000);
+                        player.up();
+                        battleScene.toggle();
+                        mapScene.toggle();
+                    }
+                }
             } else if (mapScene.isVisible()) {
                 // Print the game map instead if the inventory is invisbile.
                 cursorPos = drawScene(mapScene);
@@ -190,7 +204,6 @@ public class GameTerminal {
 
                 // Colour treasures yellow.
                 colourTreasures();
-
             }
 
             // Refresh the screen to show changes if any.
@@ -313,19 +326,22 @@ public class GameTerminal {
                 battleScene.up();
                 break;
             case Enter:
-                switch (BattleSceneConstants.toEnum(battleScene.getNavigation()
-                        .getCoordinates().getY())) {
+                BattleSceneConstants action = BattleSceneConstants.toEnum(
+                        battleScene.getNavigation().getCoordinates().getY());
+                switch (action) {
                     case ATTACK:
+                        combat.battle(action);
                         System.out.println("You have attacked!");
                         break;
                     case DEFEND:
+                        combat.battle(action);
                         System.out.println("You have defended!");
                         break;
                     case ESCAPE:
-                        System.out.println("You have escaped!");
-                        player.up();
-                        battleScene.toggle();
-                        mapScene.toggle();
+                        combat.battle(action);
+                        if (!combat.isFighting()) {
+                            System.out.println("You have escaped!");
+                        }
                 }
         }
     }
@@ -424,6 +440,8 @@ public class GameTerminal {
                 && !battleScene.isVisible()) {
             battleScene.toggle();
             mapScene.toggle();
+            combat = new Combat(player, mob);
+            battleScene.setCombat(combat);
         }
 
     }

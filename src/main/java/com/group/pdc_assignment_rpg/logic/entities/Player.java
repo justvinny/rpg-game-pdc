@@ -4,8 +4,6 @@ import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
-import com.group.pdc_assignment_rpg.logic.items.Armour;
-import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 
 /**
@@ -16,16 +14,12 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
  */
 public class Player extends Creature implements Killable {
 
-    private int level;
-    private int damage, protection; // Temporary. 
-
     /**
      * Constructor for creating a new player for the first time. Takes only a
      * name and sets everything else to default values.
      */
     public Player(String name) {
-        super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory());
-        setLevel(1);
+        super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory(), 1);
     }
 
     /**
@@ -33,43 +27,9 @@ public class Player extends Creature implements Killable {
      * must be given to the constructor.
      */
     public Player(String name, int level, Inventory inventory, int x, int y, StatBlock statBlock) {
-        super(name, x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory);
-        this.setLevel(level);
+        super(name, x, y, 'P', TextColor.ANSI.BLUE, statBlock, inventory, level);
     }
 
-    /**
-     * Getter methods
-     *
-     */
-    public int getLevel() {
-        return level;
-    }
-
-    public int getDamage() {
-        Weapon weapon = (Weapon) super.getInventory().getEquipment().get(EquipmentSlot.HAND);
-        int weaponDamage = (weapon == null) ? 0 : weapon.getDamage();
-        return damage + weaponDamage;
-    }
-
-    public int getProtection() {
-        Armour armour = (Armour) super.getInventory().getEquipment().get(EquipmentSlot.ARMOUR);
-        int armourProtection = (armour == null) ? 0 : armour.getProtection();
-        return protection + armourProtection;
-    }
-
-    /**
-     * Setter methods
-     *
-     */
-    public void setLevel(int level) throws IllegalArgumentException {
-        if (level >= 1) {
-            this.level = level;
-            setStats();
-        } else {
-            throw new IllegalArgumentException("Level must be greater than or equal to 1.");
-        }
-    }
-    
     /**
      * Utility methods
      *
@@ -79,16 +39,9 @@ public class Player extends Creature implements Killable {
     }
 
     public void levelUp() {
-        level++;
-        damage += 2;
-        protection++;
+        setLevel(getLevel() + 1);
     }
-
-    public void setStats() {
-        damage = 5 + (level - 1) * 2;
-        protection = level;
-    }
-
+    
     @Override
     public boolean equals(Object obj) {
         return getName().equals(((Player) obj).getName());
@@ -108,7 +61,7 @@ public class Player extends Creature implements Killable {
      */
     public String toCommaSeparatedString() {
         return String.format("%s,%d,%d,%d,%d,%,d,%d",
-                getName(), level, x, y, getStats().getStrength(),
+                getName(), getLevel(), x, y, getStats().getStrength(),
                 getStats().getDexterity(), getStats().getIntellect());
     }
     

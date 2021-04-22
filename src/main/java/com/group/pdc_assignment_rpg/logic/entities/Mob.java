@@ -4,22 +4,19 @@ import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
-import com.group.pdc_assignment_rpg.logic.Stats;
 import java.lang.*;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 
 /**
- * Holds data and information of a mob in the game. Based on player design from
- * Macauley / Jess. Stat Block is stored in the Creature object.
+ * Holds mob/monster data/actions.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  */
 public class Mob extends Creature {
 
-    private int level;
     private Map<BattleSceneConstants, Double> personality;
 
     /**
@@ -27,8 +24,7 @@ public class Mob extends Creature {
      * must be given to the constructor.
      */
     public Mob(String name, int level, int x, int y, Inventory inventory, StatBlock statBlock, int hp, int sp, int wp, Map<BattleSceneConstants, Double> personality) {
-        super(name, x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp);
-        this.setLevel(level);
+        super(name, x, y, 'P', TextColor.ANSI.RED, statBlock, inventory, hp, sp, wp, level);
         this.setPersonality(personality);
     }
 
@@ -38,7 +34,6 @@ public class Mob extends Creature {
      */
     public Mob(String name) {
         super(name, 13, 21, 'M', TextColor.ANSI.RED);
-        setLevel(1);
         this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
         populatePersonality(0.75, 0.2, 0.05);
     }
@@ -53,10 +48,6 @@ public class Mob extends Creature {
         this.populatePersonality(attackVal, defendVal, escapeVal);
     }
     
-    public int getLevel() {
-            return level;
-    }
-
     public int getX() {
         return this.x;
     }
@@ -81,14 +72,6 @@ public class Mob extends Creature {
      * Setter methods
      *
      */
-    public void setLevel(int level) throws IllegalArgumentException {
-        if (level >= 1) {
-            this.level = level;
-        } else {
-            throw new IllegalArgumentException("Level must be greater than or equal to 1.");
-        }
-    }
-
     public void setPersonality(Map<BattleSceneConstants, Double> personality) {
         this.personality = personality;
     }

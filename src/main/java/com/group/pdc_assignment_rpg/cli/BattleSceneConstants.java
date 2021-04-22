@@ -13,6 +13,7 @@ package com.group.pdc_assignment_rpg.cli;
 public enum BattleSceneConstants {
     INVALID(-1), ATTACK(5), DEFEND(6), ESCAPE(7);
 
+    public static final int BATTLE_LOG_LINES = 18;
     public static final int CURSOR_X = 2;
     public static final int CURSOR_Y_START = 5;
     public static final int CURSOR_Y_END = 7;

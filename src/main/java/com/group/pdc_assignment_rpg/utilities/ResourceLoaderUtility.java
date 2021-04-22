@@ -172,7 +172,7 @@ public class ResourceLoaderUtility {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] playerData = line.split(",");
                 String playerName = playerData[0];
-                Level playerLevel = Level.valueOf(playerData[1]);
+                Level playerLevel = Level.createLvl(Integer.valueOf(playerData[1]));
 
                 // Player inventory.
                 Inventory playerInventory = loadPlayerInventory(playerName);

@@ -1,5 +1,5 @@
-Bob,Potion of Healing,Potion of Healing,Mighty Sword,Potion of Healing,Sky Sunderer,Divine Bulwark
+Bob,Potion of Healing,Potion of Healing,Sky Sunderer,Divine Bulwark,Mighty Sword,Potion of Healing
 bob,Tattered Clothing,Potion of Healing,Broken Sword
-Greg,Broken Sword,Tattered Clothing
+Greg,Tattered Clothing,Broken Sword
 Jack,Tattered Clothing,Broken Sword
-Jane,Tattered Clothing,Potion of Healing,Broken Sword
+Jane,Broken Sword,Potion of Healing,Tattered Clothing

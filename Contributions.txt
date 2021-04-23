@@ -1,5 +1,5 @@
 Contributions
-Vinson
+	Vinson - 19089783
 -Game Console UI using Lanterna external library.
 UI Designed:
 	-Game Map
@@ -15,7 +15,30 @@ UI Designed:
 -Persistent storage for Player, Mob, Inventory, Equipped Items, etc.
 -Project Structure
 -Game balancing
--Resolving merge conflcits on remote repository.
+-Resolving merge conflicts on remote repository.
 -Bug fixing
 -Refactoring
+	Macauley - 19072621
+- Initial Program UML
+- Internal Game Logic
+- Levelling Logic
+	- Player Experience System
+	- Mob XP Dropping
+	- Player Level-Up
+	- Iterable Enum for holding Player Level data
+- Creature Statistics
+	- Statblock for Creatures
+	- HP/SP/MP System
+- Item Logic 
+- Equipment System
+- Utility for creating hashmap entries en masse
+- Utility for converting enum to plain text
+- Gameplay Design
+- Bug Fixing
+- Code Refactoring
+	- Adding new features to existing classes
+	- Ensuring existing features are not broken by changes
+	- Removing Code Smells
+- Contributed to Battle Scene events
+	Jess - 20096516
 

@@ -23,6 +23,7 @@ public class MapScene extends Scene {
     private final List<Treasure> treasures;
     private List<String> scene;
     private String actionMessage;
+    private String actionMessage2;
 
     /**
      * Constructor for map scene.
@@ -37,6 +38,7 @@ public class MapScene extends Scene {
         this.treasures = treasures;
         this.player = player;
         this.actionMessage = "None";
+        this.actionMessage2 = "";
 
         addPlayerBar();
         addLegend();
@@ -91,7 +93,7 @@ public class MapScene extends Scene {
                 player.getLevel().getThreshold(),
                 player.getHP(),
                 player.getMaxHP());
-        
+
         String playerInfo2 = String.format("Vitality: %d | Endurance: %d |"
                 + " Willpower: %d | Damage: %d | Protection: %d",
                 player.getStats().getVitality(),
@@ -99,7 +101,7 @@ public class MapScene extends Scene {
                 player.getStats().getWillpower(),
                 player.getDamage(),
                 player.getProtection());
-        
+
         playerBar.add(createDashes());
         playerBar.add(playerInfo1);
         playerBar.add(playerInfo2);
@@ -122,15 +124,21 @@ public class MapScene extends Scene {
     }
 
     /**
-     * Shows the last event that happened to the UI so our players knows
-     * they've picked up an item from a treasure for example.
-     * 
+     * Shows the last event that happened to the UI so our players knows they've
+     * picked up an item from a treasure for example.
+     *
      * @return the event UI.
      */
     private List<String> addActionMessage() {
         List<String> message = new ArrayList<>();
         message.add(createDashes());
         message.add("Event: " + actionMessage);
+
+        // Add 2nd message if available.
+        if (!actionMessage2.isEmpty()) {
+            message.add("       " + actionMessage2);
+        }
+
         message.add(createDashes());
         return message;
     }
@@ -138,7 +146,7 @@ public class MapScene extends Scene {
     /**
      * Makes a row dashes at the same width of our map for UI decoration
      * purposes.
-     * 
+     *
      * @return a row of dashes.
      */
     private String createDashes() {
@@ -147,13 +155,27 @@ public class MapScene extends Scene {
     }
 
     /**
-     * Changes the message in response to events like picking up items, 
-     * fighting a mob, or fighting a boss.
-     * 
+     * Changes the message in response to events like picking up items, fighting
+     * a mob, or fighting a boss.
+     *
      * @param message of the event that is happening.
      */
     public void setActionMessage(String message) {
         actionMessage = message;
+        actionMessage2 = "";
+        refreshScene();
+    }
+
+    /**
+     * Changes the message in response to events like picking up items, fighting
+     * a mob, or fighting a boss. Overloaded to get an extra message like Mob
+     * drops.
+     *
+     * @param message of the event that is happening.
+     */
+    public void setActionMessage(String message, String message2) {
+        actionMessage = message;
+        actionMessage2 = message2;
         refreshScene();
     }
 }

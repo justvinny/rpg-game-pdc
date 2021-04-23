@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.logic.items;
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Where a creature's inventory is stored, holds item and equipment that are
@@ -56,6 +57,12 @@ public final class Inventory {
 
     public EnumMap<EquipmentSlot, Item> getEquipment() {
         return equipment;
+    }
+
+    public List<Item> getAllItems() {
+        return inventory.keySet()
+                .stream()
+                .collect(Collectors.toList());
     }
 
     public Item getItem(String equipmentName) {
@@ -215,9 +222,9 @@ public final class Inventory {
      * files.
      *
      * @param playerName name of the player that will be used as a primary key
-     *      in our database. Note: This is not optimal, and should be using an
-     *      integer id instead but since we are only using text files, we feel
-     *      that this is the easiest way to implement our relational text schema.
+     * in our database. Note: This is not optimal, and should be using an
+     * integer id instead but since we are only using text files, we feel that
+     * this is the easiest way to implement our relational text schema.
      * @return a comma separated string representing our player.
      */
     public String toCommaSeparatedString(String playerName) {

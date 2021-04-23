@@ -131,15 +131,9 @@ public class GameTerminal {
                 // If the key pressed is Esc, quit the game.
                 if (keyStroke.getKeyType() == KeyType.Escape) {
                     // Save the player and its inventory upon exit to persisent storage.
-                    ResourceLoaderUtility.writePlayerData(player);
-                    ResourceLoaderUtility.writeInventoryData(player);
-                    ResourceLoaderUtility.writeEquippedData(player);
+                    saveCharacter();
 
-                    screen.clear();
                     printExitMessage();
-                    screen.refresh();
-                    Thread.sleep(QUIT_GAME_PAUSE_MS);
-                    screen.close();
                     break;
                 } else if (keyStroke.getKeyType() == KeyType.Character
                         && keyStroke.getCharacter() == 'i'
@@ -177,14 +171,28 @@ public class GameTerminal {
                 cursorPos = drawScene(battleScene);
                 drawNavigationCursor(battleScene.getNavigation());
 
+                // Check if player still alive.
+                gameOver();
+
                 // Check if battle still ongoing.
                 if (combat != null) {
                     if (!combat.isFighting()) {
                         screen.refresh();
                         // Pause screen to show player who won the battle.
                         Thread.sleep(END_BATTLE_PAUSE_MS);
-                        mapScene.setActionMessage(
-                                combat.getLog().get(combat.getLog().size() - 1));
+
+                        // Set even message.
+                        String eventMessage = combat.getLog().get(combat.getLog().size() - 1);
+                        String eventMessage2 = combat.getLog().get(combat.getLog().size() - 2);
+
+                        // Send different messages if the player got loot or not.
+                        if (eventMessage.contains(player.getName())) {
+                            mapScene.setActionMessage(eventMessage);
+                        } else {
+                            mapScene.setActionMessage(eventMessage2, eventMessage);
+                        }
+
+                        bossDied(); // Check if boss died.
                         battleScene.toggle();
                         mapScene.toggle();
                         mapScene.refreshScene();
@@ -220,12 +228,37 @@ public class GameTerminal {
      * @throws IOException exception thrown when using TextGraphics putString
      * method.
      */
-    private void printExitMessage() throws IOException {
+    private void printExitMessage() throws IOException, InterruptedException {
+        screen.clear();
         String message = "Thanks for playing our game!";
         // Center our text to the screen.
         int colPos = (terminal.getTerminalSize().getColumns() / 2) - message.length() / 2;
         int rowPos = terminal.getTerminalSize().getRows() / 2;
         textGraphics.putString(colPos, rowPos, message);
+        screen.refresh();
+        Thread.sleep(QUIT_GAME_PAUSE_MS);
+        screen.close();
+    }
+
+    /**
+     * Prints alternate exit message. For instance, when a player dies and the
+     * game is over.
+     *
+     * @param textGraphics used for drawing to our Lanterna console.
+     * @param terminal is the Lanterna terminal.
+     * @throws IOException exception thrown when using TextGraphics putString
+     * method.
+     */
+    private void printExitMessage(String message) throws IOException, InterruptedException {
+        screen.clear();
+        // Center our text to the screen.
+        int colPos = (terminal.getTerminalSize().getColumns() / 2) - message.length() / 2;
+        int rowPos = terminal.getTerminalSize().getRows() / 2;
+        textGraphics.putString(colPos, rowPos, message);
+        textGraphics.putString(colPos, rowPos, message);
+        screen.refresh();
+        Thread.sleep(QUIT_GAME_PAUSE_MS);
+        screen.close();
     }
 
     /**
@@ -474,6 +507,10 @@ public class GameTerminal {
                         MOBS_AVAILABLE[(int) (Math.random() * MOBS_AVAILABLE.length)]);
         }
 
+        // Add mob loot.
+        mob.setInventory(ResourceLoaderUtility.loadMobDrops(mob.getName()));
+
+        // Setup combat.
         combat = new Combat(player, mob);
         battleScene.setCombat(combat);
         battleScene.startBattle(mob);
@@ -485,5 +522,34 @@ public class GameTerminal {
     private void generateRandomEncounterSteps() {
         randomEncounterSteps = (int) ((Math.random() * RAND_RANGE_STEPS) + MIN_ENCOUNTER_STEPS);
 
+    }
+
+    /**
+     * Quit the game if player is dead.
+     */
+    private void gameOver() throws InterruptedException, IOException {
+        if (player.getHP() <= 0) {
+            saveCharacter();
+            printExitMessage("You died. Game Over!");
+        }
+    }
+
+    /**
+     * Move the boss out of the map if the player kill it.
+     */
+    private void bossDied() {
+        if (boss.getHP() <= 0) {
+            boss.setX(1);
+            boss.setY(1);
+        }
+    }
+    
+    /**
+     * Save character data like levels, stats, inventory, and equipped items.
+     */
+    private void saveCharacter() {
+        ResourceLoaderUtility.writePlayerData(player);
+        ResourceLoaderUtility.writeInventoryData(player);
+        ResourceLoaderUtility.writeEquippedData(player);
     }
 }

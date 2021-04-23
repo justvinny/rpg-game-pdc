@@ -5,7 +5,9 @@ import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.items.Item;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -101,6 +103,10 @@ public final class Mob extends Creature {
         return this.y;
     }
 
+    public List<Item> getLoot() {
+        return getInventory().getAllItems();
+    }
+    
     public Map<BattleSceneConstants, Double> getPersonality() {
         return personality;
     }

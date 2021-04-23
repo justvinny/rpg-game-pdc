@@ -46,13 +46,17 @@ public final class Player extends Creature implements Killable {
      */
     @Override
     public int getXP() {
-        if (xp >= getLevel().getThreshold()) {
-            levelUp();
-        }
-        
         return xp;
     }
 
+    @Override
+    public void addXP(int xp) {
+        super.addXP(xp);
+        
+        if (getXP() >= getLevel().getThreshold()) {
+            levelUp();
+        }
+    }
 
     /**
      * Utility methods
@@ -93,6 +97,10 @@ public final class Player extends Creature implements Killable {
                 ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
                 ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
                 ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
+        
+        // Equip items.
+        getInventory().getEquipment().put(EquipmentSlot.HAND, getInventory().getItem("Broken Sword"));
+        getInventory().getEquipment().put(EquipmentSlot.ARMOUR, getInventory().getItem("Tattered Clothing"));
     }
 
     /**

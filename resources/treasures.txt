@@ -1,5 +1,5 @@
-Mighty Sword,4,1
-Bloody Chainmail,42,9
+Sword of Stabbing,4,1
+Coarse Leather Armour,42,9
 Potion of Healing,4,21
 Potion of Healing,37,22
 Potion of Healing,103,17

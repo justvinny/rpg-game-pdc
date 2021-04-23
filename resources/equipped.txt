@@ -1,9 +1,13 @@
-Bob,Sky Sunderer,Divine Bulwark
-bob,None,None
+Noob3,Sword of Stabbing,Bloody Chainmail
+Noob2,Mighty Sword,Bloody Chainmail
+Noob1,Sword of Stabbing,Bloody Chainmail
 Newb,Mighty Sword,Bloody Chainmail
-Jess,Mighty Sword,Bloody Chainmail
 Vinson,Mighty Sword,Bloody Chainmail
 Greg,None,None
-Jack,Broken Sword,Tattered Clothing
 Jane,None,None
 Mac,Mighty Sword,Bloody Chainmail
+Jake,None,None
+Bob,Sky Sunderer,Divine Bulwark
+bob,None,None
+Jess,Mighty Sword,Bloody Chainmail
+Jack,Broken Sword,Tattered Clothing

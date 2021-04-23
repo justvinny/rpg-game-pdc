@@ -51,6 +51,9 @@ public class MainDriver {
 
             // Load boss monster.
             Mob boss = ResourceLoaderUtility.loadMobFromDB(BOSS_MOB);
+            boss.setHP(boss.getMaxHP() * 3);
+            boss.setInventory(ResourceLoaderUtility.loadMobDrops(BOSS_MOB));
+
 
             // Load map treasures.
             List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();

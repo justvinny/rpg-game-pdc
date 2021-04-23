@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.logic;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import java.util.Random;
 import com.group.pdc_assignment_rpg.logic.entities.*;
+import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +153,16 @@ public class Combat {
                         + " XP from " + target.getName() + "!");
                 initiator.addXP(target.getXP());
                 target.setDefending(false);
+
+                // Get the mob's loot if the dead target is a mob.
+                if (target instanceof Mob) {
+                    List<Item> loot = ((Mob) target).getLoot();
+                    loot.forEach(item -> initiator.getInventory().add(item));
+
+                    if (!loot.isEmpty()) {
+                        battleLog.add("Obtained " + loot.toString());
+                    }
+                }
                 return false;
             }
         } else {

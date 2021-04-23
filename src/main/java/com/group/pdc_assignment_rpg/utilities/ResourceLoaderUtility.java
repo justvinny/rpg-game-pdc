@@ -17,6 +17,7 @@ import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Utility class to for loading game maps from text files.
@@ -44,6 +46,7 @@ public class ResourceLoaderUtility {
     private static final String ITEM_LIST_PATH = RESOURCE_PATH + "/item-list.txt";
     private static final String EQUIPPED_ITEMS_PATH = RESOURCE_PATH + "/equipped.txt";
     private static final String MOBS_PATH = RESOURCE_PATH + "/mobs.txt";
+    private static final String MOB_DROPS_PATH = RESOURCE_PATH + "/mob-drops.txt";
 
     /**
      * Method to load a map from a text file depending on map name argument
@@ -189,7 +192,7 @@ public class ResourceLoaderUtility {
                     playerInventory.getEquipment().put(EquipmentSlot.ARMOUR,
                             playerInventory.getItem(playerEquipped.get(1)));
                 }
-                
+
                 // Player coordinates.
                 int playerX = Integer.valueOf(playerData[2]);
                 int playerY = Integer.valueOf(playerData[3]);
@@ -515,5 +518,56 @@ public class ResourceLoaderUtility {
             }
         }
         return mob;
+    }
+
+    /**
+     * Method to load the possible mob drops that a player can obtain once they
+     * win in combat.
+     * @param mobName name of mob the player is battling.
+     * @return items that the player will get.
+     */
+    public static Inventory loadMobDrops(String mobName) {
+        BufferedReader bufferedReader = null;
+        Inventory inventory = new Inventory();
+
+        try {
+            bufferedReader = new BufferedReader(new FileReader(MOB_DROPS_PATH));
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] inventoryData = line.split(",");
+                String mobNameDB = inventoryData[0];
+
+                if (mobNameDB.equals(mobName)) {
+                    // Add possible drops to inventory.
+                    for (int i = 1; i < inventoryData.length; i += 2) {
+                        String itemName = inventoryData[i];
+                        Item item = itemLoaderFactory(itemName);
+                        int dropRate = Integer.valueOf(inventoryData[i + 1]);
+
+                        // Calculate if we should include the drop to the inventory
+                        // using the drop rate percentage.
+                        boolean isObtained = ((int) (Math.random() * 101)) <= dropRate;
+
+                        // Add the item if the calculation makes it obtainable.
+                        if (isObtained) {
+                            inventory.add(item);
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+
+        return inventory;
     }
 }

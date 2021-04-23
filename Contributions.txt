@@ -1,0 +1,21 @@
+Contributions
+Vinson
+-Game Console UI using Lanterna external library.
+UI Designed:
+	-Game Map
+	-Battle Scene
+	-Inventory Scene
+	-Player HUD
+	-Cursors
+-Scene navigation for the Map, Battle, and Inventory.
+-Main game loop
+-Integrated backend game logic to the Console UI.
+-Random Battle Encounters
+-File I/O
+-Persistent storage for Player, Mob, Inventory, Equipped Items, etc.
+-Project Structure
+-Game balancing
+-Resolving merge conflcits on remote repository.
+-Bug fixing
+-Refactoring
+

@@ -41,4 +41,19 @@ UI Designed:
 	- Removing Code Smells
 - Contributed to Battle Scene events
 	Jess - 20096516
-
+- Entity logic & inheritance hierarchy
+	- Entity Class
+	- Creature Class
+	- Mob Class
+	- Player Class
+- Combat System Logic
+	- Attack/defend/escape actions
+	- Randomised rolls & stat check competitions
+	- Combat loop
+	- Basic mob AI/decision making
+	- Mob personality system
+	- Killable interface
+	- Battle event logging
+	- Basic combat balancing
+- Bug Fixing
+- Refactoring

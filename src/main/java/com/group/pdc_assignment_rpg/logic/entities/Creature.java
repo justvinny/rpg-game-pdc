@@ -288,8 +288,6 @@ public abstract class Creature extends Entity {
             }
         } else if (amount <= 0) {
             throw new IllegalArgumentException("Heal amount must be greater than 0.");
-        } else if (getHP() >= getMaxHP()) {
-            throw new IllegalArgumentException("Cannot heal when max hit points already reached.");
         }
     }
 

@@ -35,6 +35,9 @@ public class MainDriver {
      */
     public static final String BOSS_MOB = "Goblin King";
     public static final int GAME_PAUSE_MS = 1000;
+    public static final double BOSS_ATTACK_PERSONALITY = .7;
+    public static final double BOSS_DEFEND_PERSONALITY = .3;
+    public static final double BOSS_ESCAPE_PERSONALITY = 0;
     
     public static void main(String[] args) {
         try {
@@ -51,9 +54,11 @@ public class MainDriver {
 
             // Load boss monster.
             Mob boss = ResourceLoaderUtility.loadMobFromDB(BOSS_MOB);
-            boss.setHP(boss.getMaxHP() * 3);
             boss.setInventory(ResourceLoaderUtility.loadMobDrops(BOSS_MOB));
-
+            boss.populatePersonality(
+                    BOSS_ATTACK_PERSONALITY, // Boss should attack more
+                    BOSS_DEFEND_PERSONALITY, // Boss should defend sometimes.
+                    BOSS_ESCAPE_PERSONALITY); // Boss shouldn't flee.
 
             // Load map treasures.
             List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();

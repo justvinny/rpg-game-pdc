@@ -1,15 +1,17 @@
-Noob3,Potion of Healing,Potion of Healing,Potion of Healing,Yellow Rock,Potion of Healing,Tattered Clothing,Yellow Rock,Yellow Rock,Potion of Healing,Potion of Healing,Yellow Rock,Bloody Chainmail,Potion of Healing,Broken Sword,Yellow Rock,Sword of Stabbing,Yellow Rock,Potion of Healing
-Noob2,Tattered Clothing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Sword of Stabbing,Yellow Rock,Mighty Sword,Potion of Healing,Coarse Leather Armour,Broken Sword,Bloody Chainmail
-Noob1,Tattered Clothing,Broken Sword,Bloody Chainmail,Sword of Stabbing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing
-Newb,Broken Sword,Tattered Clothing,Potion of Healing,Mighty Sword,Potion of Healing,Bloody Chainmail
-Vinson,Tattered Clothing,Potion of Healing,Broken Sword,Potion of Healing,Potion of Healing,Bloody Chainmail,Potion of Healing,Mighty Sword
+Noob3,Potion of Healing,Yellow Rock,Sword of Stabbing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Bloody Chainmail,Tattered Clothing,Yellow Rock,Yellow Rock,Potion of Healing,Yellow Rock,Potion of Healing,Potion of Healing,Broken Sword,Yellow Rock,Yellow Rock
+Noob2,Tattered Clothing,Potion of Healing,Potion of Healing,Bloody Chainmail,Yellow Rock,Sword of Stabbing,Potion of Healing,Coarse Leather Armour,Potion of Healing,Mighty Sword,Broken Sword,Potion of Healing
+Noob1,Potion of Healing,Potion of Healing,Broken Sword,Sword of Stabbing,Tattered Clothing,Potion of Healing,Bloody Chainmail,Potion of Healing
+Ets,Potion of Healing,Tattered Clothing,Broken Sword
+Newb,Potion of Healing,Potion of Healing,Mighty Sword,Bloody Chainmail,Broken Sword,Tattered Clothing
+Vinson,Potion of Healing,Broken Sword,Potion of Healing,Potion of Healing,Potion of Healing,Mighty Sword,Bloody Chainmail,Tattered Clothing
 Greg,Broken Sword,Tattered Clothing
-Dave,Divine Bulwark,Yellow Rock,Potion of Healing,Yellow Rock,Yellow Rock,Sword of Stabbing,Yellow Rock,Sky Sunderer,Broken Sword,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Coarse Leather Armour,Potion of Healing,Yellow Rock,Yellow Rock,Yellow Rock
-Jane,Potion of Healing,Broken Sword,Tattered Clothing
-Mac,Bloody Chainmail,Potion of Healing,Broken Sword,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Tattered Clothing,Mighty Sword
-Jake,Potion of Healing,Tattered Clothing,Broken Sword
-Bob,Potion of Healing,Potion of Healing,Sky Sunderer,Mighty Sword,Divine Bulwark,Potion of Healing
-bob,Broken Sword,Potion of Healing,Tattered Clothing
+Dave,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Divine Bulwark,Yellow Rock,Broken Sword,Coarse Leather Armour,Yellow Rock,Potion of Healing,Yellow Rock,Yellow Rock,Sword of Stabbing,Yellow Rock,Sky Sunderer,Potion of Healing,Yellow Rock
+Jane,Broken Sword,Potion of Healing,Tattered Clothing
+Mac,Bloody Chainmail,Potion of Healing,Potion of Healing,Broken Sword,Potion of Healing,Potion of Healing,Mighty Sword,Potion of Healing,Tattered Clothing,Potion of Healing
+Test1,Yellow Rock,Yellow Rock,Sword of Stabbing,Broken Sword,Mighty Sword,Tattered Clothing,Yellow Rock,Yellow Rock,Bloody Chainmail,Yellow Rock,Coarse Leather Armour
+Jake,Tattered Clothing,Potion of Healing,Broken Sword
+Bob,Sky Sunderer,Yellow Rock,Bloody Chainmail,Potion of Healing,Yellow Rock,Mighty Sword,Yellow Rock,Divine Bulwark,Potion of Healing
+bob,Potion of Healing,Broken Sword,Tattered Clothing
 Dave',Broken Sword,Potion of Healing,Tattered Clothing
-Jess,Bloody Chainmail,Mighty Sword,Broken Sword,Tattered Clothing
-Jack,Broken Sword,Tattered Clothing
+Jess,Tattered Clothing,Bloody Chainmail,Broken Sword,Mighty Sword
+Jack,Tattered Clothing,Broken Sword

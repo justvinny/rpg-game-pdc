@@ -49,15 +49,15 @@ public class GameTerminal {
     /**
      * Fields
      */
-    private MapScene mapScene;
-    private InventoryScene inventoryScene;
-    private BattleScene battleScene;
-    private Player player;
+    private final MapScene mapScene;
+    private final InventoryScene inventoryScene;
+    private final BattleScene battleScene;
+    private final Player player;
+    private final Mob boss;
     private Terminal terminal;
     private Screen screen;
     private TextGraphics textGraphics;
     private Combat combat;
-    private Mob boss;
     private int playerSteps, randomEncounterSteps;
 
     /**

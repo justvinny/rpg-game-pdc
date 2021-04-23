@@ -38,7 +38,7 @@ public final class Mob extends Creature {
     public Mob(String name, char symbol, int level, int x, int y, StatBlock statBlock) {
         super(name, x, y, symbol, TextColor.ANSI.RED, statBlock, new Inventory(), Level.createLvl(level));
         this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
-        populatePersonality(0.75, 0.2, 0.05);
+        populatePersonality(0.75, 0.2, 0);
     }
 
     /*

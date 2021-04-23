@@ -4,10 +4,12 @@ Noob1,Sword of Stabbing,Bloody Chainmail
 Newb,Mighty Sword,Bloody Chainmail
 Vinson,Mighty Sword,Bloody Chainmail
 Greg,None,None
+Dave,Sky Sunderer,Divine Bulwark
 Jane,None,None
 Mac,Mighty Sword,Bloody Chainmail
 Jake,None,None
 Bob,Sky Sunderer,Divine Bulwark
 bob,None,None
+Dave',Broken Sword,Tattered Clothing
 Jess,Mighty Sword,Bloody Chainmail
 Jack,Broken Sword,Tattered Clothing

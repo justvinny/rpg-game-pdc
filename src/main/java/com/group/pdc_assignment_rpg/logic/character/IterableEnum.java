@@ -24,8 +24,5 @@ public interface IterableEnum<E extends Enum<E>> {
   }
 
   @SuppressWarnings("unchecked")
-  private E[] getAllValues() {//java 9 private methods in interface
-      IterableEnum[] ies = this.getClass().getEnumConstants();
-      return (E[]) ies;
-  }
+  public E[] getAllValues();
 }

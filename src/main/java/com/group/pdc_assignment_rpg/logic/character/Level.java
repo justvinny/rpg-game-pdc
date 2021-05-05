@@ -111,4 +111,8 @@ public enum Level implements IterableEnum<Level> {
 	private static class Values {
             public static int BASE_THRESHOLD = 16;
     }
+    public Level[] getAllValues() {//java 9 private methods in interface
+	IterableEnum[] ies = this.getClass().getEnumConstants();
+	return (Level[]) ies;
+    }
 }

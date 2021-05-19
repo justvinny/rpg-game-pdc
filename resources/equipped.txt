@@ -6,10 +6,13 @@ Newb,Mighty Sword,Bloody Chainmail
 Vinson,Mighty Sword,Bloody Chainmail
 Greg,None,None
 Dave,Sky Sunderer,Divine Bulwark
+Blah123,Broken Sword,Tattered Clothing
 Jane,None,None
 Mac,Mighty Sword,Bloody Chainmail
+Test123,Broken Sword,Tattered Clothing
 Test1,Mighty Sword,Bloody Chainmail
 Jake,None,None
+New123,Broken Sword,Tattered Clothing
 Bob,Sky Sunderer,Divine Bulwark
 bob,None,None
 Dave',Broken Sword,Tattered Clothing

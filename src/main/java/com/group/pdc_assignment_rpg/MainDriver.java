@@ -17,11 +17,19 @@ import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_START;
 import static com.group.pdc_assignment_rpg.cli.InventorySceneConstants.CURSOR_Y_STEP;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
+import com.group.pdc_assignment_rpg.logic.entities.PlayerListModel;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
+import com.group.pdc_assignment_rpg.view.gui.GameController;
+import com.group.pdc_assignment_rpg.view.gui.MainFrameController;
+import com.group.pdc_assignment_rpg.view.gui.MainFrameView;
+import com.group.pdc_assignment_rpg.view.gui.PlayerLoadingController;
+import com.group.pdc_assignment_rpg.view.gui.ScreenManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Entry point to the RPG game.
@@ -38,16 +46,41 @@ public class MainDriver {
     public static final double BOSS_ATTACK_PERSONALITY = .7;
     public static final double BOSS_DEFEND_PERSONALITY = .3;
     public static final double BOSS_ESCAPE_PERSONALITY = 0;
-    
+
     public static void main(String[] args) {
-        try {
-            init();
-        } catch (InvalidMapException ex) {
-            System.err.println(ex.getMessage());
-        }
+        initGUI();
+
+        // To use the console version, uncomment the next lines
+        // and comment out initGUI(); 
+//        try {
+//            initConsole();
+//        } catch (InvalidMapException ex) {
+//            Logger.getLogger(MainDriver.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
-    private static void init() throws InvalidMapException {
+    private static void initGUI() {
+        // Player list
+        PlayerListModel playerListModel = new PlayerListModel();
+
+        // GUI
+        // Screen manager singleton used for switching between screens.
+        ScreenManager screenManager = ScreenManager.getInstance();
+        screenManager.getPlayerLoading().setPlayerListModel(playerListModel.getPlayerList());
+
+        // Main frame that will contain all our screns
+        MainFrameView mainFrame = new MainFrameView();
+        MainFrameController mainFrameController = new MainFrameController(mainFrame);
+        
+        // Controllers for different screens from the ScreenManager.
+        PlayerLoadingController playerLoadingController
+                = new PlayerLoadingController(
+                        mainFrame,
+                        screenManager.getPlayerLoading(),
+                        playerListModel);
+    }
+
+    private static void initConsole() throws InvalidMapException {
         try {
             // Load player and start screen.
             Player player = loadStartScreen();
@@ -76,7 +109,7 @@ public class MainDriver {
 
             // Start our game.
             GameTerminal gameTerminal = new GameTerminal(mapScene, inventoryScene, battleScene, player, boss);
-            
+
             // Message that says game terminal is loaded.
             System.out.println("Game terminal is now running! Check the new popup window.");
             gameTerminal.start();
@@ -157,7 +190,8 @@ public class MainDriver {
     }
 
     /**
-     * Helper method to generate the battle scene UI for the our game. 
+     * Helper method to generate the battle scene UI for the our game.
+     *
      * @param player the player that will be playable by the user.
      * @return the battle scene CLI.
      */

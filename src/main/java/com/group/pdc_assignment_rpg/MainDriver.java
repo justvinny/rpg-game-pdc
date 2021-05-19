@@ -78,6 +78,8 @@ public class MainDriver {
                         mainFrame,
                         screenManager.getPlayerLoading(),
                         playerListModel);
+        
+        GameController gameController = new GameController(mainFrame);
     }
 
     private static void initConsole() throws InvalidMapException {

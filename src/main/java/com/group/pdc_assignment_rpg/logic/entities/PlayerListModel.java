@@ -8,7 +8,11 @@ package com.group.pdc_assignment_rpg.logic.entities;
 import com.group.pdc_assignment_rpg.observer.CustomObservable;
 import com.group.pdc_assignment_rpg.observer.CustomObserver;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -48,8 +52,20 @@ public class PlayerListModel extends CustomObservable {
         }
     }
 
+    public Player get(String name) {
+        Player player = playerList
+                .stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+        return Objects.requireNonNull(player, "Can't load null player");
+    }
+
     public List<Player> getPlayerList() {
-        return playerList;
+        return playerList
+                .stream()
+                .sorted(Comparator.comparing(Player::getName))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public boolean playerExists(String name) {

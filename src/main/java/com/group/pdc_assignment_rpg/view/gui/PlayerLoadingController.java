@@ -62,6 +62,8 @@ public class PlayerLoadingController implements CustomObserver {
                             "No Player Selected", JOptionPane.ERROR_MESSAGE);
                 } else {
                     // Launch the main game with the selected player.
+                    Player player = playerListModel.get(playerLoading.playerSelected());
+                    ScreenManager.getInstance().getGame().setPlayer(player);
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
                     mainFrame.requestFocusInWindow();
                     

@@ -18,6 +18,9 @@ public class MainFrameController {
     public MainFrameController(MainFrameView view) {
         ScreenManager screenManager = ScreenManager.getInstance();
 
+        // Key listener for the frame where we can use keys such
+        // as opening inventory and exiting the game using the
+        // escape key.
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

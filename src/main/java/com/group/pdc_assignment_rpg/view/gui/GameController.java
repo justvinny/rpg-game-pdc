@@ -5,8 +5,8 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 /**
@@ -18,19 +18,24 @@ public class GameController {
     public GameController(MainFrameView mainFrame) {
         ScreenManager screenManager = ScreenManager.getInstance();
 
-        screenManager.getGame().addKeyListener(new KeyAdapter() {
+        screenManager.getGame().addBtnInventoryListener(new ActionListener() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_I) {
-                    if (mainFrame.getCurrentScreen() instanceof GameView) {
-                        mainFrame.setCurrentScreen(screenManager.getInventory());
-                        screenManager.getInventory().requestFocusInWindow();
-                    }
-                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    // Exit
-                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+            public void actionPerformed(ActionEvent e) {
+                // Open the inventory.
+                if (mainFrame.getCurrentScreen() instanceof GameView) {
+                    mainFrame.setCurrentScreen(screenManager.getInventory());
                 }
-
+                
+                // Give back focus to main frame after button clicked
+                // to allow the key listener on the frame to work.
+                mainFrame.requestFocusInWindow(); 
+            }
+        });
+        
+        screenManager.getGame().addBtnExitListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
             }
         });
     }

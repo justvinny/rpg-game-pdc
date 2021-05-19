@@ -6,6 +6,9 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMENSION;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -17,7 +20,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 
@@ -27,12 +29,10 @@ import javax.swing.SpringLayout;
  */
 public class PlayerLoadingView extends JPanel {
 
-    private static final int DEFAULT_MARGIN = 5;
     private static final String CREATE_PLAYER_LABEL = "Enter Name";
     private static final String CREATE_PLAYER_BTN = "Create Player";
     private static final String LOAD_PLAYER_TEXT = "Load Player";
     private static final String START_GAME_BTN = "Start Game";
-    private static final Dimension DEFAULT_BTN_DIMENSION = new Dimension(150, 30);
     private static final Dimension FIELD_DIMENSIONS = new Dimension(250, 30);
     private static final Dimension LIST_DIMENSIONS = new Dimension(250, 200);
 
@@ -64,6 +64,7 @@ public class PlayerLoadingView extends JPanel {
         // Label
         labelCreatePlayer = new JLabel(CREATE_PLAYER_LABEL);
         labelCreatePlayer.requestFocusInWindow();
+        labelCreatePlayer.setFont(DEFAULT_FONT);
 
         // Field
         fieldCreatePlayer = new JTextField();
@@ -73,6 +74,7 @@ public class PlayerLoadingView extends JPanel {
         // Button
         btnCreatePlayer = new JButton(CREATE_PLAYER_BTN);
         btnCreatePlayer.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnCreatePlayer.setFont(DEFAULT_FONT);
 
         // add 
         add(labelCreatePlayer);
@@ -84,6 +86,7 @@ public class PlayerLoadingView extends JPanel {
     private void loadPlayerList() {
         // Label
         labelLoadPlayer = new JLabel(LOAD_PLAYER_TEXT);
+        labelLoadPlayer.setFont(DEFAULT_FONT);
 
         // List
         jListPlayers = new JList();
@@ -97,6 +100,7 @@ public class PlayerLoadingView extends JPanel {
         // Button
         btnStartGame = new JButton(START_GAME_BTN);
         btnStartGame.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnStartGame.setFont(DEFAULT_FONT);
 
         // add
         add(labelLoadPlayer);
@@ -149,8 +153,8 @@ public class PlayerLoadingView extends JPanel {
     }
 
     public String playerSelected() {
-        boolean value = jListPlayers.getSelectedValue() != null;
-        return (value) ? jListPlayers.getSelectedValue().toString() : "";
+        boolean isNull = jListPlayers.getSelectedValue() == null;
+        return (isNull) ? "" : jListPlayers.getSelectedValue().toString();
     }
 
     public void setPlayerSelected(String name) {

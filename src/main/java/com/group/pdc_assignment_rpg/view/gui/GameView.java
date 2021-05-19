@@ -11,9 +11,11 @@ import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
@@ -21,11 +23,12 @@ import javax.swing.SpringLayout;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class GameView extends JPanel {
+public class GameView extends JLayeredPane {
 
-    private static final Dimension GAME_MAP_DIMS = new Dimension((int) (MainFrameView.FRAME_WIDTH * .99), (int) (MainFrameView.FRAME_HEIGHT * .9));
-    private static final String INVENTORY_BTN = "[ I ] nventory";
-    private static final String EXIT_BTN = "[ E ] xit";
+    private static final Dimension GAME_MAP_DIMS = new Dimension((int) (MainFrameView.FRAME_WIDTH * .99), (int) (MainFrameView.FRAME_HEIGHT * .98));
+    private static final String INVENTORY_BTN = "[ I ] - Inventory";
+    private static final String EXIT_BTN = "[ Esc ] - Exit";
+    private static final Font PLAYER_INFO_FONT = new Font("Impact", Font.BOLD, 18);
 
     private SpringLayout layout;
     private JLabel labelPlayerInfo;
@@ -56,14 +59,18 @@ public class GameView extends JPanel {
         gameMapContainer.setBackground(Color.BLACK);
         gameMapContainer.setPreferredSize(GAME_MAP_DIMS);
 
-        add(gameMapContainer);
+        // JLayeredPane only works with boxed integers for some reason
+        // and doesn't work with primitive int.
+        add(gameMapContainer, new Integer(0));
     }
 
     // Player HUD at bottom of game view.
     private void createPlayerHUD() {
         // Player info
-        labelPlayerInfo = new JLabel(getPlayerInformation());
-        labelPlayerInfo.setFont(DEFAULT_FONT);
+        labelPlayerInfo = new JLabel();
+        labelPlayerInfo.setFont(PLAYER_INFO_FONT);
+        labelPlayerInfo.setForeground(Color.WHITE);
+        
 
         // Inventory button
         btnInventory = new JButton(INVENTORY_BTN);
@@ -75,27 +82,21 @@ public class GameView extends JPanel {
         btnExit.setPreferredSize(DEFAULT_BTN_DIMENSION);
         btnExit.setFont(DEFAULT_FONT);
 
-        // Add
-        add(labelPlayerInfo);
-        add(btnInventory);
-        add(btnExit);
+        // JLayered pane uses boxed integers and not primitive int.
+        add(labelPlayerInfo, new Integer(1));
+        add(btnInventory, new Integer(1));
+        add(btnExit, new Integer(1));
     }
 
-    private String getPlayerInformation() {
-        return String.format("Name: %s | Lv. %s | Exp %d/%d | HP: %d/%d | "
-                + "Damage: %d | Protection: %d | Vitality: %d | Endurance: %d |"
-                + " Willpower: %d",
+    private void setPlayerInformation() {
+        String playerInfo = String.format("Name: %s | Lv. %s | HP %d / %d | Exp: %d / %d",
                 player.getName(),
                 player.getLevel().getLvl(),
-                player.getXP(),
-                player.getLevel().getThreshold(),
                 player.getHP(),
                 player.getMaxHP(),
-                player.getDamage(),
-                player.getProtection(),
-                player.getStats().getVitality(),
-                player.getStats().getEndurance(),
-                player.getStats().getWillpower());
+                player.getXP(),
+                player.getLevel().getThreshold());        
+        labelPlayerInfo.setText(playerInfo);
     }
 
     // constraints
@@ -105,7 +106,7 @@ public class GameView extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, gameMapContainer, 0, SpringLayout.NORTH, this);
 
         // label for player info
-        layout.putConstraint(SpringLayout.SOUTH, labelPlayerInfo, -DEFAULT_MARGIN, SpringLayout.SOUTH, this);
+        layout.putConstraint(SpringLayout.NORTH, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.NORTH, this);
         layout.putConstraint(SpringLayout.WEST, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.WEST, this);
 
         // btn for inventory
@@ -120,7 +121,7 @@ public class GameView extends JPanel {
 
     public void setPlayer(Player player) {
         this.player = player;
-        labelPlayerInfo.setText(getPlayerInformation());
+        setPlayerInformation();
     }
 
     public void addBtnInventoryListener(ActionListener actionListener) {

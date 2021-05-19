@@ -8,8 +8,8 @@ package com.group.pdc_assignment_rpg.view.gui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -17,16 +17,16 @@ import javax.swing.JPanel;
  */
 public class MainFrameView extends JFrame {
 
-    public static final int FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.75);
-    public static final int FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.75);
+    public static final int FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.9);
+    public static final int FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.9);
     public static final Dimension FRAME_DIMENSIONS = new Dimension(FRAME_WIDTH, FRAME_HEIGHT);
     public static final Dimension DEFAULT_BTN_DIMENSION = new Dimension(150, 30);
     public static final int DEFAULT_MARGIN = 5;
     public static final Font DEFAULT_FONT = new Font("Impact", Font.PLAIN, 16);
-    
+
     private static final String GAME_TITLE = "RPG Game";
 
-    private JPanel currentScreen;
+    private JComponent currentScreen;
 
     public MainFrameView() {
         // First screen at startup.
@@ -35,11 +35,11 @@ public class MainFrameView extends JFrame {
         initGUI();
     }
 
-    public JPanel getCurrentScreen() {
+    public JComponent getCurrentScreen() {
         return currentScreen;
     }
 
-    public void setCurrentScreen(JPanel screen) {
+    public void setCurrentScreen(JComponent screen) {
         getContentPane().remove(currentScreen);
         currentScreen = screen;
         getContentPane().add(currentScreen);

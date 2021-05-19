@@ -18,6 +18,16 @@ public class InventoryView extends JPanel {
     }
     
     private void panelSettings() {
-        setBackground(Color.RED);    
+        setBackground(Color.WHITE);    
     }
+    
+    // Inventory title
+    
+    // Inventory list
+    
+    // item description
+    
+    // Currently equipped items.
+    
+    // Buttons for equipping, using, and going back to the main game.
 }

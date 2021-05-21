@@ -9,6 +9,7 @@ import com.group.pdc_assignment_rpg.logic.entities.Player;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 /**
  *
@@ -36,9 +37,42 @@ public class MainFrameController {
                         if (Player.getCurrentPlayer() != null) {
                             Player.getCurrentPlayer().savePlayer();
                         }
-                        
+
                         // Exit
                         view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
+                    }
+                }
+
+                if (view.getCurrentScreen() instanceof GameView) {
+                    Player player = Player.getCurrentPlayer();
+                    List<String> map = ScreenManager.getInstance().getMap().getMapTxt();
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                            if (player.getY() > 0
+                                    && map.get(player.getY() - 1).charAt(player.getX()) != '#') {
+                                player.up();
+                            }
+
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            if (player.getY() < map.size()
+                                    && map.get(player.getY() + 1).charAt(player.getX()) != '#') {
+                                player.down();
+                            }
+
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            if (player.getX() < map.get(player.getY()).length()
+                                    && map.get(player.getY()).charAt(player.getX() + 1) != '#') {
+                                player.right();
+                            }
+
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            if (player.getX() > 0
+                                    && map.get(player.getY()).charAt(player.getX() - 1) != '#') {
+                                player.left();
+                            }
                     }
                 }
             }

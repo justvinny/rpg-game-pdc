@@ -96,6 +96,7 @@ public class InventoryController {
         inventoryView.addBtnExitListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                inventoryView.getPlayer().savePlayer();
                 mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
             }
         });

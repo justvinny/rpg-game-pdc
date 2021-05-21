@@ -14,11 +14,13 @@ public class ScreenManager {
     private PlayerLoadingView playerLoading;
     private InventoryView inventory;
     private GameView game;
+    private MapView map;
     
     private ScreenManager() {
         playerLoading = new PlayerLoadingView();
         inventory = new InventoryView();
         game = new GameView();
+        map = new MapView();
     }
     
     public PlayerLoadingView getPlayerLoading() {
@@ -33,6 +35,9 @@ public class ScreenManager {
         return game;
     }
     
+    public MapView getMap() {
+        return map;
+    }
     public static ScreenManager getInstance() {
         if (instance == null) {
             instance = new ScreenManager();

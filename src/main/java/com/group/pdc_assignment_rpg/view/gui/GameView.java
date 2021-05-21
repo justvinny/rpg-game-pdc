@@ -120,6 +120,7 @@ public class GameView extends JLayeredPane {
     public void setPlayer(Player player) {
         this.player = player;
         setPlayerInformation();
+        gameMapContainer.setPlayerCamera(player);
     }
 
     public void addBtnInventoryListener(ActionListener actionListener) {
@@ -128,5 +129,9 @@ public class GameView extends JLayeredPane {
 
     public void addBtnExitListener(ActionListener actionListener) {
         btnExit.addActionListener(actionListener);
+    }
+    
+    public MapView getMapView() {
+        return gameMapContainer;
     }
 }

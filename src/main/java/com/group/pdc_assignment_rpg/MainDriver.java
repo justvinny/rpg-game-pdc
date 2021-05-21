@@ -21,6 +21,7 @@ import com.group.pdc_assignment_rpg.logic.entities.PlayerListModel;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import com.group.pdc_assignment_rpg.view.gui.GameController;
+import com.group.pdc_assignment_rpg.view.gui.InventoryController;
 import com.group.pdc_assignment_rpg.view.gui.MainFrameController;
 import com.group.pdc_assignment_rpg.view.gui.MainFrameView;
 import com.group.pdc_assignment_rpg.view.gui.PlayerLoadingController;
@@ -80,6 +81,8 @@ public class MainDriver {
                         playerListModel);
         
         GameController gameController = new GameController(mainFrame);
+        
+        InventoryController inventoryController = new InventoryController(mainFrame);
     }
 
     private static void initConsole() throws InvalidMapException {

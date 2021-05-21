@@ -5,6 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -32,6 +33,10 @@ public class MainFrameController {
                             view.setCurrentScreen(screenManager.getGame());
                         }
                     } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        if (Player.getCurrentPlayer() != null) {
+                            Player.getCurrentPlayer().savePlayer();
+                        }
+                        
                         // Exit
                         view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
                     }

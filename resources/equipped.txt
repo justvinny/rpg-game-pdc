@@ -1,6 +1,9 @@
 Noob3,Sword of Stabbing,Bloody Chainmail
 Noob2,Mighty Sword,Bloody Chainmail
 Noob1,Sword of Stabbing,Bloody Chainmail
+BobNew,Broken Sword,Tattered Clothing
+Gwapa,Broken Sword,Tattered Clothing
+123e,Broken Sword,Tattered Clothing
 Ets,Broken Sword,Tattered Clothing
 Newb,Mighty Sword,Bloody Chainmail
 Vinson,Mighty Sword,Bloody Chainmail
@@ -8,6 +11,7 @@ Greg,None,None
 Dave,Sky Sunderer,Divine Bulwark
 Blah123,Broken Sword,Tattered Clothing
 Jane,None,None
+SSPslayer101,Broken Sword,Tattered Clothing
 Mac,Mighty Sword,Bloody Chainmail
 Test123,Broken Sword,Tattered Clothing
 Test1,Mighty Sword,Bloody Chainmail

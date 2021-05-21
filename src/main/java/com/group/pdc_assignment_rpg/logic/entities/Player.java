@@ -6,6 +6,7 @@ import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.Stats;
 import com.group.pdc_assignment_rpg.logic.character.*;
+import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 
 /**
@@ -16,6 +17,8 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
  */
 public final class Player extends Creature implements Killable {
+    
+    private static Player currentPlayer = null;
 
     /*
      * Constructor for creating a new player for the first time. Takes only a
@@ -52,17 +55,53 @@ public final class Player extends Creature implements Killable {
     @Override
     public void addXP(int xp) {
         super.addXP(xp);
-        
+
         if (getXP() >= getLevel().getThreshold()) {
             levelUp();
         }
     }
 
     /**
+     * String will be used in the user inventory to display detailed player
+     * information.
+     *
+     * @return player information string.
+     */
+    public String getPlayerInformation() {
+        Item weapon = getInventory().getEquipment().get(EquipmentSlot.HAND);
+        Item armour = getInventory().getEquipment().get(EquipmentSlot.ARMOUR);
+        String weaponString = (weapon == null) ? "None" : weapon.toString();
+        String armourString = (armour == null) ? "None" : armour.toString();
+        String playerStats = String.format("Name: %s\nLevel: %d\nExperience: %d / %d\n"
+                + "HP: %d / %d\nDamage: %d\nProtection: %d\nVitality: %d\n"
+                + "Endurance: %d\nWillpower: %d\n\nWeapon: %s\nArmour: %s",
+                getName(),
+                getLevel().getLvl(),
+                getXP(),
+                getLevel().getThreshold(),
+                getHP(),
+                getMaxHP(),
+                getDamage(),
+                getProtection(),
+                getStats().getVitality(),
+                getStats().getEndurance(),
+                getStats().getWillpower(),
+                weaponString,
+                armourString);
+
+        return playerStats;
+    }
+
+    /**
      * Utility methods
      *
      */
-    @Override
+    public void savePlayer() {
+        ResourceLoaderUtility.writePlayerData(this);
+        ResourceLoaderUtility.writeInventoryData(this);
+        ResourceLoaderUtility.writeEquippedData(this);
+    }
+
     public void die() {
         // TODO: Add stuff here
     }
@@ -97,7 +136,7 @@ public final class Player extends Creature implements Killable {
                 ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
                 ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
                 ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
-        
+
         // Equip items.
         getInventory().getEquipment().put(EquipmentSlot.HAND, getInventory().getItem("Broken Sword"));
         getInventory().getEquipment().put(EquipmentSlot.ARMOUR, getInventory().getItem("Tattered Clothing"));
@@ -124,6 +163,16 @@ public final class Player extends Creature implements Killable {
      */
     public static Player loadPlayerFactory(String playerName) {
         return ResourceLoaderUtility.loadPlayerFromDB(playerName);
+    }
+    
+    public static void setPlayerInstance(Player player) {
+        if (currentPlayer == null) {
+            currentPlayer = player;
+        }
+    }
+    
+    public static Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
 }

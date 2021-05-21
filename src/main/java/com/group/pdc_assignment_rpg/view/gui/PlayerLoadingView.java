@@ -6,7 +6,6 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
-import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMENSION;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
@@ -22,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
 
 /**
  *
@@ -73,7 +73,7 @@ public class PlayerLoadingView extends JPanel {
 
         // Button
         btnCreatePlayer = new JButton(CREATE_PLAYER_BTN);
-        btnCreatePlayer.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnCreatePlayer.setPreferredSize(DEFAULT_BTN_DIMS);
         btnCreatePlayer.setFont(DEFAULT_FONT);
 
         // add 
@@ -99,7 +99,7 @@ public class PlayerLoadingView extends JPanel {
 
         // Button
         btnStartGame = new JButton(START_GAME_BTN);
-        btnStartGame.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnStartGame.setPreferredSize(DEFAULT_BTN_DIMS);
         btnStartGame.setFont(DEFAULT_FONT);
 
         // add

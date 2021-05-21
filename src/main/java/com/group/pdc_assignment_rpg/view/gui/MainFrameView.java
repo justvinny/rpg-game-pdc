@@ -5,6 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -20,16 +21,18 @@ public class MainFrameView extends JFrame {
     public static final int FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.9);
     public static final int FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.9);
     public static final Dimension FRAME_DIMENSIONS = new Dimension(FRAME_WIDTH, FRAME_HEIGHT);
-    public static final Dimension DEFAULT_BTN_DIMENSION = new Dimension(150, 30);
+    public static final Dimension DEFAULT_BTN_DIMS = new Dimension(150, 30);
     public static final int DEFAULT_MARGIN = 5;
     public static final Font DEFAULT_FONT = new Font("Impact", Font.PLAIN, 16);
 
     private static final String GAME_TITLE = "RPG Game";
 
     private JComponent currentScreen;
+    private Player player;
 
     public MainFrameView() {
         // First screen at startup.
+        player = new Player("Placeholder");
         currentScreen = ScreenManager.getInstance().getPlayerLoading();
         getContentPane().add(currentScreen);
         initGUI();
@@ -46,6 +49,14 @@ public class MainFrameView extends JFrame {
         repaint();
         revalidate();
 
+    }
+    
+    public Player getPlayer() {
+        return player;
+    }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     private void initGUI() {

@@ -65,16 +65,31 @@ public final class Inventory {
                 .collect(Collectors.toList());
     }
 
-    public Item getItem(String equipmentName) {
+    public Item getItem(String itemName) {
         return inventory.keySet()
                 .stream()
-                .filter(item -> item.getName().equals(equipmentName))
+                .filter(item -> item.getName().equals(itemName))
                 .findFirst()
                 .orElse(null);
     }
 
     public Item getItem(EquipmentSlot e) {
         return this.getEquipment().get(e);
+    }
+
+    public String[] getAllItemNames() {
+        return getAllItems()
+                .stream()
+                .map(Item::getName)
+                .toArray(String[]::new);
+    }
+
+    public boolean isEquipped(Item item) {
+        return equipment.values()
+                .stream()
+                .filter(e -> e != null)
+                .anyMatch(e -> e.equals(item));
+
     }
 
     /*
@@ -178,6 +193,11 @@ public final class Inventory {
      */
     public boolean equip(Item item) {
         if (item instanceof EquippableItem) {
+            if (isEquipped(item)) {
+                unequip(item);
+                return false;
+            }
+            
             if (item instanceof Armour) {
                 this.setEquip(EquipmentSlot.ARMOUR, item);
                 return true;
@@ -210,11 +230,18 @@ public final class Inventory {
      * @param item to unequip.
      */
     public void unequip(Item item) {
-        if (item instanceof Weapon) {
-            this.setEquip(EquipmentSlot.HAND, null);
-        } else if (item instanceof Armour) {
-            this.setEquip(EquipmentSlot.ARMOUR, null);
+        if (isEquipped(item)) {
+            if (item instanceof Weapon) {
+                this.unequip(EquipmentSlot.HAND);
+            } else if (item instanceof Armour) {
+                this.unequip(EquipmentSlot.ARMOUR);
+            }
         }
+    }
+
+    public void drop(Item item) {
+        unequip(item); // Unequip item to drop if necessary.
+        remove(item);
     }
 
     /**

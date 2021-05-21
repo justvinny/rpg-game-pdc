@@ -63,7 +63,10 @@ public class PlayerLoadingController implements CustomObserver {
                 } else {
                     // Launch the main game with the selected player.
                     Player player = playerListModel.get(playerLoading.playerSelected());
+                    Player.setPlayerInstance(player);
                     ScreenManager.getInstance().getGame().setPlayer(player);
+                    ScreenManager.getInstance().getInventory().setPlayer(player);
+                    ScreenManager.getInstance().getInventory().updateInventoryData();
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
                     mainFrame.requestFocusInWindow();
                     

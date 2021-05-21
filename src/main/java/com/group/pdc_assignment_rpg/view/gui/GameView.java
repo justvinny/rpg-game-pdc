@@ -6,7 +6,6 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
-import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMENSION;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
@@ -18,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
 
 /**
  *
@@ -74,12 +74,12 @@ public class GameView extends JLayeredPane {
 
         // Inventory button
         btnInventory = new JButton(INVENTORY_BTN);
-        btnInventory.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnInventory.setPreferredSize(DEFAULT_BTN_DIMS);
         btnInventory.setFont(DEFAULT_FONT);
 
         // Exit button
         btnExit = new JButton(EXIT_BTN);
-        btnExit.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        btnExit.setPreferredSize(DEFAULT_BTN_DIMS);
         btnExit.setFont(DEFAULT_FONT);
 
         // JLayered pane uses boxed integers and not primitive int.

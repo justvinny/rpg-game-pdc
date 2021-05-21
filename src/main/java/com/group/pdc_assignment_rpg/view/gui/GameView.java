@@ -25,14 +25,13 @@ import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DI
  */
 public class GameView extends JLayeredPane {
 
-    private static final Dimension GAME_MAP_DIMS = new Dimension((int) (MainFrameView.FRAME_WIDTH * .99), (int) (MainFrameView.FRAME_HEIGHT * .98));
     private static final String INVENTORY_BTN = "[ I ] - Inventory";
     private static final String EXIT_BTN = "[ Esc ] - Exit";
     private static final Font PLAYER_INFO_FONT = new Font("Impact", Font.BOLD, 18);
 
     private SpringLayout layout;
     private JLabel labelPlayerInfo;
-    private JPanel gameMapContainer;
+    private MapView gameMapContainer;
     private JButton btnInventory, btnExit;
 
     private Player player;
@@ -55,9 +54,7 @@ public class GameView extends JLayeredPane {
 
     // Game map panel
     private void createGameMapContainer() {
-        gameMapContainer = new JPanel();
-        gameMapContainer.setBackground(Color.BLACK);
-        gameMapContainer.setPreferredSize(GAME_MAP_DIMS);
+        gameMapContainer = new MapView();
 
         // JLayeredPane only works with boxed integers for some reason
         // and doesn't work with primitive int.
@@ -70,7 +67,6 @@ public class GameView extends JLayeredPane {
         labelPlayerInfo = new JLabel();
         labelPlayerInfo.setFont(PLAYER_INFO_FONT);
         labelPlayerInfo.setForeground(Color.WHITE);
-        
 
         // Inventory button
         btnInventory = new JButton(INVENTORY_BTN);
@@ -95,7 +91,7 @@ public class GameView extends JLayeredPane {
                 player.getHP(),
                 player.getMaxHP(),
                 player.getXP(),
-                player.getLevel().getThreshold());        
+                player.getLevel().getThreshold());
         labelPlayerInfo.setText(playerInfo);
     }
 
@@ -104,6 +100,8 @@ public class GameView extends JLayeredPane {
         // Game map panel
         layout.putConstraint(SpringLayout.WEST, gameMapContainer, 0, SpringLayout.WEST, this);
         layout.putConstraint(SpringLayout.NORTH, gameMapContainer, 0, SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.EAST, gameMapContainer, 0, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.SOUTH, gameMapContainer, 0, SpringLayout.SOUTH, this);
 
         // label for player info
         layout.putConstraint(SpringLayout.NORTH, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.NORTH, this);

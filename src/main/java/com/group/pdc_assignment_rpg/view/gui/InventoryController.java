@@ -67,7 +67,7 @@ public class InventoryController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Item item = inventoryView.getItemSelected();
-                inventoryView.getInventory().equip(item);
+                inventoryView.getInventory().use(inventoryView.getPlayer(), item);
                 inventoryView.updateInventoryData();
             }
         });

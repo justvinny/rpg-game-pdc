@@ -1,6 +1,7 @@
 package com.group.pdc_assignment_rpg.logic.items;
 
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
+import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -242,6 +243,15 @@ public final class Inventory {
     public void drop(Item item) {
         unequip(item); // Unequip item to drop if necessary.
         remove(item);
+    }
+    
+    public void use(Player player, Item item) {
+        if (item instanceof EquippableItem) {
+            equip(item);
+        } else if (item instanceof ConsumableItem) {
+            player.heal(((ConsumableItem) item).getSpecialValue());
+            remove(item);
+        } 
     }
 
     /**

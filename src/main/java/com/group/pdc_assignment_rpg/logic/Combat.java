@@ -15,6 +15,8 @@ import java.util.List;
  * @author modified Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class Combat {
+    
+    private static int nStepsToCombat = (int) (Math.random() * 25) + 61;
 
     final float DEFENSEBONUS = 1.5f;
 
@@ -223,22 +225,11 @@ public class Combat {
         }
     }
 
-    public static void main(String[] args) {
-        // Dummy player.
-        Player player = ResourceLoaderUtility.loadPlayerFromDB("Bob");
-
-        // Dummy mob.
-        Mob mob = new Mob("Red Slime");
-
-        Combat combat = new Combat(player, mob);
-
-        while (true) {
-            combat.battle(BattleSceneConstants.ATTACK);
-            System.out.println("Bob: " + player.getHP() + " Mob: " + mob.getHP());
-
-            if (player.getHP() <= 0 || mob.getHP() <= 0) {
-                break;
-            }
-        }
+    public static int getNStepsToCombat() {
+        return nStepsToCombat;
+    }
+    
+    public static void resetNStepsToCombat() {
+        nStepsToCombat = (int) (Math.random() * 25) + 61;
     }
 }

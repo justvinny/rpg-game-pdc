@@ -19,6 +19,7 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 public final class Player extends Creature implements Killable {
     
     private static Player currentPlayer = null;
+    private int nSteps;
 
     /*
      * Constructor for creating a new player for the first time. Takes only a
@@ -28,6 +29,7 @@ public final class Player extends Creature implements Killable {
         super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory(), Level.L1);
         this.setXP(0);
         this.loadDefaultEquipment();
+        nSteps = 0;
     }
 
     /*
@@ -42,6 +44,7 @@ public final class Player extends Creature implements Killable {
         } else {
             this.setXP(0);
         }
+        nSteps = 0;
     }
 
     /*
@@ -59,6 +62,10 @@ public final class Player extends Creature implements Killable {
         if (getXP() >= getLevel().getThreshold()) {
             levelUp();
         }
+    }
+    
+    public int getSteps() {
+        return nSteps;
     }
 
     /**
@@ -96,6 +103,14 @@ public final class Player extends Creature implements Killable {
      * Utility methods
      *
      */
+    public void increaseStep() {
+        nSteps++;
+    }
+    
+    public void resetSteps() {
+        nSteps = 0;
+    }
+    
     public void savePlayer() {
         ResourceLoaderUtility.writePlayerData(this);
         ResourceLoaderUtility.writeInventoryData(this);

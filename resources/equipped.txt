@@ -17,7 +17,7 @@ Test123,Broken Sword,Tattered Clothing
 Test1,Mighty Sword,Bloody Chainmail
 Jake,None,None
 New123,Broken Sword,Tattered Clothing
-Bob,Sky Sunderer,Divine Bulwark
+Bob,Sky Sunderer,Coarse Leather Armour
 bob,None,None
 Dave',Broken Sword,Tattered Clothing
 Jess,Mighty Sword,Bloody Chainmail

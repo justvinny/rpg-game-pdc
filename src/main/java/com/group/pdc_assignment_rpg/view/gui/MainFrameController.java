@@ -60,29 +60,37 @@ public class MainFrameController {
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_UP:
                             player.setDirection(UP);
+                            player.setRunning();
                             if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
                                 player.up();
+                                player.increaseStep();
                             }
 
                             break;
                         case KeyEvent.VK_DOWN:
                             player.setDirection(DOWN);
+                            player.setRunning();
                             if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
                                 player.down();
+                                player.increaseStep();
                             }
 
                             break;
                         case KeyEvent.VK_RIGHT:
                             player.setDirection(RIGHT);
+                            player.setRunning();
                             if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
                                 player.right();
+                                player.increaseStep();
                             }
 
                             break;
                         case KeyEvent.VK_LEFT:
                             player.setDirection(LEFT);
+                            player.setRunning();
                             if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
                                 player.left();
+                                player.increaseStep();
                             }
 
                             break;
@@ -111,7 +119,7 @@ public class MainFrameController {
                                         Item item = treasure.open();
                                         player.getInventory().add(item);
                                         screenManager.getInventory().updateInventoryData();
-                                        String eventMsg = "Opened treasure chest and obtained " 
+                                        String eventMsg = "Opened treasure chest and obtained "
                                                 + item.getName();
                                         screenManager.getGame().addEvent(eventMsg);
                                     }
@@ -121,6 +129,23 @@ public class MainFrameController {
                     }
                 }
             }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (view.getCurrentScreen() instanceof GameView) {
+                    Player player = Player.getCurrentPlayer();
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                        case KeyEvent.VK_DOWN:
+                        case KeyEvent.VK_RIGHT:
+                        case KeyEvent.VK_LEFT:
+                            player.setIdle();
+                    }
+                }
+            }
+            
+            
+
         });
     }
 

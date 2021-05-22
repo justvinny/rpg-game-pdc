@@ -21,11 +21,13 @@ public abstract class Entity {
     protected TextColor color;
     protected Coordinates coordinates;
     protected Direction direction;
+    protected boolean playerRunning;
 
     public Entity(int x, int y, char s, TextColor c) {
         this.setCoordinates(x, y);
         this.setSymbol(s);
         this.setColor(c);
+        this.playerRunning = false;
         this.direction = NONE;
     }
 
@@ -33,6 +35,7 @@ public abstract class Entity {
         this.setCoordinates(x, y);
         this.setSymbol('#');
         this.setColor(TextColor.ANSI.RED);
+        this.playerRunning = false;
         this.direction = NONE;
     }
 
@@ -60,6 +63,10 @@ public abstract class Entity {
         return this.color;
     }
 
+    public boolean isPlayerRunning() {
+        return playerRunning;
+    }
+    
     public Direction getDirection() {
         return direction;
     }
@@ -100,6 +107,14 @@ public abstract class Entity {
         this.coordinates.incrementX();
     }
 
+    public void setIdle() {
+        playerRunning = false;
+    }
+    
+    public void setRunning() {
+        playerRunning = true;
+    }
+    
     public void setDirection(Direction direction) {
         switch (direction) {
             case UP:

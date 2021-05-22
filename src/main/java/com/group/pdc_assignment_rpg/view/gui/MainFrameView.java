@@ -6,6 +6,7 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -24,6 +25,8 @@ public class MainFrameView extends JFrame {
     public static final Dimension DEFAULT_BTN_DIMS = new Dimension(150, 30);
     public static final int DEFAULT_MARGIN = 5;
     public static final Font DEFAULT_FONT = new Font("Impact", Font.PLAIN, 16);
+    public static final Color TEXT_COLOR = new Color(215, 215, 215);
+    public static final Color BOX_COLOR = new Color(77, 101, 180);
 
     private static final String GAME_TITLE = "RPG Game";
 

@@ -8,6 +8,7 @@ package com.group.pdc_assignment_rpg.view.gui;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.BOX_COLOR;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.SpringLayout;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.TEXT_COLOR;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,17 +83,21 @@ public class GameView extends JLayeredPane {
         // Player info
         labelPlayerInfo = new JLabel();
         labelPlayerInfo.setFont(PLAYER_INFO_FONT);
-        labelPlayerInfo.setForeground(Color.WHITE);
+        labelPlayerInfo.setForeground(TEXT_COLOR);
 
         // Inventory button
         btnInventory = new JButton(INVENTORY_BTN);
         btnInventory.setPreferredSize(DEFAULT_BTN_DIMS);
         btnInventory.setFont(DEFAULT_FONT);
+        btnInventory.setBackground(BOX_COLOR);
+        btnInventory.setForeground(TEXT_COLOR);
 
         // Exit button
         btnExit = new JButton(EXIT_BTN);
         btnExit.setPreferredSize(DEFAULT_BTN_DIMS);
         btnExit.setFont(DEFAULT_FONT);
+        btnExit.setBackground(BOX_COLOR);
+        btnExit.setForeground(TEXT_COLOR);
 
         // JLayered pane uses boxed integers and not primitive int.
         add(labelPlayerInfo, new Integer(1));
@@ -113,7 +119,7 @@ public class GameView extends JLayeredPane {
     private void createEventList() {
         txtAreaEventList = new JTextArea();
         txtAreaEventList.setOpaque(false);
-        txtAreaEventList.setForeground(Color.WHITE);
+        txtAreaEventList.setForeground(TEXT_COLOR);
         txtAreaEventList.setFont(DEFAULT_FONT);
 
         scrollEventList = new JScrollPane(txtAreaEventList);

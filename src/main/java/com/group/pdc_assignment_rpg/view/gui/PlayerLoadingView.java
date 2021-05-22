@@ -7,6 +7,7 @@ package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.BOX_COLOR;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
@@ -25,6 +26,7 @@ import javax.swing.SpringLayout;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_HEIGHT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.TEXT_COLOR;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -34,9 +36,9 @@ import java.awt.Image;
  */
 public class PlayerLoadingView extends JPanel {
 
-    private static final String CREATE_PLAYER_LABEL = "Enter Name";
+    private static final String CREATE_PLAYER_LABEL = "- Enter Name -";
     private static final String CREATE_PLAYER_BTN = "Create Player";
-    private static final String LOAD_PLAYER_TEXT = "Load Player";
+    private static final String LOAD_PLAYER_TEXT = "- Load Player -";
     private static final String START_GAME_BTN = "Start Game";
     private static final Dimension FIELD_DIMENSIONS = new Dimension(250, 30);
     private static final Dimension LIST_DIMENSIONS = new Dimension(250, 200);
@@ -56,9 +58,6 @@ public class PlayerLoadingView extends JPanel {
     }
 
     private void panelSettings() {
-        // Panel settings.
-        setBackground(Color.WHITE);
-
         // Layout manager.
         layout = new SpringLayout();
         setLayout(layout);
@@ -68,7 +67,7 @@ public class PlayerLoadingView extends JPanel {
     private void createPlayer() {
         // Label
         labelCreatePlayer = new JLabel(CREATE_PLAYER_LABEL);
-        labelCreatePlayer.setForeground(Color.WHITE);
+        labelCreatePlayer.setForeground(TEXT_COLOR);
         labelCreatePlayer.requestFocusInWindow();
         labelCreatePlayer.setFont(DEFAULT_FONT);
 
@@ -81,6 +80,8 @@ public class PlayerLoadingView extends JPanel {
         btnCreatePlayer = new JButton(CREATE_PLAYER_BTN);
         btnCreatePlayer.setPreferredSize(DEFAULT_BTN_DIMS);
         btnCreatePlayer.setFont(DEFAULT_FONT);
+        btnCreatePlayer.setBackground(BOX_COLOR);
+        btnCreatePlayer.setForeground(TEXT_COLOR);
 
         // add 
         add(labelCreatePlayer);
@@ -92,7 +93,7 @@ public class PlayerLoadingView extends JPanel {
     private void loadPlayerList() {
         // Label
         labelLoadPlayer = new JLabel(LOAD_PLAYER_TEXT);
-        labelLoadPlayer.setForeground(Color.WHITE);
+        labelLoadPlayer.setForeground(TEXT_COLOR);
         labelLoadPlayer.setFont(DEFAULT_FONT);
 
         // List
@@ -108,6 +109,8 @@ public class PlayerLoadingView extends JPanel {
         btnStartGame = new JButton(START_GAME_BTN);
         btnStartGame.setPreferredSize(DEFAULT_BTN_DIMS);
         btnStartGame.setFont(DEFAULT_FONT);
+        btnStartGame.setBackground(BOX_COLOR);
+        btnStartGame.setForeground(TEXT_COLOR);
 
         // add
         add(labelLoadPlayer);

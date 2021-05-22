@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class PlayerLoadingController implements CustomObserver {
 
+    private static final String KEYS_AVAILABLE_MSG = "Keys Available:\nEnter - Open Treasures\nI - Open Inventory\nEsc - Exit and Save Game";
     private MainFrameView mainFrame;
     private PlayerLoadingView playerLoading;
     private PlayerListModel playerListModel;
@@ -73,6 +74,7 @@ public class PlayerLoadingController implements CustomObserver {
                     ScreenManager.getInstance().getInventory().setPlayer(player);
                     ScreenManager.getInstance().getInventory().updateInventoryData();
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
+                    JOptionPane.showMessageDialog(mainFrame, KEYS_AVAILABLE_MSG);
                     mainFrame.requestFocusInWindow();
                     
                     // TODO: hook up game logic when game map is finished.

@@ -23,16 +23,14 @@ public class GameController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Open the inventory.
-                if (mainFrame.getCurrentScreen() instanceof GameView) {
-                    mainFrame.setCurrentScreen(screenManager.getInventory());
-                }
-                
+                mainFrame.setCurrentScreen(screenManager.getInventory());
+
                 // Give back focus to main frame after button clicked
                 // to allow the key listener on the frame to work.
-                mainFrame.requestFocusInWindow(); 
+                mainFrame.requestFocusInWindow();
             }
         });
-        
+
         screenManager.getGame().addBtnExitListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

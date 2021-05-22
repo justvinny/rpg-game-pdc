@@ -18,7 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.SpringLayout;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
+import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -26,24 +31,31 @@ import java.util.List;
  */
 public class GameView extends JLayeredPane {
 
+    private static final String INSPECT_BTN = "[ Enter ] - Inspect";
     private static final String INVENTORY_BTN = "[ I ] - Inventory";
     private static final String EXIT_BTN = "[ Esc ] - Exit";
     private static final Font PLAYER_INFO_FONT = new Font("Impact", Font.BOLD, 18);
+    private static final Dimension EVENT_LIST_DIMS = new Dimension((int) (FRAME_WIDTH * .4), 100);
 
     private SpringLayout layout;
     private JLabel labelPlayerInfo;
     private MapView gameMapContainer;
     private JButton btnInventory, btnExit;
+    private JTextArea txtAreaEventList;
+    private JScrollPane scrollEventList;
 
     private Player player;
     private List<Treasure> treasures;
+    private List<String> eventList;
 
     public GameView() {
         player = new Player("Placeholder");
         treasures = ResourceLoaderUtility.loadTreasures();
+        eventList = new ArrayList<>();
         panelSettings();
         createGameMapContainer();
         createPlayerHUD();
+        createEventList();
         setSpringLayoutConstraints();
     }
 
@@ -98,6 +110,22 @@ public class GameView extends JLayeredPane {
         labelPlayerInfo.setText(playerInfo);
     }
 
+    private void createEventList() {
+        txtAreaEventList = new JTextArea();
+        txtAreaEventList.setOpaque(false);
+        txtAreaEventList.setForeground(Color.WHITE);
+        txtAreaEventList.setFont(DEFAULT_FONT);
+
+        scrollEventList = new JScrollPane(txtAreaEventList);
+        scrollEventList.setOpaque(false);
+        scrollEventList.getViewport().setOpaque(false);
+        scrollEventList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollEventList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollEventList.setPreferredSize(EVENT_LIST_DIMS);
+
+        add(scrollEventList, new Integer(1));
+    }
+
     // constraints
     private void setSpringLayoutConstraints() {
         // Game map panel
@@ -109,7 +137,7 @@ public class GameView extends JLayeredPane {
         // label for player info
         layout.putConstraint(SpringLayout.NORTH, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.NORTH, this);
         layout.putConstraint(SpringLayout.WEST, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.WEST, this);
-
+        
         // btn for inventory
         layout.putConstraint(SpringLayout.SOUTH, btnInventory, -DEFAULT_MARGIN, SpringLayout.SOUTH, this);
         layout.putConstraint(SpringLayout.EAST, btnInventory, -DEFAULT_MARGIN, SpringLayout.WEST, btnExit);
@@ -118,6 +146,10 @@ public class GameView extends JLayeredPane {
         layout.putConstraint(SpringLayout.SOUTH, btnExit, -DEFAULT_MARGIN, SpringLayout.SOUTH, this);
         layout.putConstraint(SpringLayout.EAST, btnExit, -DEFAULT_MARGIN, SpringLayout.EAST, this);
 
+        // event list
+        layout.putConstraint(SpringLayout.SOUTH, scrollEventList, -DEFAULT_MARGIN, SpringLayout.SOUTH, this);
+        layout.putConstraint(SpringLayout.WEST, scrollEventList, DEFAULT_MARGIN, SpringLayout.WEST, this);
+
     }
 
     public void setPlayer(Player player) {
@@ -125,10 +157,18 @@ public class GameView extends JLayeredPane {
         setPlayerInformation();
         gameMapContainer.setPlayerCamera(player);
     }
-    
+
+    public void addEvent(String event) {
+        StringBuilder builder = new StringBuilder();
+        eventList.add(event);
+        eventList.forEach(e -> builder.append(e).append("\n"));
+        builder.deleteCharAt(builder.length() - 1); // delete last new line
+        txtAreaEventList.setText(builder.toString());
+    }
+
     public void setTreasures(List<Treasure> treasures) {
-       this.treasures = treasures;
-       gameMapContainer.setTreasures(treasures);
+        this.treasures = treasures;
+        gameMapContainer.setTreasures(treasures);
     }
 
     public void addBtnInventoryListener(ActionListener actionListener) {
@@ -138,7 +178,7 @@ public class GameView extends JLayeredPane {
     public void addBtnExitListener(ActionListener actionListener) {
         btnExit.addActionListener(actionListener);
     }
-    
+
     public MapView getMapView() {
         return gameMapContainer;
     }

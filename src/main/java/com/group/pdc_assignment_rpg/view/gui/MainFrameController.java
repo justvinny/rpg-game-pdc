@@ -108,14 +108,12 @@ public class MainFrameController {
 
                                 if (treasure != null) {
                                     if (!treasure.isOpened()) {
-//                                        player.getInventory().getAllItems().forEach(i -> System.out.println(i.getName()));
-                                        System.out.println(player.getInventory().size());
                                         Item item = treasure.open();
                                         player.getInventory().add(item);
-                                        System.out.println(item.getName());
-                                        System.out.println("\nAfter opening:");
-                                        System.out.println(player.getInventory().size());
-                                        ScreenManager.getInstance().getInventory().updateInventoryData();
+                                        screenManager.getInventory().updateInventoryData();
+                                        String eventMsg = "Opened treasure chest and obtained " 
+                                                + item.getName();
+                                        screenManager.getGame().addEvent(eventMsg);
                                     }
                                 }
 
@@ -123,8 +121,8 @@ public class MainFrameController {
                     }
                 }
             }
-        }); 
-   }
+        });
+    }
 
     private boolean wallCollision(Player player, List<String> map) {
         switch (player.getDirection()) {

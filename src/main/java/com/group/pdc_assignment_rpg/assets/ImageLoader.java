@@ -18,13 +18,15 @@ public class ImageLoader {
     private static final String CHARACTER_PATH = "./resources/images/character.png";
     private static final String OPEN_TREASURE_PATH = "./resources/images/open_treasure.png";
     private static final String CLOSED_TREASURE_PATH = "./resources/images/closed_treasure.png";
+    private static final String LOADING_BG_PATH = "./resources/images/loading_screen_bg.png";
     private static ImageLoader instance = null;
-    private Image wallTile, character, openTreasure, closedTreasure;
+    private Image wallTile, character, openTreasure, closedTreasure, loadingBG;
 
     private ImageLoader() {
         setWallTile();
         setCharacter();
         setTreasure();
+        setLoadingBG();
     }
 
     private void setWallTile() {
@@ -45,6 +47,11 @@ public class ImageLoader {
         closedTreasure = closed.getImage();
     }
 
+    private void setLoadingBG() {
+        ImageIcon bg = new ImageIcon(LOADING_BG_PATH);
+        loadingBG = bg.getImage();
+    }
+    
     public Image getWallTile() {
         return wallTile;
     }
@@ -59,6 +66,10 @@ public class ImageLoader {
     
     public Image getClosedTreasure() {
         return closedTreasure;
+    }    
+    
+    public Image getLoadingBG() {
+        return loadingBG;
     }
     
     public static ImageLoader getInstance() {

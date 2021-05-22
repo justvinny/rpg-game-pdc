@@ -5,6 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
+import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
@@ -22,6 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_HEIGHT;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
+import java.awt.Graphics;
+import java.awt.Image;
 
 /**
  *
@@ -63,6 +68,7 @@ public class PlayerLoadingView extends JPanel {
     private void createPlayer() {
         // Label
         labelCreatePlayer = new JLabel(CREATE_PLAYER_LABEL);
+        labelCreatePlayer.setForeground(Color.WHITE);
         labelCreatePlayer.requestFocusInWindow();
         labelCreatePlayer.setFont(DEFAULT_FONT);
 
@@ -86,6 +92,7 @@ public class PlayerLoadingView extends JPanel {
     private void loadPlayerList() {
         // Label
         labelLoadPlayer = new JLabel(LOAD_PLAYER_TEXT);
+        labelLoadPlayer.setForeground(Color.WHITE);
         labelLoadPlayer.setFont(DEFAULT_FONT);
 
         // List
@@ -136,6 +143,15 @@ public class PlayerLoadingView extends JPanel {
 
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); 
+        
+        Image bg = ImageLoader.getInstance().getLoadingBG();
+        g.drawImage(bg, 0, 0, FRAME_WIDTH, FRAME_HEIGHT, null);
+    }
+
+    
     public void setPlayerListModel(List<Player> playerList) {
         String[] playerNames = playerList
                 .stream()
@@ -168,4 +184,6 @@ public class PlayerLoadingView extends JPanel {
     public void clearField() {
         fieldCreatePlayer.setText("");
     }
+    
+    
 }

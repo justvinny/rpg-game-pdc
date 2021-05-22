@@ -8,6 +8,8 @@ package com.group.pdc_assignment_rpg.view.gui;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import static com.group.pdc_assignment_rpg.logic.navigation.Collision.treasureCollision;
+import static com.group.pdc_assignment_rpg.logic.navigation.Collision.wallCollision;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.DOWN;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.LEFT;
@@ -35,8 +37,25 @@ public class MainFrameController {
         // as opening inventory and exiting the game using the
         // escape key.
         view.addKeyListener(new KeyAdapter() {
+            
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                if (view.getCurrentScreen() instanceof GameView) {
+                    Player player = Player.getCurrentPlayer();
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                        case KeyEvent.VK_DOWN:
+                        case KeyEvent.VK_RIGHT:
+                        case KeyEvent.VK_LEFT:
+                            player.setIdle();
+                    }
+                }
+            }
+            
             @Override
             public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
                 if (!(view.getCurrentScreen() instanceof PlayerLoadingView)) {
                     if (e.getKeyCode() == KeyEvent.VK_I) {
                         if (view.getCurrentScreen() instanceof GameView) {
@@ -61,38 +80,18 @@ public class MainFrameController {
                         case KeyEvent.VK_UP:
                             player.setDirection(UP);
                             player.setRunning();
-                            if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
-                                player.up();
-                                player.increaseStep();
-                            }
-
                             break;
                         case KeyEvent.VK_DOWN:
                             player.setDirection(DOWN);
                             player.setRunning();
-                            if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
-                                player.down();
-                                player.increaseStep();
-                            }
-
                             break;
                         case KeyEvent.VK_RIGHT:
                             player.setDirection(RIGHT);
                             player.setRunning();
-                            if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
-                                player.right();
-                                player.increaseStep();
-                            }
-
                             break;
                         case KeyEvent.VK_LEFT:
                             player.setDirection(LEFT);
                             player.setRunning();
-                            if (!wallCollision(player, map) && !treasureCollision(player, treasures)) {
-                                player.left();
-                                player.increaseStep();
-                            }
-
                             break;
                         case KeyEvent.VK_ENTER:
                             if (treasureCollision(player, treasures)) {
@@ -128,85 +127,8 @@ public class MainFrameController {
                             }
                     }
                 }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (view.getCurrentScreen() instanceof GameView) {
-                    Player player = Player.getCurrentPlayer();
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
-                        case KeyEvent.VK_DOWN:
-                        case KeyEvent.VK_RIGHT:
-                        case KeyEvent.VK_LEFT:
-                            player.setIdle();
-                    }
-                }
-            }
-            
-            
+            }            
 
         });
-    }
-
-    private boolean wallCollision(Player player, List<String> map) {
-        switch (player.getDirection()) {
-            case UP:
-                return player.getY() > 0
-                        && map.get(player.getY() - 1).charAt(player.getX()) == '#';
-            case DOWN:
-                return player.getY() < map.size()
-                        && map.get(player.getY() + 1).charAt(player.getX()) == '#';
-            case LEFT:
-                return player.getX() > 0
-                        && map.get(player.getY()).charAt(player.getX() - 1) == '#';
-            case RIGHT:
-                return player.getX() < map.get(player.getY()).length()
-                        && map.get(player.getY()).charAt(player.getX() + 1) == '#';
-            default:
-                return false;
-        }
-    }
-
-    private boolean treasureCollision(Player player, List<Treasure> treasures) {
-        boolean willCollide = false;
-
-        for (Treasure treasure : treasures) {
-            switch (player.getDirection()) {
-                case UP:
-                    willCollide = treasure.getCoordinates().getY() == player.getY() - 1
-                            && treasure.getCoordinates().getX() == player.getX();
-
-                    if (willCollide) {
-                        return willCollide;
-                    }
-                    break;
-                case DOWN:
-                    willCollide = treasure.getCoordinates().getY() == player.getY() + 1
-                            && treasure.getCoordinates().getX() == player.getX();
-
-                    if (willCollide) {
-                        return willCollide;
-                    }
-                    break;
-                case LEFT:
-                    willCollide = treasure.getCoordinates().getY() == player.getY()
-                            && treasure.getCoordinates().getX() == player.getX() - 1;
-
-                    if (willCollide) {
-                        return willCollide;
-                    }
-                    break;
-                case RIGHT:
-                    willCollide = treasure.getCoordinates().getY() == player.getY()
-                            && treasure.getCoordinates().getX() == player.getX() + 1;
-
-                    if (willCollide) {
-                        return willCollide;
-                    }
-            }
-        }
-
-        return willCollide;
     }
 }

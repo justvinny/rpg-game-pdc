@@ -11,12 +11,18 @@ import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.Combat;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.logic.navigation.Collision;
+import static com.group.pdc_assignment_rpg.logic.navigation.Direction.DOWN;
+import static com.group.pdc_assignment_rpg.logic.navigation.Direction.LEFT;
+import static com.group.pdc_assignment_rpg.logic.navigation.Direction.RIGHT;
+import static com.group.pdc_assignment_rpg.logic.navigation.Direction.UP;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_HEIGHT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -57,16 +63,57 @@ public final class MapView extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // Player movement
+        playerMovement();
+
+        // Render
         drawMap(g);
         drawTreasure(g);
         drawPlayer(g);
         drawCombat(g);
+
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    private void playerMovement() {
+        if (player.isPlayerRunning()) {
+            if (!Collision.wallCollision(player, mapTxt)
+                    && !Collision.treasureCollision(player, treasures)) {
+                switch (player.getDirection()) {
+                    case UP:
+                        player.up();
+                        player.increaseStep();
+                        break;
+                    case DOWN:
+                        player.down();
+                        player.increaseStep();
+                        break;
+                    case LEFT:
+                        player.left();
+                        player.increaseStep();
+                        break;
+                    case RIGHT:
+                        player.right();
+                        player.increaseStep();
+                }
+            } else {
+                player.setIdle();
+                
+            }
+        }
     }
 
     private void drawMap(Graphics g) {
+        // Draw the map relative to the player's center which gives the
+        // illusion that we have a moving screen thanks to the game camera offset.
+        // Note: -TILE_WIDTH and -TILE_HEIGHT is included in the calculation
+        // to center our character more.
         int x = -TILE_WIDTH + (int) gameCamera.getXOffset();
         int y = -TILE_HEIGHT + (int) gameCamera.getYOffset();
         Image caveWallTile = ImageLoader.getInstance().getWallTile();
+        // Draw the map using a wall tile based on the ASCII text map representation
+        // we have.
         for (String mapRow : mapTxt) {
             for (Character tile : mapRow.toCharArray()) {
                 if (tile == '#') {
@@ -89,6 +136,8 @@ public final class MapView extends JPanel implements ActionListener {
             int y = -TILE_HEIGHT + (int) gameCamera.getYOffset()
                     + treasure.getCoordinates().getY() * TILE_HEIGHT;
 
+            // Two images for treasures. A closed chest image if the treasure
+            // has still not been opened and an open image otherwise.
             if (treasure.isOpened()) {
                 g.drawImage(openTreasure, x, y, TILE_WIDTH, TILE_HEIGHT, null);
             } else {
@@ -98,28 +147,35 @@ public final class MapView extends JPanel implements ActionListener {
     }
 
     private void drawPlayer(Graphics g) {
+        // Center player to screen
         int x = -TILE_WIDTH + FRAME_WIDTH / 2;
         int y = -TILE_HEIGHT + FRAME_HEIGHT / 2;
 
         ImageLoader loader = ImageLoader.getInstance();
         if (!player.isPlayerRunning()) {
+            // Reset to idle animation if player is not running.
             loader.resetSheetNum();
         }
-        // Default
+        // Default starting animation where character is facing down.
         BufferedImage characterSprite = loader.getCharacterDown();
         switch (player.getDirection()) {
             case UP:
+                // Character facing up
                 characterSprite = loader.getCharacterUp();
                 break;
             case DOWN:
+                // Character facing down
                 characterSprite = loader.getCharacterDown();
                 break;
             case LEFT:
+                // Character facing left
                 characterSprite = loader.getCharacterLeft();
                 break;
             case RIGHT:
+                // Character facing right
                 characterSprite = loader.getCharacterRight();
         }
+        // Load a different part of the sprite sheet.
         loader.incrementSheetNum();
         g.drawImage(characterSprite, x, y, TILE_WIDTH, TILE_HEIGHT, null);
     }

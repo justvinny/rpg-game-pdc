@@ -207,8 +207,9 @@ public class InventoryView extends JPanel {
         if (jListInventory.getSelectedValue() == null) {
             return null;
         }
-        
-        String itemName = jListInventory.getSelectedValue().toString();
+       
+        // Remove 'xQty - ' at the beggining of the item name.
+        String itemName = jListInventory.getSelectedValue().toString().split(" - ")[1];
         return player.getInventory().getItem(itemName);
     }
     

@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -67,8 +68,14 @@ public class InventoryController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Item item = inventoryView.getItemSelected();
-                inventoryView.getInventory().use(inventoryView.getPlayer(), item);
-                inventoryView.updateInventoryData();
+                try {
+                    inventoryView.getInventory().use(inventoryView.getPlayer(), item);
+                    inventoryView.updateInventoryData();
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage());
+                }
+
+                mainFrame.requestFocusInWindow();
             }
         });
 
@@ -79,6 +86,7 @@ public class InventoryController {
                 inventoryView.getInventory().drop(item);
                 inventoryView.updateInventoryData();
                 inventoryView.clearItemDetails();
+                mainFrame.requestFocusInWindow();
             }
         });
 

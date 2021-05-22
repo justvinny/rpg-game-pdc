@@ -7,9 +7,11 @@ package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.entities.PlayerListModel;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.observer.CustomObserver;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,11 +23,13 @@ public class PlayerLoadingController implements CustomObserver {
     private MainFrameView mainFrame;
     private PlayerLoadingView playerLoading;
     private PlayerListModel playerListModel;
+    private List<Treasure> treasures;
 
-    public PlayerLoadingController(MainFrameView mainFrame, PlayerLoadingView playerLoading, PlayerListModel playerListModel) {
+    public PlayerLoadingController(MainFrameView mainFrame, PlayerLoadingView playerLoading, PlayerListModel playerListModel, List<Treasure> treasures) {
         this.mainFrame = mainFrame;
         this.playerLoading = playerLoading;
         this.playerListModel = playerListModel;
+        this.treasures = treasures;
         createBtnListener();
         startBtnListener();
         playerListModel.addObserver(this);
@@ -65,6 +69,7 @@ public class PlayerLoadingController implements CustomObserver {
                     Player player = playerListModel.get(playerLoading.playerSelected());
                     Player.setPlayerInstance(player);
                     ScreenManager.getInstance().getGame().setPlayer(player);
+                    ScreenManager.getInstance().getGame().setTreasures(treasures);
                     ScreenManager.getInstance().getInventory().setPlayer(player);
                     ScreenManager.getInstance().getInventory().updateInventoryData();
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());

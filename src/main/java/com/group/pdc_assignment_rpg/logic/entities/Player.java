@@ -150,7 +150,7 @@ public final class Player extends Creature implements Killable {
      */
     public String toCommaSeparatedString() {
         return String.format("%s,%s,%d,%d,%d,%,d,%d",
-                getName(), getLevel(), x, y, getStats().getStrength(),
+                getName(), getLevel(), getX(), getY(), getStats().getStrength(),
                 getStats().getDexterity(), getStats().getIntellect());
     }
 
@@ -164,6 +164,7 @@ public final class Player extends Creature implements Killable {
     public static Player loadPlayerFactory(String playerName) {
         return ResourceLoaderUtility.loadPlayerFromDB(playerName);
     }
+    
     
     public static void setPlayerInstance(Player player) {
         if (currentPlayer == null) {

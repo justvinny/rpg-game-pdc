@@ -6,18 +6,19 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_MARGIN;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
+import java.util.List;
 
 /**
  *
@@ -35,9 +36,11 @@ public class GameView extends JLayeredPane {
     private JButton btnInventory, btnExit;
 
     private Player player;
+    private List<Treasure> treasures;
 
     public GameView() {
         player = new Player("Placeholder");
+        treasures = ResourceLoaderUtility.loadTreasures();
         panelSettings();
         createGameMapContainer();
         createPlayerHUD();
@@ -54,7 +57,7 @@ public class GameView extends JLayeredPane {
 
     // Game map panel
     private void createGameMapContainer() {
-        gameMapContainer = new MapView();
+        gameMapContainer = new MapView(treasures);
 
         // JLayeredPane only works with boxed integers for some reason
         // and doesn't work with primitive int.
@@ -121,6 +124,11 @@ public class GameView extends JLayeredPane {
         this.player = player;
         setPlayerInformation();
         gameMapContainer.setPlayerCamera(player);
+    }
+    
+    public void setTreasures(List<Treasure> treasures) {
+       this.treasures = treasures;
+       gameMapContainer.setTreasures(treasures);
     }
 
     public void addBtnInventoryListener(ActionListener actionListener) {

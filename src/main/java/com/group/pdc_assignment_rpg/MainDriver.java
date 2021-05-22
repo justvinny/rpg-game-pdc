@@ -64,6 +64,9 @@ public class MainDriver {
         // Player list
         PlayerListModel playerListModel = new PlayerListModel();
 
+        // Treasure list
+        List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
+
         // GUI
         // Screen manager singleton used for switching between screens.
         ScreenManager screenManager = ScreenManager.getInstance();
@@ -71,17 +74,18 @@ public class MainDriver {
 
         // Main frame that will contain all our screns
         MainFrameView mainFrame = new MainFrameView();
-        MainFrameController mainFrameController = new MainFrameController(mainFrame);
-        
+        MainFrameController mainFrameController = new MainFrameController(mainFrame, treasures);
+
         // Controllers for different screens from the ScreenManager.
         PlayerLoadingController playerLoadingController
                 = new PlayerLoadingController(
                         mainFrame,
                         screenManager.getPlayerLoading(),
-                        playerListModel);
-        
+                        playerListModel,
+                        treasures);
+
         GameController gameController = new GameController(mainFrame);
-        
+
         InventoryController inventoryController = new InventoryController(mainFrame);
     }
 

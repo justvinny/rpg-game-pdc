@@ -16,12 +16,15 @@ public class ImageLoader {
 
     private static final String WALL_TILE_PATH = "./resources/images/cave_wall_tile.png";
     private static final String CHARACTER_PATH = "./resources/images/character.png";
+    private static final String OPEN_TREASURE_PATH = "./resources/images/open_treasure.png";
+    private static final String CLOSED_TREASURE_PATH = "./resources/images/closed_treasure.png";
     private static ImageLoader instance = null;
-    private Image wallTile, character;
+    private Image wallTile, character, openTreasure, closedTreasure;
 
     private ImageLoader() {
         setWallTile();
         setCharacter();
+        setTreasure();
     }
 
     private void setWallTile() {
@@ -33,6 +36,14 @@ public class ImageLoader {
         ImageIcon icon = new ImageIcon(CHARACTER_PATH);
         character = icon.getImage();
     }
+    
+    private void setTreasure() {
+        ImageIcon open = new ImageIcon(OPEN_TREASURE_PATH);
+        openTreasure = open.getImage();
+        
+        ImageIcon closed = new ImageIcon(CLOSED_TREASURE_PATH);
+        closedTreasure = closed.getImage();
+    }
 
     public Image getWallTile() {
         return wallTile;
@@ -42,6 +53,14 @@ public class ImageLoader {
         return character;
     }
 
+    public Image getOpenTreasure() {
+        return openTreasure;
+    }
+    
+    public Image getClosedTreasure() {
+        return closedTreasure;
+    }
+    
     public static ImageLoader getInstance() {
         if (instance == null) {
             instance = new ImageLoader();

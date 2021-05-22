@@ -9,6 +9,7 @@ import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.camera.GameCamera;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
+import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_HEIGHT;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.FRAME_WIDTH;
@@ -27,21 +28,23 @@ import javax.swing.Timer;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class MapView extends JPanel implements ActionListener {
-    
+public final class MapView extends JPanel implements ActionListener {
+
     public static final int TILE_HEIGHT = 100;
     public static final int TILE_WIDTH = 100;
     private static final int FPS = 25;
 
     private static float pX = 9;
     private static float pY = 23;
-    
+
     private List<String> mapTxt;
+    private List<Treasure> treasures;
     private GameCamera gameCamera;
     private Player player;
-    
-    public MapView() {
+
+    public MapView(List<Treasure> treasures) {
         setMap();
+        setTreasures(treasures);
         panelSettings();
         setTimer();
         player = new Player("Placeholder");
@@ -52,6 +55,7 @@ public class MapView extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawMap(g);
+        drawTreasure(g);
         drawPlayer(g);
     }
 
@@ -70,7 +74,25 @@ public class MapView extends JPanel implements ActionListener {
             y += TILE_HEIGHT;
         }
     }
-    
+
+    private void drawTreasure(Graphics g) {
+        Image openTreasure = ImageLoader.getInstance().getOpenTreasure();
+        Image closedTreasure = ImageLoader.getInstance().getClosedTreasure();
+
+        for (Treasure treasure : treasures) {
+            int x = -TILE_WIDTH + (int) gameCamera.getXOffset()
+                    + treasure.getCoordinates().getX() * TILE_WIDTH;
+            int y = -TILE_HEIGHT + (int) gameCamera.getYOffset()
+                    + treasure.getCoordinates().getY() * TILE_HEIGHT;
+
+            if (treasure.isOpened()) {
+                g.drawImage(openTreasure, x, y, TILE_WIDTH, TILE_HEIGHT, null);
+            } else {
+                g.drawImage(closedTreasure, x, y, TILE_WIDTH, TILE_HEIGHT, null);
+            }
+        }
+    }
+
     private void drawPlayer(Graphics g) {
         int x = -TILE_WIDTH + FRAME_WIDTH / 2;
         int y = -TILE_HEIGHT + FRAME_HEIGHT / 2;
@@ -86,6 +108,10 @@ public class MapView extends JPanel implements ActionListener {
         }
     }
 
+    public void setTreasures(List<Treasure> treasures) {
+        this.treasures = treasures;
+    }
+
     private void panelSettings() {
         setBackground(Color.BLACK);
     }
@@ -94,11 +120,12 @@ public class MapView extends JPanel implements ActionListener {
         Timer timer = new Timer(FPS, this);
         timer.start();
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
     }
-    
+
     public void setPlayerCamera(Player player) {
         this.player = player;
         gameCamera.setPlayer(player);

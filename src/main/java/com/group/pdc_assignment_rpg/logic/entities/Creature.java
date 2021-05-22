@@ -278,6 +278,10 @@ public abstract class Creature extends Entity {
      * @param amount is the amount of HP to heal.
      */
     public void heal(int amount) throws IllegalArgumentException {
+        if (getHP() == getMaxHP()) {
+            throw new IllegalArgumentException("Already full HP.");
+        }
+        
         // Validate that heal amount is positive and the creature isn't already on their maxHP
         if (amount > 0 && getHP() < getMaxHP()) {
             // Check if the heal amount will cause hp to exceed maxHP

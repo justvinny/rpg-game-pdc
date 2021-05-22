@@ -20,7 +20,7 @@ public class ScreenManager {
         playerLoading = new PlayerLoadingView();
         inventory = new InventoryView();
         game = new GameView();
-        map = new MapView();
+        map = null;
     }
     
     public PlayerLoadingView getPlayerLoading() {
@@ -38,6 +38,11 @@ public class ScreenManager {
     public MapView getMap() {
         return map;
     }
+    
+    public void setMap(MapView map) {
+        this.map = map;
+    }
+    
     public static ScreenManager getInstance() {
         if (instance == null) {
             instance = new ScreenManager();

@@ -95,14 +95,6 @@ public final class Mob extends Creature {
      * Getter methods
      *
      */
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
     public List<Item> getLoot() {
         return getInventory().getAllItems();
     }

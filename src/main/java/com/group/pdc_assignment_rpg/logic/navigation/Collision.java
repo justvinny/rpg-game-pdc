@@ -5,6 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.logic.navigation;
 
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.DOWN;
@@ -78,5 +79,24 @@ public class Collision {
         }
 
         return willCollide;
+    }
+
+    public static boolean bossCollision(Player player, Mob boss) {
+        switch (player.getDirection()) {
+            case UP:
+                return player.getY() - 1 == boss.getY() && player.getX() == boss.getX()
+                        && boss.isAlive();
+            case DOWN:
+                return player.getY() + 1 == boss.getY() && player.getX() == boss.getX()
+                        && boss.isAlive();
+            case LEFT:
+                return player.getY() == boss.getY() && player.getX() - 1 == boss.getX()
+                        && boss.isAlive();
+            case RIGHT:
+                return player.getY() == boss.getY() && player.getX() + 1 == boss.getX()
+                        && boss.isAlive();
+            default:
+                return false;
+        }
     }
 }

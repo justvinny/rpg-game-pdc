@@ -27,7 +27,7 @@ public abstract class Creature extends Entity {
     private String name;
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
-    private boolean defending;
+    private boolean defending, alive;
     private int damage, protection;
     private Level level;
     protected int xp;
@@ -46,6 +46,7 @@ public abstract class Creature extends Entity {
         this.setWP(wp);
         this.setDefending(false);
         this.setLevel(level);
+        alive = true;
     }
 
     /*
@@ -61,6 +62,7 @@ public abstract class Creature extends Entity {
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
         this.setLevel(level);
+        alive = true;
     }
     
     /*
@@ -77,6 +79,7 @@ public abstract class Creature extends Entity {
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
         this.setLevel(Level.L1);
+        alive = true;
     }
 
     /*
@@ -131,6 +134,10 @@ public abstract class Creature extends Entity {
         return this.defending;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
+    
     public Level getLevel() {
         return level;
     }
@@ -246,6 +253,10 @@ public abstract class Creature extends Entity {
         this.xp += xp;
     }
 
+    public void kill() {
+        alive = false;
+    }
+    
     /**
      * Utility methods
      *

@@ -9,6 +9,8 @@ import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.camera.GameCamera;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.Combat;
+import com.group.pdc_assignment_rpg.logic.StatBlock;
+import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.logic.navigation.Collision;
@@ -41,7 +43,7 @@ public final class MapView extends JPanel implements ActionListener {
 
     public static final int TILE_HEIGHT = 100;
     public static final int TILE_WIDTH = 100;
-    private static final int FPS = 25;
+    private static final int FPS = 30;
 
     private static float pX = 9;
     private static float pY = 23;
@@ -50,6 +52,7 @@ public final class MapView extends JPanel implements ActionListener {
     private List<Treasure> treasures;
     private GameCamera gameCamera;
     private Player player;
+    private Mob bossTest;
 
     public MapView(List<Treasure> treasures) {
         setMap();
@@ -57,6 +60,7 @@ public final class MapView extends JPanel implements ActionListener {
         panelSettings();
         setTimer();
         player = new Player("Placeholder");
+        bossTest = new Mob("Ghoul", 'B', 10, 86, 2, new StatBlock(30, 30, 30)); // test
         gameCamera = new GameCamera(player, FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
     }
 
@@ -66,10 +70,12 @@ public final class MapView extends JPanel implements ActionListener {
 
         // Player movement
         playerMovement();
+        bossCombat();
 
         // Render
         drawMap(g);
         drawTreasure(g);
+        drawBoss(g);
         drawPlayer(g);
         drawCombat(g);
 
@@ -79,7 +85,8 @@ public final class MapView extends JPanel implements ActionListener {
     private void playerMovement() {
         if (player.isPlayerRunning()) {
             if (!Collision.wallCollision(player, mapTxt)
-                    && !Collision.treasureCollision(player, treasures)) {
+                    && !Collision.treasureCollision(player, treasures)
+                    && !Collision.bossCollision(player, bossTest)) {
                 switch (player.getDirection()) {
                     case UP:
                         player.up();
@@ -99,8 +106,14 @@ public final class MapView extends JPanel implements ActionListener {
                 }
             } else {
                 player.setIdle();
-                
+
             }
+        }
+    }
+
+    private void bossCombat() {
+        if (Collision.bossCollision(player, bossTest)) {
+            bossTest.kill();
         }
     }
 
@@ -146,6 +159,24 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    private void drawBoss(Graphics g) {
+        // -(TILE_WIDTH * 3) to properly scale the boss to 3x the size 
+        // of everything else. Same with height.
+        int x = -(TILE_WIDTH * 3) + (int) gameCamera.getXOffset()
+                + bossTest.getCoordinates().getX() * TILE_WIDTH;
+        int y = -(TILE_HEIGHT * 2) + (int) gameCamera.getYOffset()
+                + bossTest.getCoordinates().getY() * TILE_HEIGHT;
+
+        if (bossTest.isAlive()) {
+            BufferedImage bossSheet = ImageLoader.getInstance().getBossIdle();
+            g.drawImage(bossSheet, x, y, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
+            ImageLoader.getInstance().addBossSheetNum();
+        } else {
+            Image dead = ImageLoader.getInstance().getDeadBoss();
+            g.drawImage(dead, x, y, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
+        }
+    }
+
     private void drawPlayer(Graphics g) {
         // Center player to screen
         int x = -TILE_WIDTH + FRAME_WIDTH / 2;
@@ -154,7 +185,7 @@ public final class MapView extends JPanel implements ActionListener {
         ImageLoader loader = ImageLoader.getInstance();
         if (!player.isPlayerRunning()) {
             // Reset to idle animation if player is not running.
-            loader.resetSheetNum();
+            loader.resetPlayerSheetNum();
         }
         // Default starting animation where character is facing down.
         BufferedImage characterSprite = loader.getCharacterDown();
@@ -176,12 +207,13 @@ public final class MapView extends JPanel implements ActionListener {
                 characterSprite = loader.getCharacterRight();
         }
         // Load a different part of the sprite sheet.
-        loader.incrementSheetNum();
+        loader.addPlayerSheetNum();
         g.drawImage(characterSprite, x, y, TILE_WIDTH, TILE_HEIGHT, null);
     }
 
     private void drawCombat(Graphics g) {
         if (player.getSteps() == Combat.getNStepsToCombat()) {
+            player.setIdle();
             player.resetSteps();
             Combat.resetNStepsToCombat();
             JOptionPane.showMessageDialog(this, "Combat found!");

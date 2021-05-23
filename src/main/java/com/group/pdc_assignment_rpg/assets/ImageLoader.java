@@ -21,22 +21,23 @@ import javax.swing.ImageIcon;
 public class ImageLoader {
 
     private static final String WALL_TILE_PATH = "./resources/images/cave_wall_tile.png";
-    private static final String CHARACTER_PATH = "./resources/images/character.png";
     private static final String CHARACTER_SHEET_PATH = "./resources/images/character_sprite_sheet.png";
     private static final String OPEN_TREASURE_PATH = "./resources/images/open_treasure.png";
     private static final String CLOSED_TREASURE_PATH = "./resources/images/closed_treasure.png";
     private static final String LOADING_BG_PATH = "./resources/images/loading_screen_bg.png";
+    private static final String BOSS_DEAD_PATH = "./resources/images/ghoul_dead.png";
+    private static final String BOSS_IDLE_PATH = "./resources/images/ghoul_idle_sprite_sheet.png";
     private static ImageLoader instance = null;
-    private Image wallTile, character, openTreasure, closedTreasure, loadingBG;
-    private BufferedImage characterUp, characterDown, characterLeft, characterRight;
-    private int sheetNum;
+    private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead;
+    private BufferedImage characterUp, characterDown, characterLeft, characterRight, bossIdle;
+    private int nPlayerSheet, nBossSheet;
 
     private ImageLoader() {
         setWallTile();
-        setCharacter();
         setTreasure();
         setLoadingBG();
-        setCharacterSpriteSheeet();
+        setCharacterSpriteSheet();
+        setBossSheet();
     }
 
     private void setWallTile() {
@@ -44,11 +45,6 @@ public class ImageLoader {
         wallTile = icon.getImage();
     }
 
-    private void setCharacter() {
-        ImageIcon icon = new ImageIcon(CHARACTER_PATH);
-        character = icon.getImage();
-    }
-    
     private void setTreasure() {
         ImageIcon open = new ImageIcon(OPEN_TREASURE_PATH);
         openTreasure = open.getImage();
@@ -62,37 +58,53 @@ public class ImageLoader {
         loadingBG = bg.getImage();
     }
     
-    private void setCharacterSpriteSheeet() {
+    private void setCharacterSpriteSheet() {
         try {
             BufferedImage sheet = ImageIO.read(new File(CHARACTER_SHEET_PATH));
             characterUp = sheet.getSubimage(0, 144, 144, 48);
             characterDown = sheet.getSubimage(0, 0, 144, 48);
             characterLeft = sheet.getSubimage(0, 48, 144, 48);
             characterRight = sheet.getSubimage(0, 96, 144, 48);
-            sheetNum = 1;
+            nPlayerSheet = 1;
         } catch (IOException ex) {
             Logger.getLogger(ImageLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void incrementSheetNum() {
-        if (sheetNum == 2) {
-            sheetNum = -1;
-        }
+    private void setBossSheet() {
+        ImageIcon dead = new ImageIcon(BOSS_DEAD_PATH);
+        bossDead = dead.getImage();
         
-        sheetNum++;
+        try {
+            bossIdle = ImageIO.read(new File(BOSS_IDLE_PATH));
+            nBossSheet = 0;
+        } catch (IOException ex) {
+            Logger.getLogger(ImageLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public void resetSheetNum() {
-        sheetNum = 1;
+    public void addPlayerSheetNum() {
+        if (nPlayerSheet == 2) {
+            nPlayerSheet = -1;
+        }
+        
+        nPlayerSheet++;
+    }
+    
+    public void resetPlayerSheetNum() {
+        nPlayerSheet = 1;
+    }
+    
+    public void addBossSheetNum() {
+        if (nBossSheet == 3) {
+            nBossSheet = -1;
+        }
+        
+        nBossSheet++;
     }
     
     public Image getWallTile() {
         return wallTile;
-    }
-
-    public Image getCharacter() {
-        return character;
     }
 
     public Image getOpenTreasure() {
@@ -106,21 +118,29 @@ public class ImageLoader {
     public Image getLoadingBG() {
         return loadingBG;
     }
+    
+    public Image getDeadBoss() {
+        return bossDead;
+    }
 
     public BufferedImage getCharacterUp() {
-        return characterUp.getSubimage(sheetNum * 48, 0, 48, 48);
+        return characterUp.getSubimage(nPlayerSheet * 48, 0, 48, 48);
     }
 
     public BufferedImage getCharacterDown() {
-        return characterDown.getSubimage(sheetNum * 48, 0, 48, 48);
+        return characterDown.getSubimage(nPlayerSheet * 48, 0, 48, 48);
     }
 
     public BufferedImage getCharacterLeft() {
-        return characterLeft.getSubimage(sheetNum * 48, 0, 48, 48);
+        return characterLeft.getSubimage(nPlayerSheet * 48, 0, 48, 48);
     }
 
     public BufferedImage getCharacterRight() {
-        return characterRight.getSubimage(sheetNum * 48, 0, 48, 48);
+        return characterRight.getSubimage(nPlayerSheet * 48, 0, 48, 48);
+    }
+    
+    public BufferedImage getBossIdle() {
+        return bossIdle.getSubimage(nBossSheet * 32, 0, 32, 32);
     }
     
     public static ImageLoader getInstance() {

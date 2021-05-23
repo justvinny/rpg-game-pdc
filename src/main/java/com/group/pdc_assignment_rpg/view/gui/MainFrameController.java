@@ -32,12 +32,14 @@ public class MainFrameController {
         ScreenManager screenManager = ScreenManager.getInstance();
         Map<Coordinates, Treasure> treasureMap = new HashMap<>();
         treasures.forEach(t -> treasureMap.put(t.getCoordinates(), t));
+        Map<Integer, Boolean> keyPressed = new HashMap<>();
+        populateKeyPressedMap(keyPressed);
 
         // Key listener for the frame where we can use keys such
         // as opening inventory and exiting the game using the
         // escape key.
         view.addKeyListener(new KeyAdapter() {
-            
+
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
@@ -45,14 +47,25 @@ public class MainFrameController {
                     Player player = Player.getCurrentPlayer();
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_UP:
+                            keyPressed.put(KeyEvent.VK_UP, false);
+                            break;
                         case KeyEvent.VK_DOWN:
+                            keyPressed.put(KeyEvent.VK_DOWN, false);
+                            break;
                         case KeyEvent.VK_RIGHT:
+                            keyPressed.put(KeyEvent.VK_RIGHT, false);
+                            break;
                         case KeyEvent.VK_LEFT:
-                            player.setIdle();
+                            keyPressed.put(KeyEvent.VK_LEFT, false);
+                            break;
+                    }
+
+                    if (!keyPressed.values().contains(true)) {
+                        player.setIdle();
                     }
                 }
             }
-            
+
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
@@ -75,21 +88,25 @@ public class MainFrameController {
 
                 if (view.getCurrentScreen() instanceof GameView) {
                     Player player = Player.getCurrentPlayer();
-                    List<String> map = ScreenManager.getInstance().getGame().getMapView().getMapTxt();
+
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_UP:
+                            keyPressed.put(KeyEvent.VK_UP, true);
                             player.setDirection(UP);
                             player.setRunning();
                             break;
                         case KeyEvent.VK_DOWN:
+                            keyPressed.put(KeyEvent.VK_DOWN, true);
                             player.setDirection(DOWN);
                             player.setRunning();
                             break;
                         case KeyEvent.VK_RIGHT:
+                            keyPressed.put(KeyEvent.VK_RIGHT, true);
                             player.setDirection(RIGHT);
                             player.setRunning();
                             break;
                         case KeyEvent.VK_LEFT:
+                            keyPressed.put(KeyEvent.VK_LEFT, true);
                             player.setDirection(LEFT);
                             player.setRunning();
                             break;
@@ -127,8 +144,15 @@ public class MainFrameController {
                             }
                     }
                 }
-            }            
+            }
 
         });
+    }
+
+    private void populateKeyPressedMap(Map<Integer, Boolean> keyPressed) {
+        keyPressed.put(KeyEvent.VK_UP, Boolean.FALSE);
+        keyPressed.put(KeyEvent.VK_DOWN, Boolean.FALSE);
+        keyPressed.put(KeyEvent.VK_LEFT, Boolean.FALSE);
+        keyPressed.put(KeyEvent.VK_RIGHT, Boolean.FALSE);
     }
 }

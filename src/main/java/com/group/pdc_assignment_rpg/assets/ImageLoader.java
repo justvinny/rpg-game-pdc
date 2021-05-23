@@ -21,14 +21,16 @@ import javax.swing.ImageIcon;
 public class ImageLoader {
 
     private static final String WALL_TILE_PATH = "./resources/images/cave_wall_tile.png";
+    private static final String CHARACTER_STATIC_PATH = "./resources/images/character_battle.png";
     private static final String CHARACTER_SHEET_PATH = "./resources/images/character_sprite_sheet.png";
     private static final String OPEN_TREASURE_PATH = "./resources/images/open_treasure.png";
     private static final String CLOSED_TREASURE_PATH = "./resources/images/closed_treasure.png";
     private static final String LOADING_BG_PATH = "./resources/images/loading_screen_bg.png";
     private static final String BOSS_DEAD_PATH = "./resources/images/ghoul_dead.png";
     private static final String BOSS_IDLE_PATH = "./resources/images/ghoul_idle_sprite_sheet.png";
+    private static final String BOSS_STATIC_PATH = "./resources/images/ghoul_battle.png";
     private static ImageLoader instance = null;
-    private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead;
+    private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead, characterStatic, bossStatic;
     private BufferedImage characterUp, characterDown, characterLeft, characterRight, bossIdle;
     private int nPlayerSheet, nBossSheet;
 
@@ -59,6 +61,9 @@ public class ImageLoader {
     }
     
     private void setCharacterSpriteSheet() {
+        ImageIcon playerBattle = new ImageIcon(CHARACTER_STATIC_PATH);
+        characterStatic = playerBattle.getImage();
+        
         try {
             BufferedImage sheet = ImageIO.read(new File(CHARACTER_SHEET_PATH));
             characterUp = sheet.getSubimage(0, 144, 144, 48);
@@ -72,6 +77,9 @@ public class ImageLoader {
     }
     
     private void setBossSheet() {
+        ImageIcon bossBattle = new ImageIcon(BOSS_STATIC_PATH);
+        bossStatic = bossBattle.getImage();
+        
         ImageIcon dead = new ImageIcon(BOSS_DEAD_PATH);
         bossDead = dead.getImage();
         
@@ -139,10 +147,27 @@ public class ImageLoader {
         return characterRight.getSubimage(nPlayerSheet * 48, 0, 48, 48);
     }
     
+    public Image getCharacterStatic() {
+        return characterStatic;
+    }
+    
     public BufferedImage getBossIdle() {
         return bossIdle.getSubimage(nBossSheet * 32, 0, 32, 32);
     }
     
+    public BufferedImage getBossStatic() {
+        return bossIdle.getSubimage(0, 0, 32, 32);
+    }
+    
+    public Image getMob(String mobName) {
+        switch (mobName) {
+            case "Ghoul":
+                return bossStatic;
+            case "Goblin":
+        }
+        
+        return bossStatic;
+    }
     public static ImageLoader getInstance() {
         if (instance == null) {
             instance = new ImageLoader();

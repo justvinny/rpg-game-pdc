@@ -2,6 +2,7 @@ package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
+import com.group.pdc_assignment_rpg.logic.CStats;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
@@ -47,6 +48,12 @@ public final class Mob extends Creature {
      */
     public Mob(String name, char symbol, int level, StatBlock statBlock) {
         super(name, 1, 1, symbol, TextColor.ANSI.RED, statBlock, new Inventory(), Level.createLvl(level));
+        this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
+        populatePersonality(0.75, 0.2, 0.05);
+    }
+
+    public Mob(String name, char symbol, int level, StatBlock statBlock, Inventory inventory) {
+        super(name, 1, 1, symbol, TextColor.ANSI.RED, statBlock, inventory, Level.createLvl(level));
         this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
         populatePersonality(0.75, 0.2, 0.05);
     }
@@ -98,7 +105,7 @@ public final class Mob extends Creature {
     public List<Item> getLoot() {
         return getInventory().getAllItems();
     }
-    
+
     public Map<BattleSceneConstants, Double> getPersonality() {
         return personality;
     }
@@ -114,6 +121,11 @@ public final class Mob extends Creature {
      */
     public void setPersonality(Map<BattleSceneConstants, Double> personality) {
         this.personality = personality;
+    }
+    
+    public void setMaxHP(int hp) {
+        this.getStats().getConsumables().put(CStats.HEALTH, hp);
+        this.setHP(hp);
     }
 
     /**
@@ -147,4 +159,7 @@ public final class Mob extends Creature {
         return choice;
     }
 
+    public Mob cloneMob() {
+        return new Mob(getName(), getSymbol(), getLevel().getLvl(), getStats(), getInventory());
+    }
 }

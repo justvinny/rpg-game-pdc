@@ -27,6 +27,7 @@ public class MainFrameView extends JFrame {
     public static final Font DEFAULT_FONT = new Font("Impact", Font.PLAIN, 16);
     public static final Color TEXT_COLOR = new Color(215, 215, 215);
     public static final Color BOX_COLOR = new Color(77, 101, 180);
+    public static final Color BG_COLOR = new Color(50, 51, 83);
 
     private static final String GAME_TITLE = "RPG Game";
 
@@ -36,8 +37,6 @@ public class MainFrameView extends JFrame {
     public MainFrameView() {
         // First screen at startup.
         player = new Player("Placeholder");
-        currentScreen = ScreenManager.getInstance().getPlayerLoading();
-        getContentPane().add(currentScreen);
         initGUI();
     }
 
@@ -46,18 +45,21 @@ public class MainFrameView extends JFrame {
     }
 
     public void setCurrentScreen(JComponent screen) {
-        getContentPane().remove(currentScreen);
+        if (currentScreen != null) {
+            getContentPane().remove(currentScreen);
+        }
+        
         currentScreen = screen;
         getContentPane().add(currentScreen);
         repaint();
         revalidate();
 
     }
-    
+
     public Player getPlayer() {
         return player;
     }
-    
+
     public void setPlayer(Player player) {
         this.player = player;
     }

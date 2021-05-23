@@ -9,7 +9,6 @@ import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Item;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import static com.group.pdc_assignment_rpg.logic.navigation.Collision.treasureCollision;
-import static com.group.pdc_assignment_rpg.logic.navigation.Collision.wallCollision;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.DOWN;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.LEFT;
@@ -28,9 +27,15 @@ import java.util.Map;
  */
 public class MainFrameController {
 
-    public MainFrameController(MainFrameView view, List<Treasure> treasures) {
-        ScreenManager screenManager = ScreenManager.getInstance();
-        Map<Coordinates, Treasure> treasureMap = new HashMap<>();
+    private Map<Coordinates, Treasure> treasureMap;
+    private List<Treasure> treasures;
+    private ScreenManager screenManager;
+    private MainFrameView mainFrame;
+    public MainFrameController(List<Treasure> treasures) {
+        screenManager = ScreenManager.getInstance();
+        mainFrame = screenManager.getMainFrameView();
+        treasureMap = new HashMap<>();
+        this.treasures = treasures;
         treasures.forEach(t -> treasureMap.put(t.getCoordinates(), t));
         Map<Integer, Boolean> keyPressed = new HashMap<>();
         populateKeyPressedMap(keyPressed);
@@ -38,12 +43,12 @@ public class MainFrameController {
         // Key listener for the frame where we can use keys such
         // as opening inventory and exiting the game using the
         // escape key.
-        view.addKeyListener(new KeyAdapter() {
+        mainFrame.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if (view.getCurrentScreen() instanceof GameView) {
+                if (mainFrame.getCurrentScreen() instanceof GameView) {
                     Player player = Player.getCurrentPlayer();
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_UP:
@@ -60,6 +65,8 @@ public class MainFrameController {
                             break;
                     }
 
+                    // Only set the character to idle when there are
+                    // absolutely zero arrow keys being pressed.
                     if (!keyPressed.values().contains(true)) {
                         player.setIdle();
                     }
@@ -69,12 +76,12 @@ public class MainFrameController {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (!(view.getCurrentScreen() instanceof PlayerLoadingView)) {
+                if (!(mainFrame.getCurrentScreen() instanceof PlayerLoadingView)) {
                     if (e.getKeyCode() == KeyEvent.VK_I) {
-                        if (view.getCurrentScreen() instanceof GameView) {
-                            view.setCurrentScreen(screenManager.getInventory());
-                        } else if (view.getCurrentScreen() instanceof InventoryView) {
-                            view.setCurrentScreen(screenManager.getGame());
+                        if (mainFrame.getCurrentScreen() instanceof GameView) {
+                            mainFrame.setCurrentScreen(screenManager.getInventory());
+                        } else if (mainFrame.getCurrentScreen() instanceof InventoryView) {
+                            mainFrame.setCurrentScreen(screenManager.getGame());
                         }
                     } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                         if (Player.getCurrentPlayer() != null) {
@@ -82,11 +89,11 @@ public class MainFrameController {
                         }
 
                         // Exit
-                        view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
+                        screenManager.closeGame();
                     }
                 }
 
-                if (view.getCurrentScreen() instanceof GameView) {
+                if (mainFrame.getCurrentScreen() instanceof GameView) {
                     Player player = Player.getCurrentPlayer();
 
                     switch (e.getKeyCode()) {
@@ -111,37 +118,7 @@ public class MainFrameController {
                             player.setRunning();
                             break;
                         case KeyEvent.VK_ENTER:
-                            if (treasureCollision(player, treasures)) {
-                                int playerX = player.getX();
-                                int playerY = player.getY();
-
-                                Treasure treasure = null;
-                                switch (player.getDirection()) {
-                                    case UP:
-                                        treasure = treasureMap.get(new Coordinates(playerX, playerY - 1));
-                                        break;
-                                    case DOWN:
-                                        treasure = treasureMap.get(new Coordinates(playerX, playerY + 1));
-                                        break;
-                                    case LEFT:
-                                        treasure = treasureMap.get(new Coordinates(playerX - 1, playerY));
-                                        break;
-                                    case RIGHT:
-                                        treasure = treasureMap.get(new Coordinates(playerX + 1, playerY));
-                                }
-
-                                if (treasure != null) {
-                                    if (!treasure.isOpened()) {
-                                        Item item = treasure.open();
-                                        player.getInventory().add(item);
-                                        screenManager.getInventory().updateInventoryData();
-                                        String eventMsg = "Opened treasure chest and obtained "
-                                                + item.getName();
-                                        screenManager.getGame().addEvent(eventMsg);
-                                    }
-                                }
-
-                            }
+                            checkForTreasure(player, treasureMap);
                     }
                 }
             }
@@ -154,5 +131,39 @@ public class MainFrameController {
         keyPressed.put(KeyEvent.VK_DOWN, Boolean.FALSE);
         keyPressed.put(KeyEvent.VK_LEFT, Boolean.FALSE);
         keyPressed.put(KeyEvent.VK_RIGHT, Boolean.FALSE);
+    }
+
+    private void checkForTreasure(Player player, Map<Coordinates, Treasure> treasureMap) {
+        if (treasureCollision(player, treasures)) {
+            int playerX = player.getX();
+            int playerY = player.getY();
+
+            Treasure treasure = null;
+            switch (player.getDirection()) {
+                case UP:
+                    treasure = treasureMap.get(new Coordinates(playerX, playerY - 1));
+                    break;
+                case DOWN:
+                    treasure = treasureMap.get(new Coordinates(playerX, playerY + 1));
+                    break;
+                case LEFT:
+                    treasure = treasureMap.get(new Coordinates(playerX - 1, playerY));
+                    break;
+                case RIGHT:
+                    treasure = treasureMap.get(new Coordinates(playerX + 1, playerY));
+            }
+
+            if (treasure != null) {
+                if (!treasure.isOpened()) {
+                    Item item = treasure.open();
+                    player.getInventory().add(item);
+                    screenManager.getInventory().updateInventoryData();
+                    String eventMsg = "Opened treasure chest and obtained "
+                            + item.getName();
+                    screenManager.getGame().addEvent(eventMsg);
+                }
+            }
+
+        }
     }
 }

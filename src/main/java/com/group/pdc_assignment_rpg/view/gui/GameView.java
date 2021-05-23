@@ -105,22 +105,12 @@ public class GameView extends JLayeredPane {
         add(btnExit, new Integer(1));
     }
 
-    private void setPlayerInformation() {
-        String playerInfo = String.format("Name: %s | Lv. %s | HP %d / %d | Exp: %d / %d",
-                player.getName(),
-                player.getLevel().getLvl(),
-                player.getHP(),
-                player.getMaxHP(),
-                player.getXP(),
-                player.getLevel().getThreshold());
-        labelPlayerInfo.setText(playerInfo);
-    }
-
     private void createEventList() {
         txtAreaEventList = new JTextArea();
         txtAreaEventList.setOpaque(false);
         txtAreaEventList.setForeground(TEXT_COLOR);
         txtAreaEventList.setFont(DEFAULT_FONT);
+        txtAreaEventList.setFocusable(false);
 
         scrollEventList = new JScrollPane(txtAreaEventList);
         scrollEventList.setOpaque(false);
@@ -128,6 +118,7 @@ public class GameView extends JLayeredPane {
         scrollEventList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollEventList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollEventList.setPreferredSize(EVENT_LIST_DIMS);
+        scrollEventList.setFocusable(false);
 
         add(scrollEventList, new Integer(1));
     }
@@ -143,7 +134,7 @@ public class GameView extends JLayeredPane {
         // label for player info
         layout.putConstraint(SpringLayout.NORTH, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.NORTH, this);
         layout.putConstraint(SpringLayout.WEST, labelPlayerInfo, DEFAULT_MARGIN, SpringLayout.WEST, this);
-        
+
         // btn for inventory
         layout.putConstraint(SpringLayout.SOUTH, btnInventory, -DEFAULT_MARGIN, SpringLayout.SOUTH, this);
         layout.putConstraint(SpringLayout.EAST, btnInventory, -DEFAULT_MARGIN, SpringLayout.WEST, btnExit);
@@ -158,9 +149,20 @@ public class GameView extends JLayeredPane {
 
     }
 
+    public void updatePlayerInformation() {
+        String playerInfo = String.format("Name: %s | Lv. %s | HP %d / %d | Exp: %d / %d",
+                player.getName(),
+                player.getLevel().getLvl(),
+                player.getHP(),
+                player.getMaxHP(),
+                player.getXP(),
+                player.getLevel().getThreshold());
+        labelPlayerInfo.setText(playerInfo);
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
-        setPlayerInformation();
+        updatePlayerInformation();
         gameMapContainer.setPlayerCamera(player);
     }
 

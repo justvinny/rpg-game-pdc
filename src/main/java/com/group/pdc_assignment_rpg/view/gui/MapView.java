@@ -5,7 +5,9 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
+import com.group.pdc_assignment_rpg.MainDriver;
 import com.group.pdc_assignment_rpg.assets.ImageLoader;
+import com.group.pdc_assignment_rpg.assets.MonsterLoader;
 import com.group.pdc_assignment_rpg.camera.GameCamera;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.Combat;
@@ -31,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -43,16 +44,13 @@ public final class MapView extends JPanel implements ActionListener {
 
     public static final int TILE_HEIGHT = 100;
     public static final int TILE_WIDTH = 100;
-    private static final int FPS = 30;
-
-    private static float pX = 9;
-    private static float pY = 23;
+    private static final int FPS = 60;
 
     private List<String> mapTxt;
     private List<Treasure> treasures;
     private GameCamera gameCamera;
     private Player player;
-    private Mob bossTest;
+    private Mob boss;
 
     public MapView(List<Treasure> treasures) {
         setMap();
@@ -60,7 +58,7 @@ public final class MapView extends JPanel implements ActionListener {
         panelSettings();
         setTimer();
         player = new Player("Placeholder");
-        bossTest = new Mob("Ghoul", 'B', 10, 86, 2, new StatBlock(30, 30, 30)); // test
+        boss = MonsterLoader.getInstance().getMob(MainDriver.BOSS_MOB);
         gameCamera = new GameCamera(player, FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
     }
 
@@ -71,13 +69,13 @@ public final class MapView extends JPanel implements ActionListener {
         // Player movement
         playerMovement();
         bossCombat();
+        randomEncounter();
 
         // Render
         drawMap(g);
         drawTreasure(g);
         drawBoss(g);
         drawPlayer(g);
-        drawCombat(g);
 
         Toolkit.getDefaultToolkit().sync();
     }
@@ -86,7 +84,7 @@ public final class MapView extends JPanel implements ActionListener {
         if (player.isPlayerRunning()) {
             if (!Collision.wallCollision(player, mapTxt)
                     && !Collision.treasureCollision(player, treasures)
-                    && !Collision.bossCollision(player, bossTest)) {
+                    && !Collision.bossCollision(player, boss)) {
                 switch (player.getDirection()) {
                     case UP:
                         player.up();
@@ -112,8 +110,38 @@ public final class MapView extends JPanel implements ActionListener {
     }
 
     private void bossCombat() {
-        if (Collision.bossCollision(player, bossTest)) {
-            bossTest.kill();
+        if (Collision.bossCollision(player, boss)) {
+            player.setIdle();
+            ScreenManager screenManager = ScreenManager.getInstance();
+            screenManager.getCombat().setCombatants(player, boss);
+            ScreenManager.getInstance().setCurrentScreen(ScreenManagerConstants.COMBAT);
+        }
+    }
+
+    private void randomEncounter() {
+        if (player.getSteps() == Combat.getNStepsToCombat()) {
+            player.setIdle();
+            player.resetSteps();
+            Combat.resetNStepsToCombat();
+            ScreenManager screenManager = ScreenManager.getInstance();
+
+            // Adjust random mob based on player level.
+            if (player.getLevel().getLvl() < 2) {
+                screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Slime"));
+            } else if (player.getLevel().getLvl() < 3) {
+                int rand = (int) (Math.random() * 2);
+                switch (rand) {
+                    case 0:
+                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Slime"));
+                        break;
+                    case 1:
+                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Goblin"));
+                }
+            } else {
+                screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getRandomMob());
+            }
+            
+            ScreenManager.getInstance().setCurrentScreen(ScreenManagerConstants.COMBAT);
         }
     }
 
@@ -163,11 +191,11 @@ public final class MapView extends JPanel implements ActionListener {
         // -(TILE_WIDTH * 3) to properly scale the boss to 3x the size 
         // of everything else. Same with height.
         int x = -(TILE_WIDTH * 3) + (int) gameCamera.getXOffset()
-                + bossTest.getCoordinates().getX() * TILE_WIDTH;
+                + boss.getCoordinates().getX() * TILE_WIDTH;
         int y = -(TILE_HEIGHT * 2) + (int) gameCamera.getYOffset()
-                + bossTest.getCoordinates().getY() * TILE_HEIGHT;
+                + boss.getCoordinates().getY() * TILE_HEIGHT;
 
-        if (bossTest.isAlive()) {
+        if (boss.isAlive()) {
             BufferedImage bossSheet = ImageLoader.getInstance().getBossIdle();
             g.drawImage(bossSheet, x, y, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
             ImageLoader.getInstance().addBossSheetNum();
@@ -209,15 +237,6 @@ public final class MapView extends JPanel implements ActionListener {
         // Load a different part of the sprite sheet.
         loader.addPlayerSheetNum();
         g.drawImage(characterSprite, x, y, TILE_WIDTH, TILE_HEIGHT, null);
-    }
-
-    private void drawCombat(Graphics g) {
-        if (player.getSteps() == Combat.getNStepsToCombat()) {
-            player.setIdle();
-            player.resetSteps();
-            Combat.resetNStepsToCombat();
-            JOptionPane.showMessageDialog(this, "Combat found!");
-        }
     }
 
     private void setMap() {

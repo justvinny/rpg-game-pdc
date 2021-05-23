@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -24,12 +23,16 @@ import javax.swing.event.ListSelectionListener;
  */
 public class InventoryController {
 
-    private final MainFrameView mainFrame;
+    private ScreenManager screenManager;
+    private MainFrameView mainFrame;
     private InventoryView inventoryView;
+    private GameView game;
 
-    public InventoryController(MainFrameView mainFrame) {
-        this.mainFrame = mainFrame;
-        inventoryView = ScreenManager.getInstance().getInventory();
+    public InventoryController() {
+        screenManager = ScreenManager.getInstance();
+        mainFrame = screenManager.getMainFrameView();
+        inventoryView = screenManager.getInventory();
+        game = screenManager.getGame();
 
         // JList listener item selection
         inventoryView.addInventoryListSelectionListener(new ListSelectionListener() {
@@ -50,15 +53,11 @@ public class InventoryController {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_I:
-                        if (mainFrame.getCurrentScreen() instanceof InventoryView) {
-                            mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
-                        }
-
-                        mainFrame.requestFocusInWindow();
+                        screenManager.setCurrentScreen(ScreenManagerConstants.GAME);
                         break;
                     case KeyEvent.VK_ESCAPE:
                         inventoryView.getPlayer().savePlayer();
-                        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                        screenManager.closeGame();
                 }
             }
         });
@@ -71,6 +70,7 @@ public class InventoryController {
                 try {
                     inventoryView.getInventory().use(inventoryView.getPlayer(), item);
                     inventoryView.updateInventoryData();
+                    game.updatePlayerInformation();
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage());
                 }
@@ -105,7 +105,7 @@ public class InventoryController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 inventoryView.getPlayer().savePlayer();
-                mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                screenManager.closeGame();
             }
         });
     }

@@ -117,6 +117,10 @@ public final class Player extends Creature implements Killable {
         ResourceLoaderUtility.writeEquippedData(this);
     }
 
+    public void resetCoordinates() {
+        getCoordinates().setCoordinates(5, 23);
+    }
+    
     public void die() {
         // TODO: Add stuff here
     }

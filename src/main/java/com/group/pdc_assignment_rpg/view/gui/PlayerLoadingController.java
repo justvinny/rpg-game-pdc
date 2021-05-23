@@ -18,17 +18,19 @@ import javax.swing.JOptionPane;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class PlayerLoadingController implements CustomObserver {
+public final class PlayerLoadingController implements CustomObserver {
 
     private static final String KEYS_AVAILABLE_MSG = "Keys Available:\nEnter - Open Treasures\nI - Open Inventory\nEsc - Exit and Save Game";
-    private MainFrameView mainFrame;
-    private PlayerLoadingView playerLoading;
-    private PlayerListModel playerListModel;
-    private List<Treasure> treasures;
+    private final ScreenManager screenManager;
+    private final MainFrameView mainFrame;
+    private final PlayerLoadingView playerLoading;
+    private final PlayerListModel playerListModel;
+    private final List<Treasure> treasures;
 
-    public PlayerLoadingController(MainFrameView mainFrame, PlayerLoadingView playerLoading, PlayerListModel playerListModel, List<Treasure> treasures) {
-        this.mainFrame = mainFrame;
-        this.playerLoading = playerLoading;
+    public PlayerLoadingController(PlayerListModel playerListModel, List<Treasure> treasures) {
+        screenManager = ScreenManager.getInstance();
+        mainFrame = screenManager.getMainFrameView();
+        playerLoading = screenManager.getPlayerLoading();
         this.playerListModel = playerListModel;
         this.treasures = treasures;
         createBtnListener();

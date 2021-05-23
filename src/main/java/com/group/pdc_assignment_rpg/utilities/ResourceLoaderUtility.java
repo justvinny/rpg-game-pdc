@@ -1,5 +1,6 @@
 package com.group.pdc_assignment_rpg.utilities;
 
+import com.group.pdc_assignment_rpg.MainDriver;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
@@ -497,9 +498,9 @@ public class ResourceLoaderUtility {
                 int mobIntellect = Integer.valueOf(mobData[4]);
 
                 if (mobNameFromDB.equals(mobName)) {
-                    if (mobName.equals("Goblin King")) {
+                    if (mobName.equals(MainDriver.BOSS_MOB)) {
                         StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
-                        mob = new Mob(mobNameFromDB, 'B', mobLevel, 81, 10, statBlock);
+                        mob = new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock);
                     } else {
                         StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
                         mob = new Mob(mobNameFromDB, 'R', mobLevel, statBlock);
@@ -520,9 +521,47 @@ public class ResourceLoaderUtility {
         return mob;
     }
 
+    public static Map<String, Mob> loadAllMobs() {
+        Map<String, Mob> mobMap = new HashMap<>();
+
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(MOBS_PATH));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] mobData = line.split(",");
+                String mobNameFromDB = mobData[0];
+                int mobLevel = Integer.valueOf(mobData[1]);
+                int mobStrength = Integer.valueOf(mobData[2]);
+                int mobDexterity = Integer.valueOf(mobData[3]);
+                int mobIntellect = Integer.valueOf(mobData[4]);
+
+                if (mobNameFromDB.equals(MainDriver.BOSS_MOB)) {
+                    StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
+                    mobMap.put(mobNameFromDB, new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock));
+                } else {
+                    StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
+                    mobMap.put(mobNameFromDB, new Mob(mobNameFromDB, 'R', mobLevel, statBlock));
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+        return mobMap;
+    }
+
     /**
      * Method to load the possible mob drops that a player can obtain once they
      * win in combat.
+     *
      * @param mobName name of mob the player is battling.
      * @return items that the player will get.
      */
@@ -544,15 +583,8 @@ public class ResourceLoaderUtility {
                         String itemName = inventoryData[i];
                         Item item = itemLoaderFactory(itemName);
                         int dropRate = Integer.valueOf(inventoryData[i + 1]);
-
-                        // Calculate if we should include the drop to the inventory
-                        // using the drop rate percentage.
-                        boolean isObtained = ((int) (Math.random() * 101)) <= dropRate;
-
-                        // Add the item if the calculation makes it obtainable.
-                        if (isObtained) {
-                            inventory.add(item);
-                        }
+                        item.setDropRate(dropRate);
+                        inventory.add(item);
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.logic.entities;
 import java.util.*;
 import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.logic.CStats;
+import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.Stats;
@@ -21,7 +22,7 @@ import com.group.pdc_assignment_rpg.logic.character.Level;
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 @SuppressWarnings("OverridableMethodCallInConstructor")
-public abstract class Creature extends Entity {
+public abstract class Creature extends Entity implements Killable {
 
     private StatBlock stats;
     private String name;
@@ -175,6 +176,10 @@ public abstract class Creature extends Entity {
     public String getArmourName() {
         return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
     }
+    
+    public String getBattleStatusText() {
+        return " " + name + " HP: " + getHP() + " / " + getMaxHP();
+    }
 
     /*
      * Setter methods
@@ -253,6 +258,7 @@ public abstract class Creature extends Entity {
         this.xp += xp;
     }
 
+    @Override
     public void kill() {
         alive = false;
     }

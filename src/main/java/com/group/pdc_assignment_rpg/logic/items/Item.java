@@ -8,7 +8,7 @@ import java.util.Objects;
  * extension of the StaticObject object which holds their position in the world.
  *
  * @author Macauley Cunningham - 19072621
- *
+ * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class Item {
 
@@ -16,25 +16,38 @@ public class Item {
 
     private String name;
     private ItemList item;
+    private int dropRate;
 
-    public Item(String n, ItemList i) {
+    public Item(String n, ItemList i, int dropRate) {
         try {
             this.setName(n);
         } catch (IOException e) {
             this.name = i.toString();
         }
         this.setItem(i);
+        this.dropRate = dropRate;
+    }
+
+    public Item(String n, ItemList i) {
+        this(n, i, 0);
     }
 
     public String getName() {
         return name;
     }
-    
 
     public ItemList getItem() {
         return item;
     }
 
+    public int getDropRate() {
+        return dropRate;
+    }
+
+    public void setDropRate(int dropRate) {
+        this.dropRate = dropRate;
+    }
+    
     private void setName(String name) throws IOException {
         if (name.length() < MAX_NAME_LENGTH) {
             this.name = name;
@@ -77,6 +90,5 @@ public class Item {
         }
         return this.item == other.item;
     }
-    
-    
+
 }

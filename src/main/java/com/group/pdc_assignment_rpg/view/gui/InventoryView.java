@@ -5,10 +5,10 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
-import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.items.Item;
+import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.BG_COLOR;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.BOX_COLOR;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_BTN_DIMS;
 import static com.group.pdc_assignment_rpg.view.gui.MainFrameView.DEFAULT_FONT;
@@ -20,7 +20,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
@@ -47,7 +46,6 @@ public class InventoryView extends JPanel {
     private static final String BTN_CLOSE_INVENTORY = "[ I ] - Back";
     private static final String BTN_EXIT = "[ESC] - Exit";
     private static final Font FONT_TITLE = new Font("Impact", Font.BOLD, 32);
-    private static final Color BG_COLOR = new Color(50, 51, 83);
 
     private SpringLayout layout;
     private JLabel labelTitle;

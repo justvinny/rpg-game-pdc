@@ -16,18 +16,14 @@ import java.awt.event.WindowEvent;
  */
 public class GameController {
 
-    public GameController(MainFrameView mainFrame) {
-        ScreenManager screenManager = ScreenManager.getInstance();
+    private ScreenManager screenManager;
+    public GameController() {
+        screenManager = ScreenManager.getInstance();
 
         screenManager.getGame().addBtnInventoryListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open the inventory.
-                mainFrame.setCurrentScreen(screenManager.getInventory());
-
-                // Give back focus to main frame after button clicked
-                // to allow the key listener on the frame to work.
-                mainFrame.requestFocusInWindow();
+                screenManager.setCurrentScreen(ScreenManagerConstants.INVENTORY);
             }
         });
 
@@ -35,7 +31,7 @@ public class GameController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Player.getCurrentPlayer().savePlayer();
-                mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                screenManager.closeGame();
             }
         });
     }

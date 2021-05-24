@@ -37,15 +37,15 @@ public class MonsterLoader {
     }
 
     public Mob getMob(String mobName) {
-        if (mobName.equals("Ghoul King")) {
-            Mob ghoulKing = monsterList.get(mobName).cloneMob();
-            ghoulKing.setMaxHP(350);
-            ghoulKing.getCoordinates().setCoordinates(86, 2);
-            ghoulKing.populatePersonality(
+        if (mobName.equals("Guardian Golem")) {
+            Mob guardianGolem = monsterList.get(mobName).cloneMob();
+            guardianGolem.setMaxHP(350);
+            guardianGolem.getCoordinates().setCoordinates(86, 2);
+            guardianGolem.populatePersonality(
                     BOSS_ATTACK_PERSONALITY, // Boss should attack more
                     BOSS_DEFEND_PERSONALITY, // Boss should defend sometimes.
                     BOSS_ESCAPE_PERSONALITY); // Boss shouldn't flee., 0, 0);
-            return ghoulKing;
+            return guardianGolem;
         }
         
         return monsterList.get(mobName).cloneMob();
@@ -55,11 +55,11 @@ public class MonsterLoader {
         int num = (int) (Math.random() * 3);
         switch (num) {
             case 1:
-                return getMob("Red Goblin");
+                return getMob("Ghoul");
             case 2:
-                return getMob("Red Bandit");
+                return getMob("Executioner");
             default:
-                return getMob("Red Slime");
+                return getMob("Slime");
         }
     }
 

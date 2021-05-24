@@ -1,4 +1,4 @@
-Ghoul King,5,12,12,10
-Red Slime,1,5,5,5
-Red Goblin,2,6,6,6
-Red Bandit,3,7,7,7
+Guardian Golem,5,12,12,10
+Slime,1,5,5,5
+Ghoul,2,6,6,6
+Executioner,3,7,7,7

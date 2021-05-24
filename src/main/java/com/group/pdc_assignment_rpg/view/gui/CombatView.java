@@ -5,6 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
+import com.group.pdc_assignment_rpg.MainDriver;
 import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.Combat;
@@ -26,8 +27,6 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,7 +48,8 @@ public final class CombatView extends JPanel {
     private static final Dimension STATUS_BOX_DIMS
             = new Dimension((int) (FRAME_WIDTH * .48), 30);
     private static final Dimension PLAYER_SPRITE_DIMS = new Dimension(TILE_WIDTH, TILE_HEIGHT);
-    private static final Dimension MOB_SPRITE_DRIMS = new Dimension(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    private static final Dimension MOB_SPRITE_DIMS = new Dimension(TILE_WIDTH * 2, TILE_HEIGHT * 2);
+    private static final Dimension BOSS_SPRITE_DIMS = new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 3);
 
     private SpringLayout layout, commandPanelLayout;
     private JPanel panelCommand;
@@ -59,7 +59,7 @@ public final class CombatView extends JPanel {
     private JScrollPane scrollBatteLog;
     private PlayerBattleSprite playerSprite;
     private MobBattleSprite mobSprite;
-    
+
     private Player player;
     private Mob mob;
     private Combat combat;
@@ -113,8 +113,8 @@ public final class CombatView extends JPanel {
         playerSprite = new PlayerBattleSprite();
         playerSprite.setPreferredSize(PLAYER_SPRITE_DIMS);
 
-        mobSprite = new MobBattleSprite("Ghoul");
-        mobSprite.setPreferredSize(MOB_SPRITE_DRIMS);
+        mobSprite = new MobBattleSprite("Slime");
+        mobSprite.setPreferredSize(MOB_SPRITE_DIMS);
 
         add(playerSprite);
         add(mobSprite);
@@ -159,7 +159,7 @@ public final class CombatView extends JPanel {
         txtAreaBattleLog.setOpaque(false);
         txtAreaBattleLog.setForeground(TEXT_COLOR);
         txtAreaBattleLog.setFont(DEFAULT_FONT);
-        
+
         // Scroll for battle log
         scrollBatteLog = new JScrollPane(txtAreaBattleLog);
         scrollBatteLog.setPreferredSize(COMMAND_BOX_DIMS);
@@ -217,31 +217,43 @@ public final class CombatView extends JPanel {
     public Combat getCombat() {
         return combat;
     }
-    
+
     public void setCombatants(Player player, Mob mob) {
         this.player = player;
         this.mob = mob;
         this.combat = new Combat(player, mob);
-
+        setMobSprite(mob);
         updateStatusBars();
         updateBattleLog();
+        repaint();
+        revalidate();
+    }
+
+    public void setMobSprite(Mob mob) {
+        this.mobSprite.setMobName(mob.getName());
+
+        if (mob.getName().equals(MainDriver.BOSS_MOB)) {
+            this.mobSprite.setPreferredSize(BOSS_SPRITE_DIMS);
+        } else {
+            this.mobSprite.setPreferredSize(MOB_SPRITE_DIMS);
+        }
     }
 
     public boolean battle(BattleSceneConstants action) {
         combat.battle(action);
         return combat.isFighting();
     }
-    
+
     public void updateStatusBars() {
         this.labelPlayer.setText(player.getBattleStatusText());
         this.labelMonster.setText(mob.getBattleStatusText());
     }
-    
+
     public void updateBattleLog() {
         StringBuilder builder = new StringBuilder();
         builder.append(" Battle Log\n");
         combat.getFullLog().forEach(s -> builder.append(" ").append(s).append("\n"));
-        builder.deleteCharAt(builder.length()-1); // Remove last \n
+        builder.deleteCharAt(builder.length() - 1); // Remove last \n
         txtAreaBattleLog.setText(builder.toString());
     }
 
@@ -280,11 +292,20 @@ public final class CombatView extends JPanel {
             this.mobName = mobName;
         }
 
+        public void setMobName(String mobName) {
+            this.mobName = mobName;
+        }
+
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Image mob = ImageLoader.getInstance().getMob(mobName);
-            g.drawImage(mob, 0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 2, null);
+
+            if (mobName.equals(MainDriver.BOSS_MOB)) {
+                g.drawImage(mob, 0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
+            } else {
+                g.drawImage(mob, 0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 2, null);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ New123,Broken Sword,Tattered Clothing
 Bob,None,None
 Jess,Mighty Sword,Bloody Chainmail
 Jack,Broken Sword,Tattered Clothing
+Leeroy,Sword of Stabbing,Tattered Clothing
 BobNew,Broken Sword,Tattered Clothing
 Gwapa,Broken Sword,Tattered Clothing
 123e,Broken Sword,Tattered Clothing

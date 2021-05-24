@@ -26,11 +26,15 @@ public class ImageLoader {
     private static final String OPEN_TREASURE_PATH = "./resources/images/open_treasure.png";
     private static final String CLOSED_TREASURE_PATH = "./resources/images/closed_treasure.png";
     private static final String LOADING_BG_PATH = "./resources/images/loading_screen_bg.png";
-    private static final String BOSS_DEAD_PATH = "./resources/images/ghoul_dead.png";
-    private static final String BOSS_IDLE_PATH = "./resources/images/ghoul_idle_sprite_sheet.png";
-    private static final String BOSS_STATIC_PATH = "./resources/images/ghoul_battle.png";
+    private static final String BOSS_DEAD_PATH = "./resources/images/golem_death.png";
+    private static final String BOSS_IDLE_PATH = "./resources/images/golem_idle_sprite_sheet.png";
+    private static final String GHOUL_STATIC_PATH = "./resources/images/ghoul_battle.png";
+    private static final String GOLEM_STATIC_PATH = "./resources/images/golem_battle.png";
+    private static final String EXECUTIONER_STATIC_PATH = "./resources/images/executioner_battle.png";
+    private static final String SLIME_STATIC_PATH = "./resources/images/slime_battle.png";
     private static ImageLoader instance = null;
-    private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead, characterStatic, bossStatic;
+    private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead,
+            characterStatic, ghoulStatic, golemStatic, slimeStatic, executionerStatic;
     private BufferedImage characterUp, characterDown, characterLeft, characterRight, bossIdle;
     private int nPlayerSheet, nBossSheet;
 
@@ -40,6 +44,7 @@ public class ImageLoader {
         setLoadingBG();
         setCharacterSpriteSheet();
         setBossSheet();
+        setStaticMonsters();
     }
 
     private void setWallTile() {
@@ -50,7 +55,7 @@ public class ImageLoader {
     private void setTreasure() {
         ImageIcon open = new ImageIcon(OPEN_TREASURE_PATH);
         openTreasure = open.getImage();
-        
+
         ImageIcon closed = new ImageIcon(CLOSED_TREASURE_PATH);
         closedTreasure = closed.getImage();
     }
@@ -59,11 +64,11 @@ public class ImageLoader {
         ImageIcon bg = new ImageIcon(LOADING_BG_PATH);
         loadingBG = bg.getImage();
     }
-    
+
     private void setCharacterSpriteSheet() {
         ImageIcon playerBattle = new ImageIcon(CHARACTER_STATIC_PATH);
         characterStatic = playerBattle.getImage();
-        
+
         try {
             BufferedImage sheet = ImageIO.read(new File(CHARACTER_SHEET_PATH));
             characterUp = sheet.getSubimage(0, 144, 144, 48);
@@ -75,14 +80,11 @@ public class ImageLoader {
             Logger.getLogger(ImageLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void setBossSheet() {
-        ImageIcon bossBattle = new ImageIcon(BOSS_STATIC_PATH);
-        bossStatic = bossBattle.getImage();
-        
         ImageIcon dead = new ImageIcon(BOSS_DEAD_PATH);
         bossDead = dead.getImage();
-        
+
         try {
             bossIdle = ImageIO.read(new File(BOSS_IDLE_PATH));
             nBossSheet = 0;
@@ -90,27 +92,41 @@ public class ImageLoader {
             Logger.getLogger(ImageLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    private void setStaticMonsters() {
+        ImageIcon ghoulBattle = new ImageIcon(GHOUL_STATIC_PATH);
+        ghoulStatic = ghoulBattle.getImage();
+
+        ImageIcon golemBattle = new ImageIcon(GOLEM_STATIC_PATH);
+        golemStatic = golemBattle.getImage();
+        
+        ImageIcon executionerBattle = new ImageIcon(EXECUTIONER_STATIC_PATH);
+        executionerStatic = executionerBattle.getImage();
+        
+        ImageIcon slimeBattle = new ImageIcon(SLIME_STATIC_PATH);
+        slimeStatic = slimeBattle.getImage();
+    }
+
     public void addPlayerSheetNum() {
         if (nPlayerSheet == 2) {
             nPlayerSheet = -1;
         }
-        
+
         nPlayerSheet++;
     }
-    
+
     public void resetPlayerSheetNum() {
         nPlayerSheet = 1;
     }
-    
+
     public void addBossSheetNum() {
-        if (nBossSheet == 3) {
+        if (nBossSheet == 7) {
             nBossSheet = -1;
         }
-        
+
         nBossSheet++;
     }
-    
+
     public Image getWallTile() {
         return wallTile;
     }
@@ -118,15 +134,15 @@ public class ImageLoader {
     public Image getOpenTreasure() {
         return openTreasure;
     }
-    
+
     public Image getClosedTreasure() {
         return closedTreasure;
-    }    
-    
+    }
+
     public Image getLoadingBG() {
         return loadingBG;
     }
-    
+
     public Image getDeadBoss() {
         return bossDead;
     }
@@ -146,28 +162,30 @@ public class ImageLoader {
     public BufferedImage getCharacterRight() {
         return characterRight.getSubimage(nPlayerSheet * 48, 0, 48, 48);
     }
-    
+
     public Image getCharacterStatic() {
         return characterStatic;
     }
-    
+
     public BufferedImage getBossIdle() {
-        return bossIdle.getSubimage(nBossSheet * 32, 0, 32, 32);
+        return bossIdle.getSubimage(nBossSheet * 100, 0, 100, 100);
     }
-    
-    public BufferedImage getBossStatic() {
-        return bossIdle.getSubimage(0, 0, 32, 32);
-    }
-    
+
     public Image getMob(String mobName) {
         switch (mobName) {
             case "Ghoul":
-                return bossStatic;
-            case "Goblin":
+                return ghoulStatic;
+            case "Slime":
+                return slimeStatic;
+            case "Guardian Golem":
+                return golemStatic;
+            case "Executioner":
+                return executionerStatic;
+            default:
+                return slimeStatic;
         }
-        
-        return bossStatic;
     }
+
     public static ImageLoader getInstance() {
         if (instance == null) {
             instance = new ImageLoader();

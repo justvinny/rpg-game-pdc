@@ -11,7 +11,6 @@ import com.group.pdc_assignment_rpg.assets.MonsterLoader;
 import com.group.pdc_assignment_rpg.camera.GameCamera;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.Combat;
-import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
@@ -127,15 +126,15 @@ public final class MapView extends JPanel implements ActionListener {
 
             // Adjust random mob based on player level.
             if (player.getLevel().getLvl() < 2) {
-                screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Slime"));
+                screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Slime"));
             } else if (player.getLevel().getLvl() < 3) {
                 int rand = (int) (Math.random() * 2);
                 switch (rand) {
                     case 0:
-                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Slime"));
+                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Slime"));
                         break;
                     case 1:
-                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Red Goblin"));
+                        screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getMob("Ghoul"));
                 }
             } else {
                 screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getRandomMob());

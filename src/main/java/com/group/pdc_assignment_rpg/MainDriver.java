@@ -43,7 +43,7 @@ public class MainDriver {
     /**
      * Constants
      */
-    public static final String BOSS_MOB = "Ghoul King";
+    public static final String BOSS_MOB = "Guardian Golem";
     public static final int GAME_PAUSE_MS = 1000;
     public static final double BOSS_ATTACK_PERSONALITY = .7;
     public static final double BOSS_DEFEND_PERSONALITY = .3;

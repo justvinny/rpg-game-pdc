@@ -70,6 +70,9 @@ public class CombatController {
                 }
             } else if (action == BattleSceneConstants.ESCAPE) {
                 JOptionPane.showMessageDialog(mainFrame, "Player escaped!");
+                combat.getCombat().playerEscape();
+            } else if (combat.getCombat().mobEscaped()) {
+                JOptionPane.showMessageDialog(mainFrame, "Enemy has escaped!");
             } else {
                 JOptionPane.showMessageDialog(mainFrame, "You have been defeated!");
                 Player.getCurrentPlayer().resetCoordinates();

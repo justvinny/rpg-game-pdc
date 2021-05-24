@@ -65,11 +65,11 @@ public final class MapView extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Player movement
+        // Game logic
         playerMovement();
         bossCombat();
         randomEncounter();
-
+        
         // Render
         drawMap(g);
         drawTreasure(g);
@@ -139,7 +139,7 @@ public final class MapView extends JPanel implements ActionListener {
             } else {
                 screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getRandomMob());
             }
-            
+
             ScreenManager.getInstance().setCurrentScreen(ScreenManagerConstants.COMBAT);
         }
     }

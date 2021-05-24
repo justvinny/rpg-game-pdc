@@ -176,7 +176,7 @@ public class Combat {
                         if (isObtained) {
                             player.getInventory().add(item);
                             lootGained.add(item);
-                        } 
+                        }
                     }
 
                     if (!allLoot.isEmpty()) {
@@ -238,6 +238,32 @@ public class Combat {
 
     public boolean playerWon() {
         return player.getHP() > 0 && mob.getHP() <= 0;
+    }
+
+    public void playerEscape() {
+        switch (player.getDirection()) {
+            case UP:
+                player.down();
+                break;
+            case DOWN:
+                player.up();
+                break;
+            case RIGHT:
+                player.left();
+                break;
+            case LEFT:
+                player.right();
+        }
+    }
+
+    public boolean mobEscaped() {
+        boolean hasEscaped = !isFighting() && player.getHP() > 0 && mob.getHP() > 0;
+        
+        if (hasEscaped) {
+            mob.setCoordinates(-99, -99);
+        }
+        
+        return hasEscaped;
     }
 
     private void playerTurn(BattleSceneConstants choice) {

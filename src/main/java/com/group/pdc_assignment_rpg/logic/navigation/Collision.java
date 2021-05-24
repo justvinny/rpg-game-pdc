@@ -82,21 +82,7 @@ public class Collision {
     }
 
     public static boolean bossCollision(Player player, Mob boss) {
-        switch (player.getDirection()) {
-            case UP:
-                return player.getY() - 1 == boss.getY() && player.getX() == boss.getX()
-                        && boss.isAlive();
-            case DOWN:
-                return player.getY() + 1 == boss.getY() && player.getX() == boss.getX()
-                        && boss.isAlive();
-            case LEFT:
-                return player.getY() == boss.getY() && player.getX() - 1 == boss.getX()
-                        && boss.isAlive();
-            case RIGHT:
-                return player.getY() == boss.getY() && player.getX() + 1 == boss.getX()
-                        && boss.isAlive();
-            default:
-                return false;
-        }
+        return player.getY() == boss.getY() && player.getX() == boss.getX() - 1
+                && boss.isAlive();
     }
 }

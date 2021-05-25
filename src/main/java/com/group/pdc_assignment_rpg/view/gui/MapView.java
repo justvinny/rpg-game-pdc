@@ -5,9 +5,9 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
-import com.group.pdc_assignment_rpg.MainDriver;
 import com.group.pdc_assignment_rpg.assets.ImageLoader;
 import com.group.pdc_assignment_rpg.assets.MonsterLoader;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.camera.GameCamera;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.Combat;
@@ -45,20 +45,20 @@ public final class MapView extends JPanel implements ActionListener {
     public static final int TILE_WIDTH = 100;
     private static final int FPS = 60;
 
+    private final GameCamera gameCamera;
+    private final Mob boss;
     private List<String> mapTxt;
     private List<Treasure> treasures;
-    private GameCamera gameCamera;
     private Player player;
-    private Mob boss;
 
     public MapView(List<Treasure> treasures) {
         setMap();
         setTreasures(treasures);
         panelSettings();
         setTimer();
-        player = new Player("Placeholder");
-        boss = MonsterLoader.getInstance().getMob(MainDriver.BOSS_MOB);
         gameCamera = new GameCamera(player, FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
+        boss = MonsterLoader.getInstance().getMob(BOSS_MOB);
+        player = new Player("Placeholder");
     }
 
     @Override
@@ -69,7 +69,7 @@ public final class MapView extends JPanel implements ActionListener {
         playerMovement();
         bossCombat();
         randomEncounter();
-        
+
         // Render
         drawMap(g);
         drawTreasure(g);

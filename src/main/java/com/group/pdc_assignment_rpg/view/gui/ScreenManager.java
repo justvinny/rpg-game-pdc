@@ -11,15 +11,15 @@ import java.awt.event.WindowEvent;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class ScreenManager {
+public final class ScreenManager {
 
     private static ScreenManager instance = null;
-    private MainFrameView mainFrameView;
-    private PlayerLoadingView playerLoading;
-    private InventoryView inventory;
-    private GameView game;
+    private final MainFrameView mainFrameView;
+    private final PlayerLoadingView playerLoading;
+    private final InventoryView inventory;
+    private final GameView game;
+    private final CombatView combat;
     private MapView map;
-    private CombatView combat;
 
     private ScreenManager(MainFrameView mainFrameView) {
         this.mainFrameView = mainFrameView;
@@ -84,7 +84,9 @@ public class ScreenManager {
     }
 
     public static void initScreenManager(MainFrameView mainFrameView) {
-        instance = new ScreenManager(mainFrameView);
+        if (instance == null) {
+            instance = new ScreenManager(mainFrameView);
+        }
     }
 
     public static ScreenManager getInstance() {

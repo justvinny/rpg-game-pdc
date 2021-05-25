@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class GameController {
+public final class GameController {
 
     private ScreenManager screenManager;
     public GameController() {

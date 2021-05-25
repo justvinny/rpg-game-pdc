@@ -31,7 +31,7 @@ import javax.swing.JTextArea;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class GameView extends JLayeredPane {
+public final class GameView extends JLayeredPane {
 
     private static final String INSPECT_BTN = "[ Enter ] - Inspect";
     private static final String INVENTORY_BTN = "[ I ] - Inventory";
@@ -46,9 +46,9 @@ public class GameView extends JLayeredPane {
     private JTextArea txtAreaEventList;
     private JScrollPane scrollEventList;
 
+    private final List<String> eventList;
     private Player player;
     private List<Treasure> treasures;
-    private List<String> eventList;
 
     public GameView() {
         player = new Player("Placeholder");

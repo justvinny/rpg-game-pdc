@@ -9,10 +9,12 @@ import com.group.pdc_assignment_rpg.logic.entities.Player;
 import com.group.pdc_assignment_rpg.logic.entities.PlayerListModel;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.observer.CustomObserver;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -52,9 +54,22 @@ public final class PlayerLoadingController implements CustomObserver {
                 } else {
                     // Create a new player and save it to the DB.
                     Player player = new Player(name);
-                    playerListModel.add(player);
-                    playerLoading.clearField();
-                    playerLoading.setPlayerSelected(name);
+
+                    ResourceLoaderUtility.DB_EXECUTOR.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerListModel.add(player);
+
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playerLoading.clearField();
+                                    playerLoading.setPlayerSelected(name);
+                                }
+                            });
+                        }
+                    });
+
                 }
             }
         });
@@ -78,7 +93,7 @@ public final class PlayerLoadingController implements CustomObserver {
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
                     JOptionPane.showMessageDialog(mainFrame, KEYS_AVAILABLE_MSG);
                     mainFrame.requestFocusInWindow();
-                    
+
                     // TODO: hook up game logic when game map is finished.
                 }
             }

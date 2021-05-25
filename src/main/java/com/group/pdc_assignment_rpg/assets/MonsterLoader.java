@@ -5,9 +5,6 @@
  */
 package com.group.pdc_assignment_rpg.assets;
 
-import static com.group.pdc_assignment_rpg.MainDriver.BOSS_ATTACK_PERSONALITY;
-import static com.group.pdc_assignment_rpg.MainDriver.BOSS_DEFEND_PERSONALITY;
-import static com.group.pdc_assignment_rpg.MainDriver.BOSS_ESCAPE_PERSONALITY;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.Iterator;
@@ -19,6 +16,10 @@ import java.util.Map;
  */
 public class MonsterLoader {
 
+    public static final String BOSS_MOB = "Guardian Golem";
+    public static final double BOSS_ATTACK_PERSONALITY = .5;
+    public static final double BOSS_DEFEND_PERSONALITY = .5;
+    public static final double BOSS_ESCAPE_PERSONALITY = 0;
     private static MonsterLoader instance = null;
     private Map<String, Mob> monsterList;
 
@@ -39,7 +40,7 @@ public class MonsterLoader {
     public Mob getMob(String mobName) {
         if (mobName.equals("Guardian Golem")) {
             Mob guardianGolem = monsterList.get(mobName).cloneMob();
-            guardianGolem.setMaxHP(350);
+            guardianGolem.setMaxHP(150);
             guardianGolem.getCoordinates().setCoordinates(86, 2);
             guardianGolem.populatePersonality(
                     BOSS_ATTACK_PERSONALITY, // Boss should attack more
@@ -47,7 +48,7 @@ public class MonsterLoader {
                     BOSS_ESCAPE_PERSONALITY); // Boss shouldn't flee., 0, 0);
             return guardianGolem;
         }
-        
+
         return monsterList.get(mobName).cloneMob();
     }
 
@@ -64,14 +65,12 @@ public class MonsterLoader {
     }
 
     public static void initMonsterLoader() {
-        instance = new MonsterLoader();
+        if (instance == null) {
+            instance = new MonsterLoader();
+        }
     }
 
     public static MonsterLoader getInstance() {
-        if (instance == null) {
-            initMonsterLoader();
-        }
-
         return instance;
     }
 }

@@ -24,6 +24,10 @@ public class PlayerListModel extends CustomObservable {
 
     public PlayerListModel() {
         super();
+        setPlayerList();
+    }
+
+    private void setPlayerList() {
         playerList = ResourceLoaderUtility.loadAllPlayersFromDB();
     }
 

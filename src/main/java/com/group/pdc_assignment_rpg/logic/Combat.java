@@ -256,10 +256,11 @@ public class Combat {
         }
     }
 
-    public boolean mobEscaped() {
+    public boolean enemyEscaped() {
         boolean hasEscaped = !isFighting() && player.getHP() > 0 && mob.getHP() > 0;
         
-        if (hasEscaped) {
+        // Enemy has escaped
+        if (hasEscaped && currentTurn == Combatant.PLAYER) {
             mob.setCoordinates(-99, -99);
         }
         

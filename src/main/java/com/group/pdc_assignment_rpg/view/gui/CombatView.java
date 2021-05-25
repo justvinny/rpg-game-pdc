@@ -5,8 +5,8 @@
  */
 package com.group.pdc_assignment_rpg.view.gui;
 
-import com.group.pdc_assignment_rpg.MainDriver;
 import com.group.pdc_assignment_rpg.assets.ImageLoader;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import com.group.pdc_assignment_rpg.logic.Combat;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
@@ -232,7 +232,7 @@ public final class CombatView extends JPanel {
     public void setMobSprite(Mob mob) {
         this.mobSprite.setMobName(mob.getName());
 
-        if (mob.getName().equals(MainDriver.BOSS_MOB)) {
+        if (mob.getName().equals(BOSS_MOB)) {
             this.mobSprite.setPreferredSize(BOSS_SPRITE_DIMS);
         } else {
             this.mobSprite.setPreferredSize(MOB_SPRITE_DIMS);
@@ -301,7 +301,7 @@ public final class CombatView extends JPanel {
             super.paintComponent(g);
             Image mob = ImageLoader.getInstance().getMob(mobName);
 
-            if (mobName.equals(MainDriver.BOSS_MOB)) {
+            if (mobName.equals(BOSS_MOB)) {
                 g.drawImage(mob, 0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
             } else {
                 g.drawImage(mob, 0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 2, null);

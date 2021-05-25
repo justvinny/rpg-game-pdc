@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class InventoryView extends JPanel {
+public final class InventoryView extends JPanel {
 
     private static final Dimension LIST_DIMS = new Dimension((int) (MainFrameView.FRAME_WIDTH * .47), (int) (MainFrameView.FRAME_HEIGHT * .65));
     private static final String LABEL_TITLE = "Player Inventory";

@@ -16,7 +16,6 @@ import static com.group.pdc_assignment_rpg.logic.navigation.Direction.RIGHT;
 import static com.group.pdc_assignment_rpg.logic.navigation.Direction.UP;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,10 @@ import java.util.Map;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class MainFrameController {
+public final class MainFrameController {
 
+    private final List<Treasure> treasures;
     private Map<Coordinates, Treasure> treasureMap;
-    private List<Treasure> treasures;
     private ScreenManager screenManager;
     private MainFrameView mainFrame;
     public MainFrameController(List<Treasure> treasures) {

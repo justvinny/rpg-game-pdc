@@ -1,6 +1,6 @@
 package com.group.pdc_assignment_rpg.utilities;
 
-import com.group.pdc_assignment_rpg.MainDriver;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
@@ -18,7 +18,6 @@ import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,7 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Utility class to for loading game maps from text files.
@@ -40,6 +40,7 @@ public class ResourceLoaderUtility {
     /**
      * Constants
      */
+    public static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final String RESOURCE_PATH = "./resources";
     private static final String TREASURES_PATH = RESOURCE_PATH + "/treasures.txt";
     private static final String PLAYER_LIST_PATH = RESOURCE_PATH + "/players.txt";
@@ -498,7 +499,7 @@ public class ResourceLoaderUtility {
                 int mobIntellect = Integer.valueOf(mobData[4]);
 
                 if (mobNameFromDB.equals(mobName)) {
-                    if (mobName.equals(MainDriver.BOSS_MOB)) {
+                    if (mobName.equals(BOSS_MOB)) {
                         StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
                         mob = new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock);
                     } else {
@@ -536,7 +537,7 @@ public class ResourceLoaderUtility {
                 int mobDexterity = Integer.valueOf(mobData[3]);
                 int mobIntellect = Integer.valueOf(mobData[4]);
 
-                if (mobNameFromDB.equals(MainDriver.BOSS_MOB)) {
+                if (mobNameFromDB.equals(BOSS_MOB)) {
                     StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
                     mobMap.put(mobNameFromDB, new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock));
                 } else {

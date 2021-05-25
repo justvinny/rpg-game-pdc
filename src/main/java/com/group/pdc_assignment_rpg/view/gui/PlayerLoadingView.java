@@ -34,7 +34,7 @@ import java.awt.Image;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class PlayerLoadingView extends JPanel {
+public final class PlayerLoadingView extends JPanel {
 
     private static final String CREATE_PLAYER_LABEL = "- Enter Name -";
     private static final String CREATE_PLAYER_BTN = "Create Player";

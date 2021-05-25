@@ -21,7 +21,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class InventoryController {
+public final class InventoryController {
 
     private ScreenManager screenManager;
     private MainFrameView mainFrame;

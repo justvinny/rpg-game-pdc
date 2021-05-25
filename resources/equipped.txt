@@ -1,26 +1,11 @@
 Noob3,Sword of Stabbing,Bloody Chainmail
+TestA,Mighty Sword,Coarse Leather Armour
+Test1,Mighty Sword,Bloody Chainmail
 Noob2,Mighty Sword,Bloody Chainmail
 Noob1,Sword of Stabbing,Bloody Chainmail
-Ets,Broken Sword,Tattered Clothing
-Newb,Mighty Sword,Bloody Chainmail
-Vinson,Mighty Sword,Bloody Chainmail
-Greg,None,None
-Jake,None,None
-New123,Broken Sword,Tattered Clothing
-Bob,None,None
+Bob,Sky Sunderer,Divine Bulwark
 Jess,Mighty Sword,Bloody Chainmail
-Jack,Broken Sword,Tattered Clothing
-Leeroy,Sword of Stabbing,Tattered Clothing
-BobNew,Broken Sword,Tattered Clothing
-Gwapa,Broken Sword,Tattered Clothing
-123e,Broken Sword,Tattered Clothing
-Lebron,Sword of Stabbing,Coarse Leather Armour
+Vinson,Mighty Sword,Bloody Chainmail
 Dave,Sky Sunderer,Divine Bulwark
-Blah123,Broken Sword,Tattered Clothing
-Jane,None,None
-SSPslayer101,Broken Sword,Tattered Clothing
 Mac,Mighty Sword,Bloody Chainmail
-Test123,Broken Sword,Tattered Clothing
-Test1,Mighty Sword,Bloody Chainmail
-bob,None,None
-Dave',Broken Sword,Tattered Clothing
+Test2,Mighty Sword,Coarse Leather Armour

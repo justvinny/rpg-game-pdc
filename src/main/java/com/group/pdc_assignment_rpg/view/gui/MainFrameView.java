@@ -17,7 +17,7 @@ import javax.swing.JFrame;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class MainFrameView extends JFrame {
+public final class MainFrameView extends JFrame {
 
     public static final int FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.9);
     public static final int FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.9);

@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
-public class CombatController {
+public final class CombatController {
 
-    private ScreenManager screenManager;
-    private MainFrameView mainFrame;
-    private CombatView combat;
-    private GameView game;
-    private InventoryView inventory;
+    private final ScreenManager screenManager;
+    private final MainFrameView mainFrame;
+    private final CombatView combat;
+    private final GameView game;
+    private final InventoryView inventory;
 
     public CombatController() {
         screenManager = ScreenManager.getInstance();
@@ -68,10 +68,12 @@ public class CombatController {
                 if (!combatModel.getItemDropLog().isEmpty()) {
                     combatModel.getItemDropLog().forEach(i -> game.addEvent(i));
                 }
-            } else if (action == BattleSceneConstants.ESCAPE) {
+            } else if (action == BattleSceneConstants.ESCAPE
+                    && combat.getCombat().enemyEscaped()) {
                 JOptionPane.showMessageDialog(mainFrame, "Player escaped!");
                 combat.getCombat().playerEscape();
-            } else if (combat.getCombat().mobEscaped()) {
+            } else if (action != BattleSceneConstants.ESCAPE
+                    && combat.getCombat().enemyEscaped()) {
                 JOptionPane.showMessageDialog(mainFrame, "Enemy has escaped!");
             } else {
                 JOptionPane.showMessageDialog(mainFrame, "You have been defeated!");

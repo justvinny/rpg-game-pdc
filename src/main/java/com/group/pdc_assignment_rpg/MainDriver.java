@@ -1,6 +1,10 @@
 package com.group.pdc_assignment_rpg;
 
 import com.group.pdc_assignment_rpg.assets.MonsterLoader;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_ATTACK_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_DEFEND_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_ESCAPE_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.cli.*;
 import com.group.pdc_assignment_rpg.cli.BattleScene;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
@@ -43,11 +47,8 @@ public class MainDriver {
     /**
      * Constants
      */
-    public static final String BOSS_MOB = "Guardian Golem";
     public static final int GAME_PAUSE_MS = 1000;
-    public static final double BOSS_ATTACK_PERSONALITY = .7;
-    public static final double BOSS_DEFEND_PERSONALITY = .3;
-    public static final double BOSS_ESCAPE_PERSONALITY = 0;
+
 
     public static void main(String[] args) {
         initGUI();

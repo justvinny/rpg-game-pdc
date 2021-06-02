@@ -113,8 +113,6 @@ public final class Player extends Creature implements Killable {
     
     public void savePlayer() {
         ResourceLoaderUtility.writePlayerData(this);
-        ResourceLoaderUtility.writeInventoryData(this);
-        ResourceLoaderUtility.writeEquippedData(this);
     }
 
     public void resetCoordinates() {
@@ -152,9 +150,9 @@ public final class Player extends Creature implements Killable {
     private void loadDefaultEquipment() {
         // Add default items for new character.
         getInventory().addMultiple(
-                ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
-                ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
-                ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
+                ResourceLoaderUtility.createItem("Broken Sword"),
+                ResourceLoaderUtility.createItem("Tattered Clothing"),
+                ResourceLoaderUtility.createItem("Potion of Healing"));
 
         // Equip items.
         getInventory().getEquipment().put(EquipmentSlot.HAND, getInventory().getItem("Broken Sword"));

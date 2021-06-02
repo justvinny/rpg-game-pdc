@@ -16,6 +16,16 @@
             <artifactId>lanterna</artifactId>
             <version>3.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>apache.id</groupId>
+            <artifactId>derby.id</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>apache.id</groupId>
+            <artifactId>derbyclient.id</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 <repositories>
         <repository>

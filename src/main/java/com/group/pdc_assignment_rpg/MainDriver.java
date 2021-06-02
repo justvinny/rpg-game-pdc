@@ -51,6 +51,7 @@ public class MainDriver {
 
 
     public static void main(String[] args) {
+        ResourceLoaderUtility.establishMySQLConnection();
         initGUI();
 
         // To use the console version, uncomment the next lines
@@ -160,8 +161,6 @@ public class MainDriver {
         } else {
             // Saves the new player data to our database.
             ResourceLoaderUtility.writePlayerData(player);
-            ResourceLoaderUtility.writeInventoryData(player);
-            ResourceLoaderUtility.writeEquippedData(player);
             System.out.println("Creating new player...");
         }
 

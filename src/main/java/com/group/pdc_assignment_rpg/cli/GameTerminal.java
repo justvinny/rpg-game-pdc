@@ -548,7 +548,5 @@ public class GameTerminal {
      */
     private void saveCharacter() {
         ResourceLoaderUtility.writePlayerData(player);
-        ResourceLoaderUtility.writeInventoryData(player);
-        ResourceLoaderUtility.writeEquippedData(player);
     }
 }

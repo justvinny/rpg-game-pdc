@@ -1,11 +1,11 @@
-Noob3,Yellow Rock,Broken Sword,Tattered Clothing,Potion of Healing,Sword of Stabbing,Bloody Chainmail
-TestA,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Broken Sword,Tattered Clothing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Coarse Leather Armour,Mighty Sword,Mighty Sword,Sword of Stabbing,Bloody Chainmail
-Test1,Yellow Rock,Broken Sword,Tattered Clothing,Coarse Leather Armour,Mighty Sword,Sword of Stabbing,Bloody Chainmail
-Noob2,Yellow Rock,Broken Sword,Tattered Clothing,Potion of Healing,Coarse Leather Armour,Mighty Sword,Sword of Stabbing,Bloody Chainmail
-Noob1,Broken Sword,Tattered Clothing,Potion of Healing,Sword of Stabbing,Bloody Chainmail
+Noob3,Yellow Rock,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Sword of Stabbing
+TestA,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword,Mighty Sword,Coarse Leather Armour,Sword of Stabbing
+Test1,Yellow Rock,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword,Coarse Leather Armour,Sword of Stabbing
+Noob2,Yellow Rock,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword,Coarse Leather Armour,Sword of Stabbing
+Noob1,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Sword of Stabbing
 Bob,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Sky Sunderer,Sky Sunderer,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing
-Jess,Broken Sword,Tattered Clothing,Mighty Sword,Bloody Chainmail
-Vinson,Broken Sword,Tattered Clothing,Potion of Healing,Mighty Sword,Bloody Chainmail
-Dave,Yellow Rock,Sky Sunderer,Potion of Healing,Coarse Leather Armour,Bloody Chainmail,Divine Bulwark
-Mac,Broken Sword,Tattered Clothing,Potion of Healing,Mighty Sword,Bloody Chainmail
-Test2,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Broken Sword,Tattered Clothing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Coarse Leather Armour,Mighty Sword,Mighty Sword,Sword of Stabbing,Bloody Chainmail
+Jess,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword
+Vinson,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword
+Dave,Yellow Rock,Sky Sunderer,Potion of Healing,Bloody Chainmail,Divine Bulwark,Coarse Leather Armour
+Mac,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword
+Test2,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Yellow Rock,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Potion of Healing,Broken Sword,Tattered Clothing,Bloody Chainmail,Mighty Sword,Mighty Sword,Coarse Leather Armour,Sword of Stabbing

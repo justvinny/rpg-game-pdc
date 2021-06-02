@@ -18,15 +18,14 @@ import com.group.pdc_assignment_rpg.logic.items.Weapon;
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,20 +35,35 @@ import java.util.concurrent.Executors;
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class ResourceLoaderUtility {
-
+    
+    
     /**
      * Constants
      */
+    public static Connection conn;
+    private static final String URL="jdbc:derby://localhost:1527/RPGDB; create=true";
+    private static final String USERNAME="root";
+    private static final String PASSWORD="010101";
     public static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final String RESOURCE_PATH = "./resources";
-    private static final String TREASURES_PATH = RESOURCE_PATH + "/treasures.txt";
-    private static final String PLAYER_LIST_PATH = RESOURCE_PATH + "/players.txt";
-    private static final String PLAYER_INVENTORY_PATH = RESOURCE_PATH + "/player-inventories.txt";
-    private static final String ITEM_LIST_PATH = RESOURCE_PATH + "/item-list.txt";
-    private static final String EQUIPPED_ITEMS_PATH = RESOURCE_PATH + "/equipped.txt";
-    private static final String MOBS_PATH = RESOURCE_PATH + "/mobs.txt";
-    private static final String MOB_DROPS_PATH = RESOURCE_PATH + "/mob-drops.txt";
+    private static final String TREASURES_TABLE = "TREASURE";
+    private static final String PLAYER_TABLE = "PLAYER";
+    private static final String INVENTORY_TABLE = "INVENTORY";
+    private static final String ITEM_LIST_TABLE = "ITEM";
+    private static final String EQUIPPED_ITEMS_TABLE = "EQUIPMENT";
+    private static final String MOBS_TABLE = "MOB";
+    private static final String MOB_DROPS_TABLE = "MOBDROP";
 
+    public static void establishMySQLConnection()
+    {
+        try{
+            conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println(URL+" connected...");
+        }
+        catch (SQLException ex) {
+            System.err.println("Establish Connection - SQLException: " + ex.getMessage());
+        }
+    } 
     /**
      * Method to load a map from a text file depending on map name argument
      * given.Once successfully loaded, the map will be stored in a list.
@@ -116,37 +130,43 @@ public class ResourceLoaderUtility {
      * @return a list of treasures on the map.
      */
     public static List<Treasure> loadTreasures() {
-        File file = new File(TREASURES_PATH);
-
         List<Treasure> treasures = new ArrayList<>();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                // Convert the comma separated string into a treasure.
-                String[] item = line.split(",");
-                String itemName = item[0];
-                int x = Integer.valueOf(item[1]);
-                int y = Integer.valueOf(item[2]);
-                Coordinates coordinates = new Coordinates(x, y);
-
-                // Add the treasure to our list.
-                Item itemToAdd = itemLoaderFactory(itemName);
-                treasures.add(new Treasure(itemToAdd, coordinates));
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
+        Statement statement1 = null;
+        Statement statement2 = null;
+        try{
+            statement1 = conn.createStatement();
+            statement2 = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement1.executeQuery("SELECT * FROM " + TREASURES_TABLE);
+            ResultSet ms;
+            while(rs.next()){
+                ms = statement2.executeQuery("SELECT * FROM " + ITEM_LIST_TABLE + " WHERE ItemName = '" + rs.getString("ItemName") + "'");
+                if(ms.next()){
+                    treasures.add(new Treasure(createItem(ms.getString("ItemName")), new Coordinates(rs.getInt("PosX"), rs.getInt("PosY"))));
                 }
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
             }
-        }
-
+        } catch(SQLException ex){
+            System.err.println("Load Treasure - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement1!=null) {
+                try {
+                    conn.commit();
+                    statement1.close();
+                }
+                catch(SQLException ex) {
+                    System.err.println("Could not close query");
+                }
+            }
+            if(statement2!=null) {
+                try {
+                     statement2.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        
         return treasures;
     }
 
@@ -157,122 +177,151 @@ public class ResourceLoaderUtility {
      * @return
      */
     public static Player loadPlayerFromDB(String playerName) {
-        return loadAllPlayersFromDB().stream()
-                .filter(p -> p.getName().equals(playerName))
-                .findFirst()
-                .orElse(null);
-    }
+        Player player;
+        Statement statement = null;
+        try{
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + PLAYER_TABLE + " WHERE PlayerName = '" + playerName + "'");
+            if(rs.next()){
+                String name = rs.getString("PlayerName");
+                Level level = Level.valueOf(rs.getString("Level"));
+                Inventory inventory = loadPlayerInventory(playerName);
+                inventory.setEquipment(loadPlayerEquippedItems(playerName));
+                
+                int x = rs.getInt("PosX");
+                int y = rs.getInt("PosY");
+                
+                StatBlock stats = new StatBlock(   
+                        rs.getInt("PlayerStrength"),
+                        rs.getInt("PlayerDexterity"),
+                        rs.getInt("PlayerIntellect"));
+                
+                player = new Player(
+                        name,
+                        level,
+                        inventory,
+                        x,
+                        y,
+                        stats);
+            } else {
+                player = new Player(playerName);
+            }
+        } catch (SQLException ex) {
+            System.err.println("Load Player - SQLException: " + ex.getMessage());
+            player = new Player(playerName);
+        } finally{
+            if(statement!=null) {
+                try {
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        return player;
+    }   
 
-    /**
-     * Loads all the players that exist in our database.
-     *
-     * @return a list of existing players.
-     */
     public static List<Player> loadAllPlayersFromDB() {
         List<Player> players = new ArrayList<>();
-        BufferedReader bufferedReader = null;
+        Statement statement = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(PLAYER_LIST_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] playerData = line.split(",");
-                String playerName = playerData[0];
-                Level playerLevel = Level.valueOf(playerData[1]);
-
-                // Player inventory.
-                Inventory playerInventory = loadPlayerInventory(playerName);
-
-                // Equip items
-                List<String> playerEquipped = loadPlayerEquippedItems(playerName);
-
-                if (!playerEquipped.get(0).equals("None")) {
-                    playerInventory.getEquipment().put(EquipmentSlot.HAND,
-                            playerInventory.getItem(playerEquipped.get(0)));
-                }
-
-                if (!playerEquipped.get(1).equals("None")) {
-                    playerInventory.getEquipment().put(EquipmentSlot.ARMOUR,
-                            playerInventory.getItem(playerEquipped.get(1)));
-                }
-
-                // Player coordinates.
-                int playerX = Integer.valueOf(playerData[2]);
-                int playerY = Integer.valueOf(playerData[3]);
-
-                // Stat block
-                int playerStrength = Integer.valueOf(playerData[4]);
-                int playerDexterity = Integer.valueOf(playerData[5]);
-                int playerIntellect = Integer.valueOf(playerData[6]);
-                StatBlock playerStatBlock = new StatBlock(
-                        playerStrength,
-                        playerDexterity,
-                        playerIntellect);
-
-                // Make player
-                Player player = new Player(
-                        playerName,
-                        playerLevel,
-                        playerInventory,
-                        playerX,
-                        playerY,
-                        playerStatBlock);
-
-                players.add(player);
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + PLAYER_TABLE);
+            while (rs.next()) {
+                players.add(loadPlayerFromDB(rs.getString("PlayerName")));
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+        } catch (SQLException ex) {
+            System.err.println("Load All Players - SQL Exception: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
+       }
         return players;
     }
-
-    /**
-     * Checks if player exists in our database.
-     *
-     * @param name of the player we need to search.
-     * @return boolean value if there's a match or not.
-     */
-    public static boolean playerExists(String name) {
-        return loadAllPlayersFromDB().stream()
-                .anyMatch(p -> p.getName().equals(name));
+    
+    public static boolean playerExists(String playerName){
+        boolean exists = false;
+        Statement statement = null;
+        try{
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + PLAYER_TABLE + " WHERE PlayerName = '" + playerName + "'");
+            if(rs.next()){
+                exists = true;
+            }
+        } catch (SQLException ex){
+            
+        } finally{
+            if(statement!=null) {
+                try {
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        return exists;
     }
-
+    
     /**
      * Write a new player or update an existing player to our database.
      */
     public static void writePlayerData(Player player) {
-        List<Player> players = loadAllPlayersFromDB();
-
-        // Check if player already exists.
-        if (players.contains(player)) {
-            // Delete the player.
-            players.remove(player);
-        }
-
-        // Update player.
-        players.add(player);
-
-        PrintWriter printWriter = null;
-        try {
-            printWriter = new PrintWriter(new FileOutputStream(PLAYER_LIST_PATH));
-
-            for (Player p : players) {
-                printWriter.println(p.toCommaSeparatedString());
+        Statement statement = null;
+        try{
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + PLAYER_TABLE
+                    + " WHERE PlayerName = '" + player.getName() + "'");
+            if (rs.next()){ // Check if player exists
+                statement.executeUpdate("UPDATE " + PLAYER_TABLE 
+                    + " set posx = " + player.getX() 
+                    + ", posy = " + player.getY()  
+                    + ", PlayerStrength = " + player.getStats().getStrength() 
+                    + ", PlayerDexterity = " + player.getStats().getDexterity() 
+                    + ", PlayerIntellect = " + player.getStats().getIntellect() 
+                    + ", Level = '" + player.getLevel().toString()
+                    + "' WHERE PlayerName = '" + player.getName() + "'");
+            } else{
+                statement.executeUpdate("INSERT INTO " + PLAYER_TABLE + " VALUES ('" 
+                    + player.getName() 
+                    + "'," + player.getX() 
+                    + "," + player.getY()  
+                    + "," + player.getStats().getStrength() 
+                    + "," + player.getStats().getDexterity() 
+                    + "," + player.getStats().getIntellect() 
+                    + ",'" + player.getLevel().toString()
+                    + "')");
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (printWriter != null) {
-                printWriter.close();
+                writeInventoryData(player);
+                writeEquippedData(player);
+            
+        } catch (SQLException ex) {
+            System.err.println("Write Player - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
+                try {
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
             }
-        }
+       }
     }
 
     /**
@@ -281,25 +330,32 @@ public class ResourceLoaderUtility {
      * @param player the player who we wish to write the inventory data for.
      */
     public static void writeInventoryData(Player player) {
-        Map<String, Inventory> inventories = loadAllPlayerInventories();
-
-        PrintWriter printWriter = null;
+        List<Item> inventory = player.getInventory().getAllItems();
+        Statement statement = null;
         try {
-            printWriter = new PrintWriter(new FileOutputStream(PLAYER_INVENTORY_PATH));
-
-            // Update inventory of player.
-            inventories.put(player.getName(), player.getInventory());
-
-            for (String playerName : inventories.keySet()) {
-                printWriter.println(inventories.get(playerName).toCommaSeparatedString(playerName));
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + INVENTORY_TABLE + " WHERE PlayerName = '" + player.getName() + "'");
+            if (rs.next()){
+                statement.executeUpdate("DELETE FROM " + INVENTORY_TABLE + " WHERE PlayerName ='" + player.getName() + "'");
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (printWriter != null) {
-                printWriter.close();
+            for (Item item : inventory){
+                int amount = player.getInventory().getAmount(item);
+                statement.executeUpdate("INSERT INTO " + INVENTORY_TABLE + " VALUES('" + player.getName() + "','" + item.getName() + "', " + amount + ")");   System.out.println(amount);
             }
-        }
+        } catch(SQLException ex){
+            System.err.println("Write Inventory - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
+                try {
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
     }
 
     /**
@@ -310,43 +366,45 @@ public class ResourceLoaderUtility {
      * @return an Inventory of the player.
      */
     public static Inventory loadPlayerInventory(String playerName) {
-        return Objects.requireNonNull(loadAllPlayerInventories().get(playerName));
-    }
-
-    /**
-     * Loads all the inventories in the database.
-     *
-     * @return all the player inventories.
-     */
-    public static Map<String, Inventory> loadAllPlayerInventories() {
-        Map<String, Inventory> inventories = new HashMap<>();
-        BufferedReader bufferedReader = null;
+        Inventory inventory = new Inventory();
+        Statement statement1 = null;
+        Statement statement2 = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(PLAYER_INVENTORY_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] inventoryData = line.split(",");
-                String playerNameDB = inventoryData[0];
-
-                Inventory inventory = new Inventory();
-                for (int i = 1; i < inventoryData.length; i++) {
-                    inventory.add(itemLoaderFactory(inventoryData[i]));
-                }
-
-                inventories.put(playerNameDB, inventory);
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+            statement1 = conn.createStatement();
+            statement2 = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement1.executeQuery("SELECT * FROM " + INVENTORY_TABLE + " WHERE PlayerName = '" + playerName + "'");
+            ResultSet ms;
+            if(rs.next()){
+                do {
+                    ms = statement2.executeQuery("SELECT * FROM " + ITEM_LIST_TABLE + " WHERE ItemName = '" + rs.getString("ItemName") + "'");
+                    if(ms.next()){
+                        inventory.add(createItem(ms.getString("ItemName")), rs.getInt("Quantity"));
+                    }
+                } while(rs.next());
+            } 
+        } catch (SQLException ex) {
+            System.err.println("Load Inventory - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement1!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement1.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
-        return inventories;
+            if(statement2!=null) {
+                try {
+                     statement2.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        return inventory;
     }
 
     /**
@@ -355,31 +413,38 @@ public class ResourceLoaderUtility {
      * @param player the player who we wish to write the inventory data for.
      */
     public static void writeEquippedData(Player player) {
-        Map<String, List<String>> equippedItems = loadAllPlayerEquippedItems();
-
-        PrintWriter printWriter = null;
+        EnumMap <EquipmentSlot, Item> equipment = player.getInventory().getEquipment();
+        Statement statement = null;
         try {
-            printWriter = new PrintWriter(new FileOutputStream(EQUIPPED_ITEMS_PATH));
-
-            // Update equpped items of player
-            equippedItems.put(player.getName(), new ArrayList<>());
-            equippedItems.get(player.getName()).add(player.getWeaponName());
-            equippedItems.get(player.getName()).add(player.getArmourName());
-
-            for (String playerName : equippedItems.keySet()) {
-                List<String> equippedItemsPlayer = equippedItems.get(playerName);
-                String weapon = equippedItemsPlayer.get(0);
-                String armour = equippedItemsPlayer.get(1);
-                printWriter.println(String.format("%s,%s,%s",
-                        playerName, weapon, armour));
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + EQUIPPED_ITEMS_TABLE + " WHERE PlayerName = '" + player.getName() + "'");
+            if(rs.next()){
+                statement.executeUpdate("DELETE FROM " + EQUIPPED_ITEMS_TABLE + " WHERE PlayerName ='" + player.getName() + "'");
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (printWriter != null) {
-                printWriter.close();
+            if(equipment.get(EquipmentSlot.HAND) != null){
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','hand', '" + equipment.get(EquipmentSlot.HAND).getName() + "')");            
+            } else {
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','hand', " + null + ")");            
             }
-        }
+            if(equipment.get(EquipmentSlot.ARMOUR) != null){
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','armour', '" + equipment.get(EquipmentSlot.ARMOUR).getName() + "')"); 
+            } else {
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','armour'," + null + ")");            
+            }
+        } catch(SQLException ex) {
+            System.err.println("Write Equipment - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
+                try {
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
     }
 
     /**
@@ -388,94 +453,84 @@ public class ResourceLoaderUtility {
      * @param playerName name of the player used to query the DB.
      * @return a list of the equipped items of the player.
      */
-    public static List<String> loadPlayerEquippedItems(String playerName) {
-        return Objects.requireNonNull(loadAllPlayerEquippedItems().get(playerName));
-    }
-
-    /**
-     * Loads all the equipped items for players from the database.
-     *
-     * @return all the player equipped items.
-     */
-    public static Map<String, List<String>> loadAllPlayerEquippedItems() {
-        Map<String, List<String>> equipped = new HashMap<>();
-        BufferedReader bufferedReader = null;
+    public static EnumMap<EquipmentSlot, Item> loadPlayerEquippedItems(String playerName) {
+        EnumMap<EquipmentSlot, Item> equipment = new EnumMap(EquipmentSlot.class);
+        Statement statement1 = null;
+        Statement statement2 = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(EQUIPPED_ITEMS_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] equippedData = line.split(",");
-                String playerNameDB = equippedData[0];
+            statement1 = conn.createStatement();
+            statement2 = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet hand = statement1.executeQuery("SELECT * FROM " + EQUIPPED_ITEMS_TABLE + " WHERE PlayerName = '" + playerName + "' AND ItemSlot = 'hand'");
+            ResultSet body = statement2.executeQuery("SELECT * FROM " + EQUIPPED_ITEMS_TABLE + " WHERE PlayerName = '" + playerName + "' AND ItemSlot = 'body'");
 
-                equipped.put(playerNameDB, new ArrayList<>());
-                equipped.get(playerNameDB).add(equippedData[1]);
-                equipped.get(playerNameDB).add(equippedData[2]);
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+            if(hand.next()){
+                if(!hand.getString("ItemName").equals("None")){
+                    equipment.put(EquipmentSlot.HAND, createItem(hand.getString("ItemName")));
+                }
+            } 
+            if(body.next()){
+                if(!body.getString("ItemName").equals("None")){
+                    equipment.put(EquipmentSlot.ARMOUR, createItem(body.getString("ItemName")));
                 }
             }
-        }
-        return equipped;
+        } catch (SQLException ex) {
+            System.err.println("Load Equipment - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement1!=null) {
+                try {
+                    conn.commit();
+                    statement1.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+            if(statement2!=null) {
+                try {
+                    conn.commit();
+                    statement2.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        return equipment;
     }
 
-    /**
-     * Factory method to generate items of different types based on our
-     * item-list database which uses the item name as the key.
-     *
-     * @param itemName name of the item.
-     * @return an item that can either be a weapon, armour, consumable, etc.
-     */
-    public static Item itemLoaderFactory(String itemName) {
+    public static Item createItem(String name){
         Item item = null;
-        BufferedReader bufferedReader = null;
+        Statement statement = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(ITEM_LIST_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] itemData = line.split(",");
-                String itemNameDB = itemData[0];
-                ItemList itemType = ItemList.valueOf(itemData[1].toUpperCase());
-
-                // Create an item depending on type.
-                if (itemNameDB.equals(itemName)) {
-                    switch (itemType) {
-                        case ARMOUR:
-                            int protection = Integer.valueOf(itemData[2]);
-                            item = new Armour(itemNameDB, itemType, protection);
-                            break;
-                        case RED_POTION:
-                            int healing = Integer.valueOf(itemData[2]);
-                            item = new ConsumableItem(itemNameDB, itemType, healing);
-                            break;
-                        case SWORD:
-                        case HANDAXE:
-                        case SPEAR:
-                            int damage = Integer.valueOf(itemData[2]);
-                            item = new Weapon(itemNameDB, itemType, damage);
-                            break;
-                        default:
-                            item = new Item(itemNameDB, itemType);
-                    }
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + ITEM_LIST_TABLE + " WHERE ItemName = '" + name + "'");
+            if(rs.next()){
+                String itemname = rs.getString("ItemName");
+                ItemList itemtype = ItemList.valueOf(rs.getString("ItemType").toUpperCase());
+                int power = rs.getInt("Power");
+                switch(itemtype){
+                    case SWORD: item = new Weapon(itemname, itemtype, power); return item;
+                    case HANDAXE: item = new Weapon(itemname, itemtype, power); return item;
+                    case ARMOUR: item = new Armour(itemname, itemtype, power); return item;
+                    case RED_POTION: item = new ConsumableItem(itemname, itemtype, power); return item;
+                    default: item = new Item(itemname, itemtype); return item;
                 }
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+        } catch (SQLException ex){
+            System.err.println("Create Item - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
+       }
         return item;
     }
 
@@ -486,76 +541,63 @@ public class ResourceLoaderUtility {
      */
     public static Mob loadMobFromDB(String mobName) {
         Mob mob = null;
-        BufferedReader bufferedReader = null;
+        Statement statement = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(MOBS_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] mobData = line.split(",");
-                String mobNameFromDB = mobData[0];
-                int mobLevel = Integer.valueOf(mobData[1]);
-                int mobStrength = Integer.valueOf(mobData[2]);
-                int mobDexterity = Integer.valueOf(mobData[3]);
-                int mobIntellect = Integer.valueOf(mobData[4]);
-
-                if (mobNameFromDB.equals(mobName)) {
-                    if (mobName.equals(BOSS_MOB)) {
-                        StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
-                        mob = new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock);
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + MOBS_TABLE + " WHERE MobName = '" + mobName + "'");
+            if(rs.next()){
+                StatBlock stats = new StatBlock(rs.getInt("MobStrength"), rs.getInt("MobDexterity"), rs.getInt("MobIntellect"));
+                String name = rs.getString("MobName");
+                Level level = Level.valueOf("L" + rs.getString("MobLevel"));
+                if (mobName.equals(BOSS_MOB)) {
+                        mob = new Mob(name, 'B', level.getLvl(), 86, 2, stats);
                     } else {
-                        StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
-                        mob = new Mob(mobNameFromDB, 'R', mobLevel, statBlock);
+                        mob = new Mob(name, 'R', level.getLvl(), stats);
                     }
-                }
+                
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+        } catch (SQLException ex){
+            System.err.println("Load Mob - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
+       }
+       
         return mob;
     }
-
+    
     public static Map<String, Mob> loadAllMobs() {
         Map<String, Mob> mobMap = new HashMap<>();
-
-        BufferedReader bufferedReader = null;
+        Statement statement = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(MOBS_PATH));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] mobData = line.split(",");
-                String mobNameFromDB = mobData[0];
-                int mobLevel = Integer.valueOf(mobData[1]);
-                int mobStrength = Integer.valueOf(mobData[2]);
-                int mobDexterity = Integer.valueOf(mobData[3]);
-                int mobIntellect = Integer.valueOf(mobData[4]);
-
-                if (mobNameFromDB.equals(BOSS_MOB)) {
-                    StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
-                    mobMap.put(mobNameFromDB, new Mob(mobNameFromDB, 'B', mobLevel, 86, 2, statBlock));
-                } else {
-                    StatBlock statBlock = new StatBlock(mobStrength, mobDexterity, mobIntellect);
-                    mobMap.put(mobNameFromDB, new Mob(mobNameFromDB, 'R', mobLevel, statBlock));
-                }
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + MOBS_TABLE);
+            while (rs.next()) {
+                Mob mob = loadMobFromDB(rs.getString("MobName"));
+                mobMap.put(rs.getString("MobName"), mob);
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+        } catch (SQLException ex) {
+            System.err.println("Load All Mobs - SQL Exception: " + ex.getMessage());
+        } finally{
+            if(statement!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
+       }
         return mobMap;
     }
 
@@ -567,40 +609,46 @@ public class ResourceLoaderUtility {
      * @return items that the player will get.
      */
     public static Inventory loadMobDrops(String mobName) {
-        BufferedReader bufferedReader = null;
         Inventory inventory = new Inventory();
-
+        Statement statement1 = null;
+        Statement statement2 = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(MOB_DROPS_PATH));
-
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] inventoryData = line.split(",");
-                String mobNameDB = inventoryData[0];
-
-                if (mobNameDB.equals(mobName)) {
-                    // Add possible drops to inventory.
-                    for (int i = 1; i < inventoryData.length; i += 2) {
-                        String itemName = inventoryData[i];
-                        Item item = itemLoaderFactory(itemName);
-                        int dropRate = Integer.valueOf(inventoryData[i + 1]);
-                        item.setDropRate(dropRate);
-                        inventory.add(item);
-                    }
+            statement1 = conn.createStatement();
+            statement2 = conn.createStatement();
+            conn.setAutoCommit(false);
+            ResultSet rs = statement1.executeQuery("SELECT * FROM " + MOB_DROPS_TABLE + " WHERE MobName = '" + mobName + "'");
+            ResultSet ms;
+            while(rs.next()){
+                ms = statement2.executeQuery("SELECT * FROM " + ITEM_LIST_TABLE + " WHERE ItemName = '" + rs.getString("ItemName") + "'");
+                if (ms.next()){
+                    Item item = createItem(ms.getString("ItemName"));
+                    item.setDropRate(rs.getInt("Probability"));
+                    inventory.add(item);
                 }
             }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } finally {
-            if (bufferedReader != null) {
+        } catch (SQLException ex) {
+            System.err.println("Load Drops - SQLException: " + ex.getMessage());
+        } finally{
+            if(statement1!=null) {
                 try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
+                    conn.commit();
+                    statement1.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
                 }
             }
-        }
-
+            if(statement2!=null) {
+                try {
+                    conn.commit();
+                    statement2.close();
+                }
+                catch(SQLException ex) {
+                      System.err.println("Could not close query");
+                }
+            }
+       }
+        
         return inventory;
     }
 }

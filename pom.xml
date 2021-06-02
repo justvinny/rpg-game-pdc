@@ -17,15 +17,16 @@
             <version>3.1.1</version>
         </dependency>
         <dependency>
-            <groupId>apache.id</groupId>
-            <artifactId>derby.id</artifactId>
-            <version>1.0</version>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.14.2.0</version>
         </dependency>
         <dependency>
-            <groupId>apache.id</groupId>
-            <artifactId>derbyclient.id</artifactId>
-            <version>1.0</version>
-        </dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>10.14.2.0</version>
+        </dependency>     
+
     </dependencies>
 <repositories>
         <repository>

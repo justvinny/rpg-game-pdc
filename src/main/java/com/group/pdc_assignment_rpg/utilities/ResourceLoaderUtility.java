@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Utility class to for loading game maps from text files.
@@ -40,8 +41,8 @@ public class ResourceLoaderUtility {
     /**
      * Constants
      */
-    public static Connection conn;
-    private static final String URL="jdbc:derby://localhost:1527/RPGDB; create=true";
+    public static Connection conn = null;
+    private static final String URL="jdbc:derby://localhost:1527/RPGDB;create=true";
     private static final String USERNAME="root";
     private static final String PASSWORD="010101";
     public static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(1);
@@ -53,8 +54,8 @@ public class ResourceLoaderUtility {
     private static final String EQUIPPED_ITEMS_TABLE = "EQUIPMENT";
     private static final String MOBS_TABLE = "MOB";
     private static final String MOB_DROPS_TABLE = "MOBDROP";
-
-    public static void establishMySQLConnection()
+    
+    public static void establishConnection()
     {
         try{
             conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);

@@ -51,7 +51,7 @@ public class MainDriver {
 
 
     public static void main(String[] args) {
-        ResourceLoaderUtility.establishMySQLConnection();
+        ResourceLoaderUtility.establishConnection();
         initGUI();
 
         // To use the console version, uncomment the next lines

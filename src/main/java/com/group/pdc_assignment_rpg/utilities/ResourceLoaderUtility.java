@@ -43,7 +43,7 @@ public class ResourceLoaderUtility {
      */
     public static Connection conn = null;
     private static final String URL="jdbc:derby://localhost:1527/RPGDB;create=true";
-    private static final String USERNAME="root";
+    private static final String USERNAME="APP";
     private static final String PASSWORD="010101";
     public static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final String RESOURCE_PATH = "./resources";
@@ -342,7 +342,7 @@ public class ResourceLoaderUtility {
             }
             for (Item item : inventory){
                 int amount = player.getInventory().getAmount(item);
-                statement.executeUpdate("INSERT INTO " + INVENTORY_TABLE + " VALUES('" + player.getName() + "','" + item.getName() + "', " + amount + ")");   System.out.println(amount);
+                statement.executeUpdate("INSERT INTO " + INVENTORY_TABLE + " VALUES('" + player.getName() + "','" + item.getName() + "', " + amount + ")");
             }
         } catch(SQLException ex){
             System.err.println("Write Inventory - SQLException: " + ex.getMessage());

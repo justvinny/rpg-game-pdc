@@ -194,6 +194,8 @@ public abstract class Creature extends Entity {
             this.consumables.put(CStats.HEALTH, hp);
         } else if (hp > this.getMaxHP()) {
             this.consumables.put(CStats.HEALTH, this.getMaxHP());
+        } else if (hp < 0) {
+            this.consumables.put(CStats.HEALTH, 0);
         }
     }
 

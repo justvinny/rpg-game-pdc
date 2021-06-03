@@ -4,7 +4,6 @@ import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.entities.Mob;
-
 import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * Utility class to for loading game maps from text files.
@@ -42,7 +40,7 @@ public class ResourceLoaderUtility {
      * Constants
      */
     public static Connection conn = null;
-    private static final String URL="jdbc:derby://localhost:1527/RPGDB;create=true";
+    private static final String URL="jdbc:derby:RPGDB;create=true";
     private static final String USERNAME="APP";
     private static final String PASSWORD="010101";
     public static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(1);
@@ -160,10 +158,11 @@ public class ResourceLoaderUtility {
             }
             if(statement2!=null) {
                 try {
-                     statement2.close();
+                    conn.commit();
+                    statement2.close();
                 }
                 catch(SQLException ex) {
-                      System.err.println("Could not close query");
+                    System.err.println("Could not close query");
                 }
             }
        }

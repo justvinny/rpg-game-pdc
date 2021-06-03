@@ -2,13 +2,12 @@ package com.group.pdc_assignment_rpg.logic.items;
 
 import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
 import com.group.pdc_assignment_rpg.logic.entities.Player;
-import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Where a creature's inventory is stored, holds item and equipment that are
- * used during gameplay.
+ * used during gameplay. I
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  * @author Macauley Cunningham - 19072621 <macalite@flashgiver.com>
@@ -139,11 +138,13 @@ public final class Inventory {
                     inventory.put(item, inventory.get(item) + 1);
                 }
 
-        if (inventory.size() <= capacity) {
-            if (inventory.containsKey(item)) {
-                inventory.put(item, inventory.get(item) + 1);
-            } else {
-                inventory.put(item, 1);
+                if (inventory.size() <= capacity) {
+                    if (inventory.containsKey(item)) {
+                        inventory.put(item, inventory.get(item) + 1);
+                    } else {
+                        inventory.put(item, 1);
+                    }
+                }
             }
         }
     }
@@ -156,19 +157,21 @@ public final class Inventory {
                     inventory.put(item, inventory.get(item) + amount);
                 }
 
-        if (inventory.size() <= capacity) {
-            if (item != null && amount > 0) {
-                inventory.put(item, amount);
+                if (inventory.size() <= capacity) {
+                    if (item != null && amount > 0) {
+                        inventory.put(item, amount);
+                    }
+                }
             }
         }
     }
-
-    /**
-     * Input should be any number of Items, only able to add one of each at a
-     * time
-     *
-     * @param items
-     */
+    
+            /**
+             * Input should be any number of Items, only able to add one of each
+             * at a time
+             *
+             * @param items
+             */
     public void addMultiple(Item... items) {
         for (int i = 0; i < items.length; i++) {
             this.add(items[i]);

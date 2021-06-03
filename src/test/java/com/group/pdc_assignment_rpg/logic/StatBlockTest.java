@@ -1,12 +1,11 @@
 package com.group.pdc_assignment_rpg.logic;
 
-import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Thu Jun 03 14:01:30 NZST 2021:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0179-cf9a-abbe-00001de261c8 
-on database directory C:\Users\Macauley\Documents\School\2021\PDC\rpg-game-pdc\rpg-game-pdc\RPGDB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/Macauley/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_281-b09
-user.dir=C:\Users\Macauley\Documents\School\2021\PDC\rpg-game-pdc\rpg-game-pdc
+Thu Jun 03 20:31:25 NZST 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0179-d0ff-a58f-00000713c398 
+on database directory C:\Users\Owner\Documents\NetBeansProjects\rpg-game-pdc\RPGDB with class loader sun.misc.Launcher$AppClassLoader@4e0e2f2a 
+Loaded from file:/C:/Users/Owner/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=AdoptOpenJDK
+java.runtime.version=1.8.0_252-b09
+user.dir=C:\Users\Owner\Documents\NetBeansProjects\rpg-game-pdc
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

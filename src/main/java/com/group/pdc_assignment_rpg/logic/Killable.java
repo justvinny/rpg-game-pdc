@@ -6,5 +6,5 @@ package com.group.pdc_assignment_rpg.logic;
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  */
 public interface Killable {
-    public void die();
+    public void kill();
 }

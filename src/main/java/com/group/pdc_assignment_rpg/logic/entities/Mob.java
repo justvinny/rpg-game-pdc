@@ -2,6 +2,7 @@ package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
+import com.group.pdc_assignment_rpg.logic.CStats;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
@@ -51,6 +52,12 @@ public final class Mob extends Creature {
         populatePersonality(0.75, 0.2, 0.05);
     }
 
+    public Mob(String name, char symbol, int level, StatBlock statBlock, Inventory inventory) {
+        super(name, 1, 1, symbol, TextColor.ANSI.RED, statBlock, inventory, Level.createLvl(level));
+        this.personality = new EnumMap<BattleSceneConstants, Double>(BattleSceneConstants.class);
+        populatePersonality(0.75, 0.2, 0.05);
+    }
+
     /*
      * Constructor for creating a new mob for the first time. Takes only a name
      * and sets everything else to default values.
@@ -95,18 +102,10 @@ public final class Mob extends Creature {
      * Getter methods
      *
      */
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
     public List<Item> getLoot() {
         return getInventory().getAllItems();
     }
-    
+
     public Map<BattleSceneConstants, Double> getPersonality() {
         return personality;
     }
@@ -122,6 +121,11 @@ public final class Mob extends Creature {
      */
     public void setPersonality(Map<BattleSceneConstants, Double> personality) {
         this.personality = personality;
+    }
+    
+    public void setMaxHP(int hp) {
+        this.getStats().getConsumables().put(CStats.HEALTH, hp);
+        this.setHP(hp);
     }
 
     /**
@@ -155,4 +159,7 @@ public final class Mob extends Creature {
         return choice;
     }
 
+    public Mob cloneMob() {
+        return new Mob(getName(), getSymbol(), getLevel().getLvl(), getStats(), getInventory());
+    }
 }

@@ -539,8 +539,7 @@ public class GameTerminal {
      */
     private void bossDied() {
         if (boss.getHP() <= 0) {
-            boss.setX(1);
-            boss.setY(1);
+            boss.getCoordinates().setCoordinates(1, 1);
         }
     }
     
@@ -549,7 +548,5 @@ public class GameTerminal {
      */
     private void saveCharacter() {
         ResourceLoaderUtility.writePlayerData(player);
-        ResourceLoaderUtility.writeInventoryData(player);
-        ResourceLoaderUtility.writeEquippedData(player);
     }
 }

@@ -19,6 +19,7 @@ import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 public final class Player extends Creature implements Killable {
     
     private static Player currentPlayer = null;
+    private int nSteps;
 
     /*
      * Constructor for creating a new player for the first time. Takes only a
@@ -28,6 +29,7 @@ public final class Player extends Creature implements Killable {
         super(name, 5, 23, 'P', TextColor.ANSI.BLUE, new StatBlock(), new Inventory(), Level.L1);
         this.setXP(0);
         this.loadDefaultEquipment();
+        nSteps = 0;
     }
 
     /*
@@ -42,6 +44,7 @@ public final class Player extends Creature implements Killable {
         } else {
             this.setXP(0);
         }
+        nSteps = 0;
     }
 
     /*
@@ -59,6 +62,10 @@ public final class Player extends Creature implements Killable {
         if (getXP() >= getLevel().getThreshold()) {
             levelUp();
         }
+    }
+    
+    public int getSteps() {
+        return nSteps;
     }
 
     /**
@@ -96,12 +103,22 @@ public final class Player extends Creature implements Killable {
      * Utility methods
      *
      */
+    public void increaseStep() {
+        nSteps++;
+    }
+    
+    public void resetSteps() {
+        nSteps = 0;
+    }
+    
     public void savePlayer() {
         ResourceLoaderUtility.writePlayerData(this);
-        ResourceLoaderUtility.writeInventoryData(this);
-        ResourceLoaderUtility.writeEquippedData(this);
     }
 
+    public void resetCoordinates() {
+        getCoordinates().setCoordinates(5, 23);
+    }
+    
     public void die() {
         // TODO: Add stuff here
     }
@@ -133,9 +150,9 @@ public final class Player extends Creature implements Killable {
     private void loadDefaultEquipment() {
         // Add default items for new character.
         getInventory().addMultiple(
-                ResourceLoaderUtility.itemLoaderFactory("Broken Sword"),
-                ResourceLoaderUtility.itemLoaderFactory("Tattered Clothing"),
-                ResourceLoaderUtility.itemLoaderFactory("Potion of Healing"));
+                ResourceLoaderUtility.createItem("Broken Sword"),
+                ResourceLoaderUtility.createItem("Tattered Clothing"),
+                ResourceLoaderUtility.createItem("Potion of Healing"));
 
         // Equip items.
         getInventory().getEquipment().put(EquipmentSlot.HAND, getInventory().getItem("Broken Sword"));
@@ -150,7 +167,7 @@ public final class Player extends Creature implements Killable {
      */
     public String toCommaSeparatedString() {
         return String.format("%s,%s,%d,%d,%d,%,d,%d",
-                getName(), getLevel(), x, y, getStats().getStrength(),
+                getName(), getLevel(), getX(), getY(), getStats().getStrength(),
                 getStats().getDexterity(), getStats().getIntellect());
     }
 
@@ -164,6 +181,7 @@ public final class Player extends Creature implements Killable {
     public static Player loadPlayerFactory(String playerName) {
         return ResourceLoaderUtility.loadPlayerFromDB(playerName);
     }
+    
     
     public static void setPlayerInstance(Player player) {
         if (currentPlayer == null) {

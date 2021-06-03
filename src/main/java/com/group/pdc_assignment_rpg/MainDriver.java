@@ -1,5 +1,10 @@
 package com.group.pdc_assignment_rpg;
 
+import com.group.pdc_assignment_rpg.assets.MonsterLoader;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_ATTACK_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_DEFEND_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_ESCAPE_PERSONALITY;
+import static com.group.pdc_assignment_rpg.assets.MonsterLoader.BOSS_MOB;
 import com.group.pdc_assignment_rpg.cli.*;
 import com.group.pdc_assignment_rpg.cli.BattleScene;
 import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
@@ -20,17 +25,17 @@ import com.group.pdc_assignment_rpg.exceptions.InvalidMapException;
 import com.group.pdc_assignment_rpg.logic.entities.PlayerListModel;
 import com.group.pdc_assignment_rpg.logic.items.Treasure;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
+import com.group.pdc_assignment_rpg.view.gui.CombatController;
 import com.group.pdc_assignment_rpg.view.gui.GameController;
 import com.group.pdc_assignment_rpg.view.gui.InventoryController;
 import com.group.pdc_assignment_rpg.view.gui.MainFrameController;
 import com.group.pdc_assignment_rpg.view.gui.MainFrameView;
 import com.group.pdc_assignment_rpg.view.gui.PlayerLoadingController;
 import com.group.pdc_assignment_rpg.view.gui.ScreenManager;
+import com.group.pdc_assignment_rpg.view.gui.ScreenManagerConstants;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Entry point to the RPG game.
@@ -42,13 +47,11 @@ public class MainDriver {
     /**
      * Constants
      */
-    public static final String BOSS_MOB = "Goblin King";
     public static final int GAME_PAUSE_MS = 1000;
-    public static final double BOSS_ATTACK_PERSONALITY = .7;
-    public static final double BOSS_DEFEND_PERSONALITY = .3;
-    public static final double BOSS_ESCAPE_PERSONALITY = 0;
+
 
     public static void main(String[] args) {
+        ResourceLoaderUtility.establishConnection();
         initGUI();
 
         // To use the console version, uncomment the next lines
@@ -64,25 +67,32 @@ public class MainDriver {
         // Player list
         PlayerListModel playerListModel = new PlayerListModel();
 
-        // GUI
-        // Screen manager singleton used for switching between screens.
-        ScreenManager screenManager = ScreenManager.getInstance();
-        screenManager.getPlayerLoading().setPlayerListModel(playerListModel.getPlayerList());
+        // Init monster loader.
+        MonsterLoader.initMonsterLoader();
+        
+        // Treasure list
+        List<Treasure> treasures = ResourceLoaderUtility.loadTreasures();
 
+        // GUI
         // Main frame that will contain all our screns
         MainFrameView mainFrame = new MainFrameView();
-        MainFrameController mainFrameController = new MainFrameController(mainFrame);
         
+        // Screen manager singleton used for switching between screens.
+        ScreenManager.initScreenManager(mainFrame);
+        ScreenManager screenManager = ScreenManager.getInstance();
+        screenManager.getPlayerLoading().setPlayerListModel(playerListModel.getPlayerList());
+        screenManager.setCurrentScreen(ScreenManagerConstants.PLAYER_LOADING); // First Screen
+
         // Controllers for different screens from the ScreenManager.
-        PlayerLoadingController playerLoadingController
-                = new PlayerLoadingController(
-                        mainFrame,
-                        screenManager.getPlayerLoading(),
-                        playerListModel);
-        
-        GameController gameController = new GameController(mainFrame);
-        
-        InventoryController inventoryController = new InventoryController(mainFrame);
+        // Note. All controllers have access to the view thanks to the
+        // ScreenManager so none of them need a reference passed of the
+        // views to their constructors.
+        MainFrameController mainFrameController = new MainFrameController(treasures);
+        PlayerLoadingController playerLoadingController = 
+                new PlayerLoadingController(playerListModel, treasures);
+        GameController gameController = new GameController();
+        InventoryController inventoryController = new InventoryController();
+        CombatController combaController = new CombatController();
     }
 
     private static void initConsole() throws InvalidMapException {
@@ -151,8 +161,6 @@ public class MainDriver {
         } else {
             // Saves the new player data to our database.
             ResourceLoaderUtility.writePlayerData(player);
-            ResourceLoaderUtility.writeInventoryData(player);
-            ResourceLoaderUtility.writeEquippedData(player);
             System.out.println("Creating new player...");
         }
 

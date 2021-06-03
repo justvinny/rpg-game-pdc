@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.logic.entities;
 import java.util.*;
 import com.googlecode.lanterna.TextColor;
 import com.group.pdc_assignment_rpg.logic.CStats;
+import com.group.pdc_assignment_rpg.logic.Killable;
 import com.group.pdc_assignment_rpg.logic.items.Inventory;
 import com.group.pdc_assignment_rpg.logic.StatBlock;
 import com.group.pdc_assignment_rpg.logic.Stats;
@@ -21,13 +22,13 @@ import com.group.pdc_assignment_rpg.logic.character.Level;
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 @SuppressWarnings("OverridableMethodCallInConstructor")
-public abstract class Creature extends Entity {
+public abstract class Creature extends Entity implements Killable {
 
     private StatBlock stats;
     private String name;
     private Map<CStats, Integer> consumables;
     private Inventory inventory;
-    private boolean defending;
+    private boolean defending, alive;
     private int damage, protection;
     private Level level;
     protected int xp;
@@ -46,6 +47,7 @@ public abstract class Creature extends Entity {
         this.setWP(wp);
         this.setDefending(false);
         this.setLevel(level);
+        alive = true;
     }
 
     /*
@@ -61,6 +63,7 @@ public abstract class Creature extends Entity {
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
         this.setLevel(level);
+        alive = true;
     }
     
     /*
@@ -77,6 +80,7 @@ public abstract class Creature extends Entity {
         this.setSP(getMaxSP());
         this.setWP(getMaxWP());
         this.setLevel(Level.L1);
+        alive = true;
     }
 
     /*
@@ -131,6 +135,10 @@ public abstract class Creature extends Entity {
         return this.defending;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
+    
     public Level getLevel() {
         return level;
     }
@@ -167,6 +175,10 @@ public abstract class Creature extends Entity {
 
     public String getArmourName() {
         return (isArmourEquipped()) ? inventory.getEquipment().get(EquipmentSlot.ARMOUR).getName() : "None";
+    }
+    
+    public String getBattleStatusText() {
+        return " " + name + " HP: " + getHP() + " / " + getMaxHP();
     }
 
     /*
@@ -248,6 +260,11 @@ public abstract class Creature extends Entity {
         this.xp += xp;
     }
 
+    @Override
+    public void kill() {
+        alive = false;
+    }
+    
     /**
      * Utility methods
      *
@@ -280,6 +297,10 @@ public abstract class Creature extends Entity {
      * @param amount is the amount of HP to heal.
      */
     public void heal(int amount) throws IllegalArgumentException {
+        if (getHP() == getMaxHP()) {
+            throw new IllegalArgumentException("Already full HP.");
+        }
+        
         // Validate that heal amount is positive and the creature isn't already on their maxHP
         if (amount > 0 && getHP() < getMaxHP()) {
             // Check if the heal amount will cause hp to exceed maxHP

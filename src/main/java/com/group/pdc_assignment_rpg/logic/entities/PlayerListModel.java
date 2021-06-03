@@ -24,6 +24,10 @@ public class PlayerListModel extends CustomObservable {
 
     public PlayerListModel() {
         super();
+        setPlayerList();
+    }
+
+    private void setPlayerList() {
         playerList = ResourceLoaderUtility.loadAllPlayersFromDB();
     }
 
@@ -45,8 +49,6 @@ public class PlayerListModel extends CustomObservable {
     public void add(Player player) {
         if (!playerList.contains(player)) {
             ResourceLoaderUtility.writePlayerData(player);
-            ResourceLoaderUtility.writeInventoryData(player);
-            ResourceLoaderUtility.writeEquippedData(player);
             playerList.add(player);
             notifyObservers();
         }

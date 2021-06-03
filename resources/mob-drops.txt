@@ -1,4 +1,4 @@
-Goblin King,Sky Sunderer,10,Divine Bulwark,10,Yellow Rock,90
-Red Slime,Potion of Healing,50,Yellow Rock,90
-Red Goblin,Bloody Chainmail,40,Yellow Rock,90
-Red Bandit,Mighty Sword,40,Yellow Rock,90
+Guardian Golem,Sky Sunderer,10,Divine Bulwark,10,Yellow Rock,90
+Slime,Potion of Healing,50,Yellow Rock,90
+Ghoul,Bloody Chainmail,40,Yellow Rock,90
+Executioner,Mighty Sword,40,Yellow Rock,90

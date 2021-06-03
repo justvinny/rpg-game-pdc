@@ -4,7 +4,6 @@ import com.group.pdc_assignment_rpg.cli.BattleSceneConstants;
 import java.util.Random;
 import com.group.pdc_assignment_rpg.logic.entities.*;
 import com.group.pdc_assignment_rpg.logic.items.Item;
-import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +15,13 @@ import java.util.List;
  */
 public class Combat {
 
+    private static int nStepsToCombat = (int) (Math.random() * 25) + 61;
+
     final float DEFENSEBONUS = 1.5f;
 
     private final Player player;
     private final Mob mob;
-    private final List<String> battleLog;
+    private final List<String> battleLog, itemDropLog;
     private Combatant currentTurn;
     private boolean fighting;
 
@@ -29,6 +30,7 @@ public class Combat {
         this.mob = mob;
         this.fighting = true;
         this.battleLog = new ArrayList<>();
+        this.itemDropLog = new ArrayList<>();
 
         setFirstTurn();
     }
@@ -49,6 +51,18 @@ public class Combat {
         }
 
         return battleLog;
+    }
+
+    public List<String> getFullLog() {
+        return battleLog;
+    }
+
+    public String getLastLog() {
+        return battleLog.get(battleLog.size() - 1);
+    }
+
+    public List<String> getItemDropLog() {
+        return itemDropLog;
     }
 
     /*
@@ -147,6 +161,30 @@ public class Combat {
             boolean downed = target.damage(damage);
 
             if (downed) {
+                target.kill();
+                // Get the mob's loot if the dead target is a mob.
+                if (target instanceof Mob) {
+                    List<Item> allLoot = ((Mob) target).getLoot();
+                    List<Item> lootGained = new ArrayList<>();
+
+                    for (Item item : allLoot) {
+                        // Calculate if we should include the drop to the inventory
+                        // using the drop rate percentage.
+                        boolean isObtained = ((int) (Math.random() * 101)) <= item.getDropRate();
+
+                        // Add the item if the calculation makes it obtainable.
+                        if (isObtained) {
+                            player.getInventory().add(item);
+                            lootGained.add(item);
+                        }
+                    }
+
+                    if (!allLoot.isEmpty()) {
+                        itemDropLog.add("Obtained " + lootGained.toString());
+                        battleLog.add("Obtained " + lootGained.toString());
+
+                    }
+                }
                 battleLog.add(target.getName() + " was defeated by "
                         + initiator.getName() + "!");
                 battleLog.add(initiator.getName() + " gained " + target.getXP()
@@ -154,15 +192,6 @@ public class Combat {
                 initiator.addXP(target.getXP());
                 target.setDefending(false);
 
-                // Get the mob's loot if the dead target is a mob.
-                if (target instanceof Mob) {
-                    List<Item> loot = ((Mob) target).getLoot();
-                    loot.forEach(item -> initiator.getInventory().add(item));
-
-                    if (!loot.isEmpty()) {
-                        battleLog.add("Obtained " + loot.toString());
-                    }
-                }
                 return false;
             }
         } else {
@@ -207,6 +236,37 @@ public class Combat {
         }
     }
 
+    public boolean playerWon() {
+        return player.getHP() > 0 && mob.getHP() <= 0;
+    }
+
+    public void playerEscape() {
+        switch (player.getDirection()) {
+            case UP:
+                player.down();
+                break;
+            case DOWN:
+                player.up();
+                break;
+            case RIGHT:
+                player.left();
+                break;
+            case LEFT:
+                player.right();
+        }
+    }
+
+    public boolean enemyEscaped() {
+        boolean hasEscaped = !isFighting() && player.getHP() > 0 && mob.getHP() > 0;
+        
+        // Enemy has escaped
+        if (hasEscaped && currentTurn == Combatant.PLAYER) {
+            mob.setCoordinates(-99, -99);
+        }
+        
+        return hasEscaped;
+    }
+
     private void playerTurn(BattleSceneConstants choice) {
         if (fighting) {
             fighting = runAction(choice, player, mob);
@@ -223,22 +283,11 @@ public class Combat {
         }
     }
 
-    public static void main(String[] args) {
-        // Dummy player.
-        Player player = ResourceLoaderUtility.loadPlayerFromDB("Bob");
+    public static int getNStepsToCombat() {
+        return nStepsToCombat;
+    }
 
-        // Dummy mob.
-        Mob mob = new Mob("Red Slime");
-
-        Combat combat = new Combat(player, mob);
-
-        while (true) {
-            combat.battle(BattleSceneConstants.ATTACK);
-            System.out.println("Bob: " + player.getHP() + " Mob: " + mob.getHP());
-
-            if (player.getHP() <= 0 || mob.getHP() <= 0) {
-                break;
-            }
-        }
+    public static void resetNStepsToCombat() {
+        nStepsToCombat = (int) (Math.random() * 25) + 61;
     }
 }

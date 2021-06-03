@@ -81,7 +81,7 @@ public final class Inventory {
     public String[] getAllItemNames() {
         return getAllItems()
                 .stream()
-                .map(Item::getName)
+                .map(i -> String.format("x%d - %s", inventory.get(i), i.getName()))
                 .toArray(String[]::new);
     }
 
@@ -132,22 +132,33 @@ public final class Inventory {
      * @param item is the item to add to the inventory.
      */
     public void add(Item item) {
+
         if (inventory.size() < capacity) {
             if (item != null) {
                 if (inventory.put(item, 1) == null) {
                     inventory.put(item, inventory.get(item) + 1);
                 }
-            }
 
+        if (inventory.size() <= capacity) {
+            if (inventory.containsKey(item)) {
+                inventory.put(item, inventory.get(item) + 1);
+            } else {
+                inventory.put(item, 1);
+            }
         }
     }
 
     public void add(Item item, int amount) {
+
         if (inventory.size() < capacity) {
             if (item != null) {
                 if (inventory.put(item, amount) == null) {
                     inventory.put(item, inventory.get(item) + amount);
                 }
+
+        if (inventory.size() <= capacity) {
+            if (item != null && amount > 0) {
+                inventory.put(item, amount);
             }
         }
     }
@@ -198,7 +209,7 @@ public final class Inventory {
                 unequip(item);
                 return false;
             }
-            
+
             if (item instanceof Armour) {
                 this.setEquip(EquipmentSlot.ARMOUR, item);
                 return true;
@@ -242,16 +253,27 @@ public final class Inventory {
 
     public void drop(Item item) {
         unequip(item); // Unequip item to drop if necessary.
-        remove(item);
+
+        if (item != null) {
+            if (inventory.get(item) > 1) {
+                inventory.put(item, inventory.get(item) - 1);
+            } else {
+                remove(item);
+            }
+        }
     }
-    
-    public void use(Player player, Item item) {
+
+    public void use(Player player, Item item) throws IllegalArgumentException {
         if (item instanceof EquippableItem) {
             equip(item);
         } else if (item instanceof ConsumableItem) {
             player.heal(((ConsumableItem) item).getSpecialValue());
-            remove(item);
-        } 
+            if (inventory.get(item) > 1) {
+                inventory.put(item, inventory.get(item) - 1);
+            } else {
+                remove(item);
+            }
+        }
     }
 
     /**
@@ -270,22 +292,13 @@ public final class Inventory {
 
         // Add all items in inventory to builder.
         for (Item item : inventory.keySet()) {
-            inventoryBuilder.append(item.getName());
-            inventoryBuilder.append(",");
+            for (int i = 0; i < inventory.get(item); i++) {
+                inventoryBuilder.append(item.getName());
+                inventoryBuilder.append(",");
+            }
         }
         // Delete last comma.
         inventoryBuilder.deleteCharAt(inventoryBuilder.length() - 1);
         return inventoryBuilder.toString();
-    }
-
-    /**
-     * Alternate way to initialise a inventory. This is particularly used for
-     * loading inventory data from the database.
-     *
-     * @param playerName data loaded from database
-     * @return an inventory object based on the data loaded.
-     */
-    public static Inventory loadInventory(String playerName) {
-        return ResourceLoaderUtility.loadPlayerInventory(playerName);
     }
 }

@@ -55,7 +55,15 @@ public class Coordinates {
     public int getY() {
         return y;
     }
-
+    
+    /*
+     * Setters
+     */
+    public void setCoordinates(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    
     /*
      * Movement in a 2d plane by manipulating x and y values.
      */
@@ -74,4 +82,40 @@ public class Coordinates {
     public void decrementY() {
         y -= yStep;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.x;
+        hash = 97 * hash + this.y;
+        hash = 97 * hash + this.xStep;
+        hash = 97 * hash + this.yStep;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Coordinates other = (Coordinates) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        if (this.xStep != other.xStep) {
+            return false;
+        }
+        return this.yStep == other.yStep;
+    }
+    
+    
 }

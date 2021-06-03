@@ -1,9 +1,5 @@
 package com.group.pdc_assignment_rpg.logic.navigation;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,25 +8,6 @@ import static org.junit.Assert.*;
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
  */
 public class NavigationTest {
-    
-    public NavigationTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of up method, of class Navigation.

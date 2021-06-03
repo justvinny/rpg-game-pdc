@@ -1,10 +1,5 @@
 package com.group.pdc_assignment_rpg.logic.items;
 
-import com.group.pdc_assignment_rpg.logic.entities.EquipmentSlot;
-import com.group.pdc_assignment_rpg.logic.entities.Player;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

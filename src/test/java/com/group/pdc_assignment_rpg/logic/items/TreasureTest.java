@@ -1,10 +1,6 @@
 package com.group.pdc_assignment_rpg.logic.items;
 
 import com.group.pdc_assignment_rpg.logic.navigation.Coordinates;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,25 +10,6 @@ import static org.junit.Assert.*;
  */
 public class TreasureTest {
     
-    public TreasureTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of open method, of class Treasure.
      */

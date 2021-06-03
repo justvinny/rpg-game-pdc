@@ -5,17 +5,7 @@
  */
 package com.group.pdc_assignment_rpg.logic.entities;
 
-import com.group.pdc_assignment_rpg.logic.CStats;
-import com.group.pdc_assignment_rpg.logic.StatBlock;
-import com.group.pdc_assignment_rpg.logic.Stats;
-import com.group.pdc_assignment_rpg.logic.character.Level;
-import com.group.pdc_assignment_rpg.logic.items.Inventory;
-import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static org.junit.Assert.*;
 
 /**
@@ -24,30 +14,12 @@ import static org.junit.Assert.*;
  */
 public class CreatureTest {
     
-    public CreatureTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test damage() method.
      */
     @org.junit.Test
     public void testDamage() {
+        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         
@@ -73,6 +45,7 @@ public class CreatureTest {
      */
     @org.junit.Test
     public void testSetHP() {
+        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         
@@ -115,6 +88,7 @@ public class CreatureTest {
      */
     @org.junit.Test
     public void testSetName() {
+        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         
@@ -136,5 +110,5 @@ public class CreatureTest {
         }
         
     }
-    
+   
 }

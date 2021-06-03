@@ -22,7 +22,15 @@ import javax.swing.SwingUtilities;
  */
 public final class PlayerLoadingController implements CustomObserver {
 
-    private static final String KEYS_AVAILABLE_MSG = "Keys Available:\nEnter - Open Treasures\nI - Open Inventory\nEsc - Exit and Save Game";
+    private static final String GAME_MESSAGE = "Hi! Welcome to our RPG Game!\nGameplay:\n"
+            + "- There are 5 treasures chests that can be found.\n"
+            + "- You can heal  your HP by leveling up or using Potions.\n"
+            + "- Battles are random except for the boss monster.\n"
+            + "- Boss monster can be found near the north east corner of the map.\n"
+            + "- You can save the game by pressing the Exit button on the bottom right corner.\n"
+            + "- Game exits and saves when you die and you'll be sent back to the entrance.\n\n";
+    private static final String KEYS_AVAILABLE_MSG = "Keys Available:\nUse Arrows Keys for Movement\n"
+            + "Enter - Open Treasures\nI - Open Inventory\nEsc - Exit and Save Game";
     private final ScreenManager screenManager;
     private final MainFrameView mainFrame;
     private final PlayerLoadingView playerLoading;
@@ -91,7 +99,7 @@ public final class PlayerLoadingController implements CustomObserver {
                     ScreenManager.getInstance().getInventory().setPlayer(player);
                     ScreenManager.getInstance().getInventory().updateInventoryData();
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
-                    JOptionPane.showMessageDialog(mainFrame, KEYS_AVAILABLE_MSG);
+                    JOptionPane.showMessageDialog(mainFrame, GAME_MESSAGE + KEYS_AVAILABLE_MSG);
                     mainFrame.requestFocusInWindow();
 
                     // TODO: hook up game logic when game map is finished.

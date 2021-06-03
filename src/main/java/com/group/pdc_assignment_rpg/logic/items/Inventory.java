@@ -134,15 +134,11 @@ public final class Inventory {
 
         if (inventory.size() < capacity) {
             if (item != null) {
-                if (inventory.put(item, 1) == null) {
-                    inventory.put(item, inventory.get(item) + 1);
-                }
-
                 if (inventory.size() <= capacity) {
-                    if (inventory.containsKey(item)) {
-                        inventory.put(item, inventory.get(item) + 1);
-                    } else {
+                    if (!inventory.containsKey(item)) {
                         inventory.put(item, 1);
+                    } else {
+                        inventory.put(item, inventory.get(item) + 1);
                     }
                 }
             }
@@ -158,20 +154,20 @@ public final class Inventory {
                 }
 
                 if (inventory.size() <= capacity) {
-                    if (item != null && amount > 0) {
+                    if (amount > 0) {
                         inventory.put(item, amount);
                     }
                 }
             }
         }
     }
-    
-            /**
-             * Input should be any number of Items, only able to add one of each
-             * at a time
-             *
-             * @param items
-             */
+
+    /**
+     * Input should be any number of Items, only able to add one of each at a
+     * time
+     *
+     * @param items
+     */
     public void addMultiple(Item... items) {
         for (int i = 0; i < items.length; i++) {
             this.add(items[i]);

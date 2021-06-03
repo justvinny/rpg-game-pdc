@@ -57,7 +57,6 @@ public class ResourceLoaderUtility {
     {
         try{
             conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println(URL+" connected...");
         }
         catch (SQLException ex) {
             System.err.println("Establish Connection - SQLException: " + ex.getMessage());
@@ -397,7 +396,8 @@ public class ResourceLoaderUtility {
             }
             if(statement2!=null) {
                 try {
-                     statement2.close();
+                    conn.commit();
+                    statement2.close();
                 }
                 catch(SQLException ex) {
                       System.err.println("Could not close query");
@@ -428,9 +428,9 @@ public class ResourceLoaderUtility {
                 statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','hand', " + null + ")");            
             }
             if(equipment.get(EquipmentSlot.ARMOUR) != null){
-                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','armour', '" + equipment.get(EquipmentSlot.ARMOUR).getName() + "')"); 
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','body', '" + equipment.get(EquipmentSlot.ARMOUR).getName() + "')"); 
             } else {
-                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','armour'," + null + ")");            
+                statement.executeUpdate("INSERT INTO " + EQUIPPED_ITEMS_TABLE + " VALUES('" + player.getName() + "','body'," + null + ")");            
             }
         } catch(SQLException ex) {
             System.err.println("Write Equipment - SQLException: " + ex.getMessage());
@@ -465,12 +465,12 @@ public class ResourceLoaderUtility {
             ResultSet body = statement2.executeQuery("SELECT * FROM " + EQUIPPED_ITEMS_TABLE + " WHERE PlayerName = '" + playerName + "' AND ItemSlot = 'body'");
 
             if(hand.next()){
-                if(!hand.getString("ItemName").equals("None")){
+                if(hand.getString("ItemName") != null){
                     equipment.put(EquipmentSlot.HAND, createItem(hand.getString("ItemName")));
                 }
             } 
             if(body.next()){
-                if(!body.getString("ItemName").equals("None")){
+                if(body.getString("ItemName") != null){
                     equipment.put(EquipmentSlot.ARMOUR, createItem(body.getString("ItemName")));
                 }
             }

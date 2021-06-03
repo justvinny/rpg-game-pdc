@@ -12,3 +12,9 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=C:\Users\Macauley\Documents\School\2021\PDC\rpg-game-pdc\rpg-game-pdc\databases
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Jun 03 13:18:05 NZST 2021: Shutting down Derby engine
+----------------------------------------------------------------
+Thu Jun 03 13:18:05 NZST 2021:
+Shutting down instance a816c00e-0179-cf08-739d-ffffabd0294a on database directory C:\Users\Macauley\Documents\School\2021\PDC\rpg-game-pdc\rpg-game-pdc\databases\RPGDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@4e0e2f2a 
+----------------------------------------------------------------

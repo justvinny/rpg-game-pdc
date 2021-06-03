@@ -132,6 +132,13 @@ public final class Inventory {
      * @param item is the item to add to the inventory.
      */
     public void add(Item item) {
+
+        if (inventory.size() < capacity) {
+            if (item != null) {
+                if (inventory.put(item, 1) == null) {
+                    inventory.put(item, inventory.get(item) + 1);
+                }
+
         if (inventory.size() <= capacity) {
             if (inventory.containsKey(item)) {
                 inventory.put(item, inventory.get(item) + 1);
@@ -142,6 +149,13 @@ public final class Inventory {
     }
 
     public void add(Item item, int amount) {
+
+        if (inventory.size() < capacity) {
+            if (item != null) {
+                if (inventory.put(item, amount) == null) {
+                    inventory.put(item, inventory.get(item) + amount);
+                }
+
         if (inventory.size() <= capacity) {
             if (item != null && amount > 0) {
                 inventory.put(item, amount);

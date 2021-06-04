@@ -34,15 +34,19 @@ import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
 /**
+ * UI View for the combat/battles in the RPG game where the user can fight 
+ * monsters through commands such as Attack, Defend, and Escape.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class CombatView extends JPanel {
 
+    /*
+        Constants
+     */
     private static final String ATTACK_BTN = "Attack";
     private static final String DEFEND_BTN = "Defend";
     private static final String ESCAPE_BTN = "Escape";
-
     private static final Dimension COMMAND_BOX_DIMS
             = new Dimension((int) (FRAME_WIDTH * .25), (int) (FRAME_HEIGHT * .25));
     private static final Dimension STATUS_BOX_DIMS
@@ -51,6 +55,9 @@ public final class CombatView extends JPanel {
     private static final Dimension MOB_SPRITE_DIMS = new Dimension(TILE_WIDTH * 2, TILE_HEIGHT * 2);
     private static final Dimension BOSS_SPRITE_DIMS = new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 3);
 
+    /*
+        Fields
+     */
     private SpringLayout layout, commandPanelLayout;
     private JPanel panelCommand;
     private JLabel labelPlayer, labelMonster;
@@ -59,11 +66,13 @@ public final class CombatView extends JPanel {
     private JScrollPane scrollBatteLog;
     private PlayerBattleSprite playerSprite;
     private MobBattleSprite mobSprite;
-
     private Player player;
     private Mob mob;
     private Combat combat;
 
+    /*
+        Constructor
+     */
     public CombatView() {
         this.player = new Player("Placeholder");
         this.mob = new Mob("Placeholder");
@@ -83,6 +92,9 @@ public final class CombatView extends JPanel {
         setSpringLayoutConstraints();
     }
 
+    /**
+     * JPanel settings go here.
+     */
     private void panelSettings() {
         setBackground(BG_COLOR);
 
@@ -90,6 +102,9 @@ public final class CombatView extends JPanel {
         setLayout(layout);
     }
 
+    /**
+     * Initialises JComponents for the Player and Enemy Status Bars.
+     */
     private void setStatusBars() {
         labelPlayer = new JLabel();
         labelPlayer.setPreferredSize(STATUS_BOX_DIMS);
@@ -109,6 +124,10 @@ public final class CombatView extends JPanel {
         add(labelMonster);
     }
 
+    /**
+     * Initialises the combat images of the player and mob that inherits from
+     * JComponent.
+     */
     private void setBattleSprites() {
         playerSprite = new PlayerBattleSprite();
         playerSprite.setPreferredSize(PLAYER_SPRITE_DIMS);
@@ -120,6 +139,10 @@ public final class CombatView extends JPanel {
         add(mobSprite);
     }
 
+    /**
+     * Initialises the JComponents for the combat events: Attack, Defend, and
+     * Escape.
+     */
     private void setCommandBox() {
         // Panel
         commandPanelLayout = new SpringLayout();
@@ -154,6 +177,11 @@ public final class CombatView extends JPanel {
         add(panelCommand);
     }
 
+    /**
+     * Initialsies the battle log JComponents that tells the player what 
+     * is happening in the battle such as who is attacking and for how 
+     * much damage.
+     */
     private void setBattleLogBox() {
         txtAreaBattleLog = new JTextArea(" Battle Log");
         txtAreaBattleLog.setOpaque(false);
@@ -171,6 +199,9 @@ public final class CombatView extends JPanel {
         add(scrollBatteLog);
     }
 
+    /**
+     * Spring Layout constraints to position our Components.
+     */
     private void setSpringLayoutConstraints() {
         // Status bar for player
         layout.putConstraint(SpringLayout.WEST, labelPlayer, DEFAULT_MARGIN, SpringLayout.WEST, this);
@@ -214,10 +245,19 @@ public final class CombatView extends JPanel {
         commandPanelLayout.putConstraint(SpringLayout.NORTH, btnEscape, 0, SpringLayout.SOUTH, btnDefend);
     }
 
+    /**
+     * Getter for combat instance
+     * @return 
+     */
     public Combat getCombat() {
         return combat;
     }
 
+    /**
+     * Set the combatants for this specific battle. 
+     * @param player
+     * @param mob 
+     */
     public void setCombatants(Player player, Mob mob) {
         this.player = player;
         this.mob = mob;
@@ -229,6 +269,11 @@ public final class CombatView extends JPanel {
         revalidate();
     }
 
+    /**
+     * Set the mob sprite being show in the combat scene depending on the 
+     * monster encountered.
+     * @param mob 
+     */
     public void setMobSprite(Mob mob) {
         this.mobSprite.setMobName(mob.getName());
 
@@ -239,16 +284,29 @@ public final class CombatView extends JPanel {
         }
     }
 
+    /**
+     * Interact with combat model to simulate battles.
+     * @param action
+     * @return 
+     */
     public boolean battle(BattleSceneConstants action) {
         combat.battle(action);
         return combat.isFighting();
     }
 
+    /**
+     * Used for updating the status bars in response to events happening
+     * in the battle.
+     */
     public void updateStatusBars() {
         this.labelPlayer.setText(player.getBattleStatusText());
         this.labelMonster.setText(mob.getBattleStatusText());
     }
 
+    /**
+     * Updates the battle log UI to display the latest text event from
+     * the battle.
+     */
     public void updateBattleLog() {
         StringBuilder builder = new StringBuilder();
         builder.append(" Battle Log\n");
@@ -257,6 +315,10 @@ public final class CombatView extends JPanel {
         txtAreaBattleLog.setText(builder.toString());
     }
 
+    /*
+        Add event listeners to JComponents that will be used by the Controller
+        class.
+    */
     public void addBtnAttackListener(ActionListener actionListener) {
         btnAttack.addActionListener(actionListener);
     }
@@ -269,6 +331,9 @@ public final class CombatView extends JPanel {
         btnEscape.addActionListener(actionListener);
     }
 
+    /**
+     * Private class to display the player sprite as a JComponent.
+     */
     private class PlayerBattleSprite extends JComponent {
 
         public PlayerBattleSprite() {
@@ -283,6 +348,9 @@ public final class CombatView extends JPanel {
         }
     }
 
+    /**
+     * Private class to display a monster sprite as JComponent.
+     */
     private class MobBattleSprite extends JComponent {
 
         private String mobName;

@@ -15,11 +15,15 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
+ * Singleton class to used to hold all our image assets that will be used in the game.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class ImageLoader {
 
+    /*
+        Constants
+    */
     private static final String WALL_TILE_PATH = "./resources/images/cave_wall_tile.png";
     private static final String CHARACTER_STATIC_PATH = "./resources/images/character_battle.png";
     private static final String CHARACTER_SHEET_PATH = "./resources/images/character_sprite_sheet.png";
@@ -33,11 +37,18 @@ public class ImageLoader {
     private static final String EXECUTIONER_STATIC_PATH = "./resources/images/executioner_battle.png";
     private static final String SLIME_STATIC_PATH = "./resources/images/slime_battle.png";
     private static ImageLoader instance = null;
+    
+    /*
+        Fields
+    */
     private Image wallTile, openTreasure, closedTreasure, loadingBG, bossDead,
             characterStatic, ghoulStatic, golemStatic, slimeStatic, executionerStatic;
     private BufferedImage characterUp, characterDown, characterLeft, characterRight, bossIdle;
     private int nPlayerSheet, nBossSheet;
 
+    /*
+        Private constructor
+    */
     private ImageLoader() {
         setWallTile();
         setTreasure();
@@ -47,6 +58,9 @@ public class ImageLoader {
         setStaticMonsters();
     }
 
+    /*
+        Setters
+    */
     private void setWallTile() {
         ImageIcon icon = new ImageIcon(WALL_TILE_PATH);
         wallTile = icon.getImage();
@@ -115,6 +129,9 @@ public class ImageLoader {
         nPlayerSheet++;
     }
 
+    /*
+        Methods used for animation.
+    */
     public void resetPlayerSheetNum() {
         nPlayerSheet = 1;
     }
@@ -127,6 +144,9 @@ public class ImageLoader {
         nBossSheet++;
     }
 
+    /*
+        Getters
+    */
     public Image getWallTile() {
         return wallTile;
     }
@@ -170,7 +190,12 @@ public class ImageLoader {
     public BufferedImage getBossIdle() {
         return bossIdle.getSubimage(nBossSheet * 100, 0, 100, 100);
     }
-
+    
+    /**
+     * Get a mob image based on mob name given.
+     * @param mobName
+     * @return 
+     */
     public Image getMob(String mobName) {
         switch (mobName) {
             case "Ghoul":
@@ -186,6 +211,10 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * Get singleton instance.
+     * @return instance.
+     */
     public static ImageLoader getInstance() {
         if (instance == null) {
             instance = new ImageLoader();

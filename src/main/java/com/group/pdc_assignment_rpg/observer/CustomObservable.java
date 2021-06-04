@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * An observable abstract class used for objects that have values that other
+ * objects may be interested in.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public abstract class CustomObservable {

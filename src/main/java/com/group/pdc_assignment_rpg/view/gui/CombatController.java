@@ -13,24 +13,47 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Controller class for the Combat View that handles the events in combat such
+ * as attacking, defending, and escaping.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class CombatController {
 
+    /*
+        Fields
+     */
     private final ScreenManager screenManager;
     private final MainFrameView mainFrame;
     private final CombatView combat;
     private final GameView game;
     private final InventoryView inventory;
 
+    /*
+        Constructor
+     */
     public CombatController() {
         screenManager = ScreenManager.getInstance();
         mainFrame = screenManager.getMainFrameView();
         combat = screenManager.getCombat();
         game = screenManager.getGame();
         inventory = screenManager.getInventory();
+        initListeners();
+    }
+    
+    /**
+     * Initialises the listeners that interact with the Combat View.
+     */
+    private void initListeners() {
+        initBtnAttackListener();
+        initBtnDefendListener();
+        initBtnEscapeListener();
+    }
 
+    /**
+     * Handles attack event logic in combat.
+     */
+    private void initBtnAttackListener() {
         combat.addBtnAttackListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,14 +61,24 @@ public final class CombatController {
 
             }
         });
+    }
 
+    /**
+     * Handles defend event logic in combat.
+     */
+    private void initBtnDefendListener() {
         combat.addBtnDefendListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 battle(BattleSceneConstants.DEFEND);
             }
         });
+    }
 
+    /**
+     * Handles escape event logic in combat.
+     */
+    private void initBtnEscapeListener() {
         combat.addBtnEscapeListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,6 +87,11 @@ public final class CombatController {
         });
     }
 
+    /**
+     * Helper method for all combat actions that contains responses the combat
+     * events.
+     * @param action 
+     */
     private void battle(BattleSceneConstants action) {
         boolean keepFighting = combat.battle(action);
         combat.updateStatusBars();
@@ -81,6 +119,8 @@ public final class CombatController {
                 Player.getCurrentPlayer().savePlayer();
                 screenManager.closeGame();
             }
+            
+            // Update Views.
             game.addEvent(combatModel.getLastLog());
             game.updatePlayerInformation();
             inventory.updateInventoryData();

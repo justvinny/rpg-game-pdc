@@ -28,28 +28,38 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
+ * UI View for the main game where the map, player HUD, and interface buttons 
+ * are located.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class GameView extends JLayeredPane {
 
+    /*
+        Cosntants
+    */
     private static final String INSPECT_BTN = "[ Enter ] - Inspect";
     private static final String INVENTORY_BTN = "[ I ] - Inventory";
     private static final String EXIT_BTN = "[ Esc ] - Exit";
     private static final Font PLAYER_INFO_FONT = new Font("Impact", Font.BOLD, 18);
     private static final Dimension EVENT_LIST_DIMS = new Dimension((int) (FRAME_WIDTH * .4), 100);
 
+    /*
+        Fields
+    */
     private SpringLayout layout;
     private JLabel labelPlayerInfo;
     private MapView gameMapContainer;
     private JButton btnInventory, btnExit;
     private JTextArea txtAreaEventList;
     private JScrollPane scrollEventList;
-
     private final List<String> eventList;
     private Player player;
     private List<Treasure> treasures;
 
+    /*
+        Constructor
+    */
     public GameView() {
         player = new Player("Placeholder");
         treasures = ResourceLoaderUtility.loadTreasures();
@@ -61,6 +71,9 @@ public final class GameView extends JLayeredPane {
         setSpringLayoutConstraints();
     }
 
+    /**
+     * JPanel settings go here.
+     */
     private void panelSettings() {
         setBackground(Color.WHITE);
 
@@ -69,7 +82,9 @@ public final class GameView extends JLayeredPane {
         setLayout(layout);
     }
 
-    // Game map panel
+    /**
+     * Initialise the JComponent that contains the animated game map.
+     */
     private void createGameMapContainer() {
         gameMapContainer = new MapView(treasures);
 
@@ -78,7 +93,10 @@ public final class GameView extends JLayeredPane {
         add(gameMapContainer, new Integer(0));
     }
 
-    // Player HUD at bottom of game view.
+    /**
+     * Initialises the JComponent that contains the Player HUD elements
+     * such Name, Level, HP, Exp, etc.
+     */
     private void createPlayerHUD() {
         // Player info
         labelPlayerInfo = new JLabel();
@@ -105,6 +123,11 @@ public final class GameView extends JLayeredPane {
         add(btnExit, new Integer(1));
     }
 
+    /**
+     * Initialise the JComponents needed to display the event log shown on the
+     * lower left side of the game screen. All the game events such picking up
+     * a treasure or winning in combat gets shown here.
+     */
     private void createEventList() {
         txtAreaEventList = new JTextArea();
         txtAreaEventList.setOpaque(false);
@@ -123,7 +146,10 @@ public final class GameView extends JLayeredPane {
         add(scrollEventList, new Integer(1));
     }
 
-    // constraints
+    /**
+     * Spring Layout constraints that allow us to position our JComponents on the
+     * JPanel.
+     */
     private void setSpringLayoutConstraints() {
         // Game map panel
         layout.putConstraint(SpringLayout.WEST, gameMapContainer, 0, SpringLayout.WEST, this);
@@ -149,6 +175,11 @@ public final class GameView extends JLayeredPane {
 
     }
 
+    /**
+     * Updates the player information show on the player HUD. Usually gets called
+     * in response to events like having less HP from battle or having more EXP
+     * from winning a battle.
+     */
     public void updatePlayerInformation() {
         String playerInfo = String.format("Name: %s | Lv. %s | HP %d / %d | Exp: %d / %d",
                 player.getName(),
@@ -160,12 +191,21 @@ public final class GameView extends JLayeredPane {
         labelPlayerInfo.setText(playerInfo);
     }
 
+    /**
+     * Sets the player model being used in this instance of the game.
+     * @param player 
+     */
     public void setPlayer(Player player) {
         this.player = player;
         updatePlayerInformation();
         gameMapContainer.setPlayerCamera(player);
     }
 
+    /**
+     * Adds a string message to the event log when an event happens on the
+     * map such as picking up treasures.
+     * @param event 
+     */
     public void addEvent(String event) {
         StringBuilder builder = new StringBuilder();
         eventList.add(event);
@@ -174,11 +214,19 @@ public final class GameView extends JLayeredPane {
         txtAreaEventList.setText(builder.toString());
     }
 
+    /**
+     * Sets the location of the treasures on the map.
+     * @param treasures 
+     */
     public void setTreasures(List<Treasure> treasures) {
         this.treasures = treasures;
         gameMapContainer.setTreasures(treasures);
     }
 
+    /*
+     * Event listeners for JComponents that will be used by its Controller.
+     *
+     */
     public void addBtnInventoryListener(ActionListener actionListener) {
         btnInventory.addActionListener(actionListener);
     }
@@ -187,6 +235,10 @@ public final class GameView extends JLayeredPane {
         btnExit.addActionListener(actionListener);
     }
 
+    /**
+     * Get a string representation of the current map.
+     * @return text formatted map.
+     */
     public MapView getMapView() {
         return gameMapContainer;
     }

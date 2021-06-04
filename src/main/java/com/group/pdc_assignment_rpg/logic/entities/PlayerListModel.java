@@ -15,37 +15,62 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
+ * Observable player list model that contains all the players in the database.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class PlayerListModel extends CustomObservable {
 
+    /*
+        Fields
+    */
     private List<Player> playerList;
 
+    /*
+        Constructor
+    */
     public PlayerListModel() {
         super();
         setPlayerList();
     }
 
+    /**
+     * Load the player list from the database.
+     */
     private void setPlayerList() {
         playerList = ResourceLoaderUtility.loadAllPlayersFromDB();
     }
 
+    /**
+     * Add an object interested in observing this class.
+     * @param observer 
+     */
     @Override
     public void addObserver(CustomObserver observer) {
         observers.add(observer);
     }
 
+    /**
+     * Removes an observer.
+     * @param observer 
+     */
     @Override
     public void removeObserver(CustomObserver observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Notifies all observers that there has been a change in the model.
+     */
     @Override
     public void notifyObservers() {
         observers.forEach(o -> o.update());
     }
 
+    /**
+     * Adds a new player to the database.
+     * @param player 
+     */
     public void add(Player player) {
         if (!playerList.contains(player)) {
             ResourceLoaderUtility.writePlayerData(player);
@@ -54,6 +79,11 @@ public class PlayerListModel extends CustomObservable {
         }
     }
 
+    /**
+     * Gets a player from the list based on the player name given.
+     * @param name
+     * @return 
+     */
     public Player get(String name) {
         Player player = playerList
                 .stream()
@@ -63,6 +93,10 @@ public class PlayerListModel extends CustomObservable {
         return Objects.requireNonNull(player, "Can't load null player");
     }
 
+    /**
+     * Gets a list of all the players in the database.
+     * @return 
+     */
     public List<Player> getPlayerList() {
         return playerList
                 .stream()
@@ -70,6 +104,11 @@ public class PlayerListModel extends CustomObservable {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Checks if a given player name exists in the database.
+     * @param name
+     * @return 
+     */
     public boolean playerExists(String name) {
         return playerList
                 .stream()

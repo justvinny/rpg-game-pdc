@@ -18,22 +18,50 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
+ * Controller class that handles the events for the Inventory View.
+ * Events such as updating the inventory list, using an item, dropping an item, 
+ * closing the inventory, and exiting the game.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class InventoryController {
 
+    /*
+        Fields
+     */
     private ScreenManager screenManager;
     private MainFrameView mainFrame;
     private InventoryView inventoryView;
     private GameView game;
 
+    /*
+        Constructor
+     */
     public InventoryController() {
         screenManager = ScreenManager.getInstance();
         mainFrame = screenManager.getMainFrameView();
         inventoryView = screenManager.getInventory();
         game = screenManager.getGame();
 
+        initListeners();
+    }
+
+    /*
+        Initialise listeners
+    */
+    private void initListeners() {
+        initInventoryListListener();
+        initBtnDropListener();
+        initBtnUseListener();
+        initBtnCloseInventoryListener();
+        initBtnExitListener();
+    }
+
+    /**
+     * Initialises the inventory list listener that allows user to select an
+     * item and interact with it.
+     */
+    private void initInventoryListListener() {
         // JList listener item selection
         inventoryView.addInventoryListSelectionListener(new ListSelectionListener() {
 
@@ -61,8 +89,30 @@ public final class InventoryController {
                 }
             }
         });
+    }
 
-        // button listeners.
+    /**
+     * Initialise the listener for the drop button to drop the item currently
+     * being selected in the inventory.
+     */
+    private void initBtnDropListener() {
+        inventoryView.addBtnDropListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Item item = inventoryView.getItemSelected();
+                inventoryView.getInventory().drop(item);
+                inventoryView.updateInventoryData();
+                inventoryView.clearItemDetails();
+                mainFrame.requestFocusInWindow();
+            }
+        });
+    }
+
+    /**
+     * Initialise the listener for the use button to use or equip items being currently
+     * selected.
+     */
+    private void initBtnUseListener() {
         inventoryView.addBtnUseListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,18 +128,13 @@ public final class InventoryController {
                 mainFrame.requestFocusInWindow();
             }
         });
+    }
 
-        inventoryView.addBtnDropListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Item item = inventoryView.getItemSelected();
-                inventoryView.getInventory().drop(item);
-                inventoryView.updateInventoryData();
-                inventoryView.clearItemDetails();
-                mainFrame.requestFocusInWindow();
-            }
-        });
-
+    /**
+     * Initialise the close inventory button listener to close the inventory
+     * and get back to the main game.
+     */
+    private void initBtnCloseInventoryListener() {
         inventoryView.addBtnCloseInvListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +145,14 @@ public final class InventoryController {
                 mainFrame.requestFocusInWindow();
             }
         });
-
+    }
+    
+    
+    /**
+     * Initialises the listener for the exit button to exit the game and save
+     * the player data.
+     */
+    private void initBtnExitListener() {
         inventoryView.addBtnExitListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,6 +162,10 @@ public final class InventoryController {
         });
     }
 
+    /**
+     * Helper method to display further information of an item being selected in
+     * the JList inventory.
+     */
     private void displayItemDetails() {
         Item item = inventoryView.getItemSelected();
 

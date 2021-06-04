@@ -6,6 +6,7 @@
 package com.group.pdc_assignment_rpg.view.gui;
 
 /**
+ * Constants used for switching screens using the ScreenManager singleton class.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */

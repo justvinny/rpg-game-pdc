@@ -17,11 +17,17 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ *  Controller class that handles the events from the PlayerLoading View. 
+ *  This class is also an observer to the PlayerListModel and responds
+ *  to any changes from that model.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class PlayerLoadingController implements CustomObserver {
 
+    /*
+        Constants
+    */
     private static final String GAME_MESSAGE = "Hi! Welcome to our RPG Game!\nGameplay:\n"
             + "- There are 5 treasures chests that can be found.\n"
             + "- You can heal  your HP by leveling up or using Potions.\n"
@@ -31,12 +37,19 @@ public final class PlayerLoadingController implements CustomObserver {
             + "- Game exits and saves when you die and you'll be sent back to the entrance.\n\n";
     private static final String KEYS_AVAILABLE_MSG = "Keys Available:\nUse Arrows Keys for Movement\n"
             + "Enter - Open Treasures\nI - Open Inventory\nEsc - Exit and Save Game";
+    
+    /*
+        Fields
+    */
     private final ScreenManager screenManager;
     private final MainFrameView mainFrame;
     private final PlayerLoadingView playerLoading;
     private final PlayerListModel playerListModel;
     private final List<Treasure> treasures;
 
+    /*
+        Constructor
+    */
     public PlayerLoadingController(PlayerListModel playerListModel, List<Treasure> treasures) {
         screenManager = ScreenManager.getInstance();
         mainFrame = screenManager.getMainFrameView();
@@ -48,6 +61,11 @@ public final class PlayerLoadingController implements CustomObserver {
         playerListModel.addObserver(this);
     }
 
+    /**
+     * Create player button listener. This button creates a player and saves
+     * it to our database. If an invalid player name is entered, a JOptionPane
+     * dialog is shown as an error message.
+     */
     private void createBtnListener() {
         playerLoading.setBtnCreateListener(new ActionListener() {
             @Override
@@ -83,6 +101,13 @@ public final class PlayerLoadingController implements CustomObserver {
         });
     }
 
+    /**
+     * Start button listener for starting the game with the player selected.
+     * Sets up the necessary things needed before loading up our main game screen.
+     * This shows a JOptionPane as an error if a player has not been selected. 
+     * At startup, this also shows a JOptionPane message that briefs the player
+     * on how to play the game.
+     */
     private void startBtnListener() {
         playerLoading.setBtnStartListener(new ActionListener() {
             @Override
@@ -101,13 +126,15 @@ public final class PlayerLoadingController implements CustomObserver {
                     mainFrame.setCurrentScreen(ScreenManager.getInstance().getGame());
                     JOptionPane.showMessageDialog(mainFrame, GAME_MESSAGE + KEYS_AVAILABLE_MSG);
                     mainFrame.requestFocusInWindow();
-
-                    // TODO: hook up game logic when game map is finished.
                 }
             }
         });
     }
 
+    /**
+     * Updates the PlayerLoading View when a change happens to the PlayerListModel
+     * being observed.
+     */
     @Override
     public void update() {
         playerLoading.setPlayerListModel(playerListModel.getPlayerList());

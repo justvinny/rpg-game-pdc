@@ -34,11 +34,17 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 
 /**
+ * UI Inventory view that displays the player's inventory where you can interact
+ * with the items such as using a potion, equipping a weapon/armour for more stats,
+ * etc.
  *
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class InventoryView extends JPanel {
 
+    /*
+        Constants
+     */
     private static final Dimension LIST_DIMS = new Dimension((int) (MainFrameView.FRAME_WIDTH * .47), (int) (MainFrameView.FRAME_HEIGHT * .65));
     private static final String LABEL_TITLE = "Player Inventory";
     private static final String BTN_USE_EQUIP = "Use / Equip Item";
@@ -47,15 +53,20 @@ public final class InventoryView extends JPanel {
     private static final String BTN_EXIT = "[ESC] - Exit";
     private static final Font FONT_TITLE = new Font("Impact", Font.BOLD, 32);
 
+    /*
+        Fields
+     */
     private SpringLayout layout;
     private JLabel labelTitle;
     private JList jListInventory;
     private JTextArea txtAreaEquippedStats, txtAreaItemDetails;
     private JScrollPane scrollInventory;
     private JButton btnUseEquip, btnDrop, btnCloseInventory, btnExit;
-
     private Player player;
 
+    /*
+        Constructor
+     */
     public InventoryView() {
         player = new Player("Placeholder");
         panelSettings();
@@ -67,6 +78,9 @@ public final class InventoryView extends JPanel {
         setSpringLayoutConstraints();
     }
 
+    /**
+     * JPanel settings go here.
+     */
     private void panelSettings() {
         setBackground(Color.WHITE);
 
@@ -75,7 +89,9 @@ public final class InventoryView extends JPanel {
         setLayout(layout);
     }
 
-    // Inventory title
+    /**
+     * Initialise JComponent to display the Inventory main header.
+     */
     private void createTitleLabel() {
         labelTitle = new JLabel(LABEL_TITLE);
         labelTitle.setFont(FONT_TITLE);
@@ -84,7 +100,10 @@ public final class InventoryView extends JPanel {
         add(labelTitle);
     }
 
-    // Inventory list
+    /**
+     * Initialise JComponents to display the inventory JList where the user can
+     * select an item to interact with.
+     */
     private void createInventoryList() {
         jListInventory = new JList();
         jListInventory.setFont(DEFAULT_FONT);
@@ -98,37 +117,46 @@ public final class InventoryView extends JPanel {
         scrollInventory.getViewport().setBackground(BOX_COLOR);
         scrollInventory.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollInventory.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollInventory.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        scrollInventory.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, true));
 
         add(scrollInventory);
     }
 
-    // Currently equipped items.
+    /**
+     * Initialise JComponent to display a comprehensive breakdown of the
+     * player's stats.
+     */
     private void createEquippedStats() {
         txtAreaEquippedStats = new JTextArea();
         txtAreaEquippedStats.setFont(DEFAULT_FONT);
         txtAreaEquippedStats.setBackground(BOX_COLOR);
         txtAreaEquippedStats.setForeground(TEXT_COLOR);
         txtAreaEquippedStats.setPreferredSize(LIST_DIMS);
-        txtAreaEquippedStats.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        txtAreaEquippedStats.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, true));
         txtAreaEquippedStats.setEditable(false);
 
         add(txtAreaEquippedStats);
     }
 
-    // item description
+    /**
+     * Initialise JComponent to display a more detailed information of an item
+     * currently being selected in the JList.
+     */
     private void createItemDetails() {
         txtAreaItemDetails = new JTextArea();
         txtAreaItemDetails.setFont(DEFAULT_FONT);
         txtAreaItemDetails.setBackground(BOX_COLOR);
         txtAreaItemDetails.setForeground(TEXT_COLOR);
-        txtAreaItemDetails.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        txtAreaItemDetails.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, true));
         txtAreaItemDetails.setEditable(false);
 
         add(txtAreaItemDetails);
     }
 
-    // Buttons for equipping, using, and going back to the main game.
+    /**
+     * Initialise JComponents for all the buttons in the inventory such as
+     * Use/Equip, Drop, Close Inventory, and Exit Game.
+     */
     private void createBottomMenu() {
         btnUseEquip = new JButton(BTN_USE_EQUIP);
         btnUseEquip.setPreferredSize(DEFAULT_BTN_DIMS);
@@ -161,7 +189,9 @@ public final class InventoryView extends JPanel {
         add(btnExit);
     }
 
-    // Spring layout constraints
+    /**
+     * Spring Layout constraints to position our Components.
+     */
     private void setSpringLayoutConstraints() {
         // Header
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelTitle, 0, SpringLayout.HORIZONTAL_CENTER, this);
@@ -198,29 +228,68 @@ public final class InventoryView extends JPanel {
         layout.putConstraint(SpringLayout.EAST, btnExit, (int) (-FRAME_WIDTH * .02), SpringLayout.EAST, this);
     }
 
+    /**
+     * Change view background.
+     *
+     * @param g
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(BG_COLOR);
         g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
     }
-    
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-    
+
+    /*
+     * Getters 
+     */
     public Inventory getInventory() {
         return player.getInventory();
     }
-    
+
     public Player getPlayer() {
         return player;
     }
-    
+
+    public Item getItemSelected() {
+        if (jListInventory.getSelectedValue() == null) {
+            return null;
+        }
+
+        // Remove 'xQty - ' at the beggining of the item name.
+        String itemName = jListInventory.getSelectedValue().toString().split(" - ")[1];
+        return player.getInventory().getItem(itemName);
+    }
+
+    /**
+     * Set the player model that will be used for the inventory.
+     *
+     * @param player
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    /**
+     * Sets the text for the current extended item information being selected in the
+     * inventory.
+     * @param itemDetails 
+     */
+    public void setItemDetailsTxt(String itemDetails) {
+        txtAreaItemDetails.setText(itemDetails);
+    }
+
+    /**
+     * Used to remove the text information being displayed for an item when it's
+     * not selected anymore.
+     */
     public void clearItemDetails() {
         txtAreaItemDetails.setText("");
     }
-    
+
+    /**
+     * Updates the inventory list to reflect changes made in the model.
+     */
     public void updateInventoryData() {
         // Set inventory
         jListInventory.setListData(player.getInventory().getAllItemNames());
@@ -229,29 +298,20 @@ public final class InventoryView extends JPanel {
         txtAreaEquippedStats.setText(player.getPlayerInformation());
 
     }
-
+    
+    
+    /*
+     * Evente listener methods that will be used by the controller.
+     * 
+     */
     public void addInventoryKeyListener(KeyListener keyListener) {
         jListInventory.addKeyListener(keyListener);
     }
-    
+
     public void addInventoryListSelectionListener(ListSelectionListener listSelectionListener) {
         jListInventory.addListSelectionListener(listSelectionListener);
     }
-    
-    public Item getItemSelected() {
-        if (jListInventory.getSelectedValue() == null) {
-            return null;
-        }
-       
-        // Remove 'xQty - ' at the beggining of the item name.
-        String itemName = jListInventory.getSelectedValue().toString().split(" - ")[1];
-        return player.getInventory().getItem(itemName);
-    }
-    
-    public void setItemDetailsTxt(String itemDetails) {
-        txtAreaItemDetails.setText(itemDetails);
-    }
-    
+
     public void addBtnUseListener(ActionListener actionListener) {
         btnUseEquip.addActionListener(actionListener);
     }

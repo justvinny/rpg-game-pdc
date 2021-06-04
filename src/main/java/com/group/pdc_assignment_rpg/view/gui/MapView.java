@@ -36,21 +36,32 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
- *
+ * UI View for the map where the currently being displayed game map is contained.
+ * This is also the main JPanel we use for 2D Graphics animation.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public final class MapView extends JPanel implements ActionListener {
 
+    /*
+        Constants
+    */
     public static final int TILE_HEIGHT = 100;
     public static final int TILE_WIDTH = 100;
     private static final int FPS = 60;
 
+    /*
+        Fields
+    */
     private final GameCamera gameCamera;
     private final Mob boss;
     private List<String> mapTxt;
     private List<Treasure> treasures;
     private Player player;
 
+    /*
+        Constructor
+    */
     public MapView(List<Treasure> treasures) {
         setMap();
         setTreasures(treasures);
@@ -61,6 +72,11 @@ public final class MapView extends JPanel implements ActionListener {
         player = new Player("Placeholder");
     }
 
+    /**
+     * Draws our main game view and contains our game play logic by acting as
+     * the game loop. 
+     * @param g 
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -76,9 +92,13 @@ public final class MapView extends JPanel implements ActionListener {
         drawBoss(g);
         drawPlayer(g);
 
+        // Makes sure window is up to date during animation.
         Toolkit.getDefaultToolkit().sync();
     }
 
+    /**
+     * Handles the player movement from the UI
+     */
     private void playerMovement() {
         if (player.isPlayerRunning()) {
             if (!Collision.wallCollision(player, mapTxt)
@@ -108,6 +128,9 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Initiates boss battle upon collision.
+     */
     private void bossCombat() {
         if (Collision.bossCollision(player, boss)) {
             player.setIdle();
@@ -117,6 +140,9 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Creates random battles based on X amount of steps by player.
+     */
     private void randomEncounter() {
         if (player.getSteps() == Combat.getNStepsToCombat()) {
             player.setIdle();
@@ -140,10 +166,15 @@ public final class MapView extends JPanel implements ActionListener {
                 screenManager.getCombat().setCombatants(player, MonsterLoader.getInstance().getRandomMob());
             }
 
+            // Set the main view to the combat screen.
             ScreenManager.getInstance().setCurrentScreen(ScreenManagerConstants.COMBAT);
         }
     }
 
+    /**
+     * Renders our game map based on a text file.
+     * @param g 
+     */
     private void drawMap(Graphics g) {
         // Draw the map relative to the player's center which gives the
         // illusion that we have a moving screen thanks to the game camera offset.
@@ -166,6 +197,10 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Renders treasure chest images.
+     * @param g 
+     */
     private void drawTreasure(Graphics g) {
         Image openTreasure = ImageLoader.getInstance().getOpenTreasure();
         Image closedTreasure = ImageLoader.getInstance().getClosedTreasure();
@@ -186,6 +221,10 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Renders boss sprite and its idle animation.
+     * @param g 
+     */
     private void drawBoss(Graphics g) {
         // -(TILE_WIDTH * 3) to properly scale the boss to 3x the size 
         // of everything else. Same with height.
@@ -194,6 +233,7 @@ public final class MapView extends JPanel implements ActionListener {
         int y = -(TILE_HEIGHT * 2) + (int) gameCamera.getYOffset()
                 + boss.getCoordinates().getY() * TILE_HEIGHT;
 
+        // Show a different sprite when boss is alive and when boss is killed.
         if (boss.isAlive()) {
             BufferedImage bossSheet = ImageLoader.getInstance().getBossIdle();
             g.drawImage(bossSheet, x, y, TILE_WIDTH * 3, TILE_HEIGHT * 3, null);
@@ -204,6 +244,10 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Renders our player and handles its animation.
+     * @param g 
+     */
     private void drawPlayer(Graphics g) {
         // Center player to screen
         int x = -TILE_WIDTH + FRAME_WIDTH / 2;
@@ -238,6 +282,9 @@ public final class MapView extends JPanel implements ActionListener {
         g.drawImage(characterSprite, x, y, TILE_WIDTH, TILE_HEIGHT, null);
     }
 
+    /**
+     * Loads the map from a text file.
+     */
     private void setMap() {
         try {
             mapTxt = ResourceLoaderUtility.loadMap("game-map");
@@ -246,29 +293,52 @@ public final class MapView extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Sets the locations of the treasures on the map.
+     * @param treasures available on the map.
+     */
     public void setTreasures(List<Treasure> treasures) {
         this.treasures = treasures;
     }
 
+    /**
+     * JPanel settings.
+     */
     private void panelSettings() {
         setBackground(Color.BLACK);
     }
 
+    /**
+     * Timer class used for animation.
+     */
     private void setTimer() {
         Timer timer = new Timer(FPS, this);
         timer.start();
     }
 
+    /**
+     * Repaints the JPanel to animate images.
+     * @param e 
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
     }
 
+    /**
+     * Sets the game camera relative to the player in order to navigate
+     * a big map.
+     * @param player 
+     */
     public void setPlayerCamera(Player player) {
         this.player = player;
         gameCamera.setPlayer(player);
     }
 
+    /**
+     * Getter method for the text representation of the map.
+     * @return map text representation
+     */
     public List<String> getMapTxt() {
         return mapTxt;
     }

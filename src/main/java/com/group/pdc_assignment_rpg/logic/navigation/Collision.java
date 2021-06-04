@@ -15,11 +15,19 @@ import static com.group.pdc_assignment_rpg.logic.navigation.Direction.UP;
 import java.util.List;
 
 /**
- *
+ *  Static collision class to detect if a player collides with an unpassable
+ * object like walls, treasures, or bosses.
+ * 
  * @author Vinson Beduya - 19089783 <vinsonemb.151994@gmail.com>
  */
 public class Collision {
 
+    /**
+     * Method to detect collision between the player and walls.
+     * @param player
+     * @param map
+     * @return 
+     */
     public static boolean wallCollision(Player player, List<String> map) {
         switch (player.getDirection()) {
             case UP:
@@ -39,6 +47,12 @@ public class Collision {
         }
     }
 
+    /**
+     * Method to detect collision between the player anda tresure chest.
+     * @param player
+     * @param treasures
+     * @return 
+     */
     public static boolean treasureCollision(Player player, List<Treasure> treasures) {
         boolean willCollide = false;
 
@@ -81,6 +95,12 @@ public class Collision {
         return willCollide;
     }
 
+    /**
+     * Method to detect collision between a player and a boss monster.
+     * @param player
+     * @param boss
+     * @return 
+     */
     public static boolean bossCollision(Player player, Mob boss) {
         return player.getY() == boss.getY() && player.getX() == boss.getX() - 1
                 && boss.isAlive();

@@ -5,6 +5,8 @@
  */
 package com.group.pdc_assignment_rpg.utilities;
 
+import java.util.Arrays;
+
 /**
  * Contains utility methods that manipulates text.
  *
@@ -77,8 +79,18 @@ public class TextUtility {
 
         // Merge both arrays into one.
         String[] mergedArr = new String[arrLen];
-        for (int i = 0; i < strArr1.length; i++) {
-            mergedArr[i] = strArr1[i] + strArr2[i];
+        for (int i = 0; i < mergedArr.length; i++) {
+            String combined = "";
+            
+            if (newArr1[i] != null) {
+                combined += newArr1[i];
+            }
+            
+            if (newArr2[i] != null) {
+                combined += newArr2[i];
+            }
+            
+            mergedArr[i] = combined;
         }
         return mergedArr;
     }
@@ -116,5 +128,16 @@ public class TextUtility {
     	}
     	
     	return titlecase.toString().trim();
+    }
+    
+    public static void main(String[] args) {
+        String[] arr1 = new String[5];
+        arr1[0] = "A";arr1[1] = "B";arr1[2] = "C";arr1[3] = "D";arr1[4] = "E";
+        String[] arr2 = new String[7];
+        arr2[0] = "Z";arr2[1] = "X";arr2[2] = "S";arr2[3] = "F";arr2[4] = "W";
+        arr2[5] = "O";arr2[6] = "P";
+        String[] merged = mergeStringArray(arr1, arr2);
+        System.out.println(Arrays.toString(arr2));
+        System.out.println(Arrays.toString(merged));
     }
 }

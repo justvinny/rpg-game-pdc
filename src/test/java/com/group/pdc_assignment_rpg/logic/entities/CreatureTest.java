@@ -7,19 +7,28 @@ package com.group.pdc_assignment_rpg.logic.entities;
 
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  *
  * @author Jessica McCormick - 20096516 <jessymccormick@gmail.com>
+ * @author Vinson Beduya
  */
 public class CreatureTest {
+    
+    /**
+     * SetUp DB connection.
+     */
+    @BeforeClass
+    public static void setUpClass() {
+        ResourceLoaderUtility.establishConnection();
+    }
     
     /**
      * Test damage() method.
      */
     @org.junit.Test
     public void testDamage() {
-        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         
@@ -45,7 +54,6 @@ public class CreatureTest {
      */
     @org.junit.Test
     public void testSetHP() {
-        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         
@@ -88,7 +96,6 @@ public class CreatureTest {
      */
     @org.junit.Test
     public void testSetName() {
-        ResourceLoaderUtility.establishConnection();
         String name = "John Doe";
         Creature creature = new Player(name);
         

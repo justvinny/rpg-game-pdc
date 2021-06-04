@@ -3,6 +3,7 @@ package com.group.pdc_assignment_rpg.logic.entities;
 import com.group.pdc_assignment_rpg.logic.character.Level;
 import com.group.pdc_assignment_rpg.utilities.ResourceLoaderUtility;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 
 /**
@@ -11,12 +12,16 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
  
+    @BeforeClass
+    public static void setUpClass() {
+        ResourceLoaderUtility.establishConnection();
+    }
+    
     /**
      * Test of Player() constructor method, using only name parameter.
      */
     @org.junit.Test
     public void testCreatePlayerFromName() {
-        ResourceLoaderUtility.establishConnection();
         // Create a new Player object with a name
         String name = "John Doe";
         Player player = new Player(name);
@@ -36,7 +41,6 @@ public class PlayerTest {
      */
     @org.junit.Test
     public void testSetPlayerInstance() {
-        ResourceLoaderUtility.establishConnection();
         System.out.println("setPlayerInstance");
         String name = "John Doe";
         Player player = new Player(name);

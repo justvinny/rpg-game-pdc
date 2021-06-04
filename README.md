@@ -40,6 +40,7 @@ Turn-based 2D RPG game made in Java Swing with random battles for our Program De
 - Play loading screen cave background by Kauz (itch.io)
 
 ## Gameplay Video:
+**Note: Click image to you youtube link.**
 ### Speedrun Gameplay
 [![RPG Game Speedrun Showcase](https://img.youtube.com/vi/y1Py46e9pco/0.jpg)](https://www.youtube.com/watch?v=y1Py46e9pco)
 
